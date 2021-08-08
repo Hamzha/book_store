@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block style %}
+body {
+background-color: #eee!important;
+}
+
+.login {
+background-color: #fff;
+width: 40%;
+margin: 80px auto;
+border-radius: 10px;
+padding: 20px;
+border-left: 5px solid #009688;
+box-shadow: 0px 0px 0px 0px #3f51b5;
+}
+
+.login>.row>h2 {
+margin: auto;
+}
+
+.btn-form {
+width: 100%;
+margin-top: 20px;
+}
+
+{% endblock style %}
+
+{% block content %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<div class="container">
+    <div class="login">
+        <div class="row">
+            <h2>Sign In</h2>
+
+
+            <form class="col-md-12" action="{% url 'user-login' %}" method="post">
+                {% csrf_token %}
+
+                <label for="inputEmail">Email</label>
+                <input type="email" id="inputEmail" class="form-control" placeholder="Email" name="email"
+                       required
+                       autofocus>
+                <br>
+                <label for="inputPassword">Password</label>
+                <input type="password" id="inputPassword" class="form-control" placeholder="Password"
+                       name="password" required>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="submit" id="register" class="btn btn-outline-success btn-form">
+                    </div>
+                </div>
+                {% if error %}
+                <div style="background-color: red;margin-top: 13px;font-weight: 600;padding: 2px;font-size: 14px;color: white;text-align: center;">
+                    <p style="margin-top: 10px;">{{error}} </p>
+                </div>
+                {% endif %}
+            </form>
+            {% if error %}
+
+
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock content %}
