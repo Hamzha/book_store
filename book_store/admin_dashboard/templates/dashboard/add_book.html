@@ -1,0 +1,83 @@
+{% extends 'dashboard/base.html' %}
+{% load widget_tweaks %}
+
+{% block dashboard_title %}
+Adding Book
+{% endblock %}
+
+
+<!-- navbar address -->
+{% block navbar_address %}
+<li class="breadcrumb-item active">Add Book</li>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<!-- form start -->
+<div class="content">
+    <div class="container-fluid">
+        <form enctype="multipart/form-data" method="post" action="{% url 'admin-add-book' %}">
+            {% csrf_token %}
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Book Title</label>
+                    {% render_field form.title|add_class:'input input__text' type="text" placeholder="Book Title" class+="form-control" %}
+                </div>
+                <div class="form-group">
+                    <label >Year of Publish</label>
+                    {% render_field form.year_of_publish|add_class:'input' type="date" placeholder="Year of publish" class+="form-control" %}
+                </div>
+
+                <div class="form-group">
+                    <label >Number of pages</label>
+                    {% render_field form.no_of_pages|add_class:'input' type="number" placeholder="Number of pages" class+="form-control" %}
+                </div>
+
+                <div class="form-group">
+                    <label >Genre of the Book</label>
+                    {% render_field form.genre|add_class:'input' type="option" placeholder="Year of publish" class+="form-control" %}
+
+                </div>
+
+
+                <div class="form-group">
+                    <label >Price of the Book</label>
+                     {% render_field form.price|add_class:'input' type="number" placeholder="Price of the book" class+="form-control" %}
+
+                </div>
+
+
+                <div class="form-group">
+                    <label >Author of the book</label>
+                    {% render_field form.author|add_class:'input' type="text" placeholder="Author of the book" class+="form-control" %}
+
+                </div>
+
+                 <div class="form-group">
+                    <label >Book Status</label>
+                    {% render_field form.book_status|add_class:'input' type="text" placeholder="book_status" class+="form-control" %}
+
+                </div>
+
+                <div class="form-group">
+                    <label >Cover Photo</label>
+                    {% render_field form.cover_photo|add_class:'file' accept='image/*' type="file" placeholder="Cover Photo" %}
+
+                </div>
+
+
+
+
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+{% endblock %}

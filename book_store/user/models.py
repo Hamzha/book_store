@@ -36,7 +36,7 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30, default='')
     last_name = models.CharField(max_length=30, default='')
-    date_of_birth = models.DateTimeField(verbose_name='date of birth')
+    date_of_birth = models.DateTimeField(verbose_name='date of birth', blank=True, null=True)
 
     # User type id
     is_staff = models.BooleanField(default=False)
