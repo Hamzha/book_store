@@ -13,6 +13,8 @@ class Book(models.Model):
     author = models.CharField(max_length=100)
     book_status = models.CharField(max_length=100, default='Pending')
     cover_photo = models.ImageField(null=True, blank=True, upload_to='images')
+    book_type = models.CharField(null=False, blank=False, max_length=100, default='Pending')
+    file = models.FileField( null=False, blank=False, upload_to='books', default='images/not-available.png')
 
     def __str__(self):
         return self.title

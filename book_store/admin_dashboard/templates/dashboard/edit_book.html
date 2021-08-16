@@ -2,13 +2,13 @@
 {% load widget_tweaks %}
 
 {% block dashboard_title %}
-Adding Book
+<E></E>dit Book
 {% endblock %}
 
 
 <!-- navbar address -->
 {% block navbar_address %}
-<li class="breadcrumb-item active">Add Book</li>
+<li class="breadcrumb-item active">Edit Book</li>
 {% endblock %}
 
 <!-- Main Content -->
@@ -16,7 +16,7 @@ Adding Book
 <!-- form start -->
 <div class="content">
     <div class="container-fluid">
-        <form enctype="multipart/form-data" method="post" action="{% url 'admin-add-book' %}">
+        <form enctype="multipart/form-data" method="post" action="{% url 'admin-edit-book' book_id %}">
             {% csrf_token %}
             <div class="card-body">
                 <div class="form-group">

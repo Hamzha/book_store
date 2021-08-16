@@ -1,10 +1,12 @@
 {% extends 'dashboard/base.html' %}
 
-<style>
-.card-block {
-    min-height: 300px;
-}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/2.3.4/owl.carousel.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/2.3.4/owl.carousel.js"></script>
 
+<style>
+.center{
+    text-align: center;
+}
 
 
 
@@ -19,76 +21,124 @@ Dashboard
 <!-- Nav bar address -->
 {% block navbar_address %}
 {% endblock %}
+
+
 <!-- Main Content -->
+
+
 {% block content %}
+
+
 <div class="card">
-    <div class="card-header border-0">
-        <div class="d-flex justify-content-between">
-            <h3 class="card-title">Book</h3>
-            <a href="javascript:void(0);">View Library</a>
-        </div>
-    </div>
+
     <div class="card-body">
+        <div class="card" style='height: 400px;'>
+            <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title">Book list</h3>
+                    <a href="{% url 'admin-list-book' %}">View Library</a>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <!-- Book list card -->
+            <div class="card-body table-responsive p-0" style="height: 300px;">
+                <table class="table table-head-fixed text-nowrap">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">Title</th>
+                        <th style="text-align: center;">Year of Publish</th>
+                        <th style="text-align: center;">No. of Pages</th>
+                        <th style="text-align: center;">Genre</th>
+                        <th style="text-align: center;">Price</th>
+                        <th style="text-align: center;">Author</th>
+                        <th style="text-align: center;">Book Status</th>
+                        <th style="text-align: center;">Book Type</th>
+                        <th style="text-align: center;">Cover Photo</th>
 
-        <!-- /.d-flex -->
-        <div class="container-fluid">
-    <h2>Bootstrap Horizontal Scrolling with Flexbox</h2>
-    <div class="row flex-nowrap">
-        <div class="col-3">
-            <div class="card card-block">Card</div>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for book in books %}
+
+                    <tr>
+                        <td style="text-align: center;">{{ book.title }}</td>
+                        <td style="text-align: center;">{{ book.year_of_publish }}</td>
+                        <td style="text-align: center;">{{ book.no_of_pages }}</td>
+                        <td style="text-align: center;">{{ book.genre }}</td>
+                        <td style="text-align: center;">{{ book.price }}</td>
+                        <td style="text-align: center;">{{ book.author }}</td>
+                        <td style="text-align: center;">{{ book.book_status }}</td>
+                        <td style="text-align: center;">{{ book.book_type }}</td>
+                        <td style="text-align: center;"><img src="{{ book.cover_photo.url }}"
+                                                             style="width:100px;height:100px"/></td>
+
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
         </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
-        <div class="col-3">
-            <div class="card card-block">Card</div>
-        </div>
+
     </div>
-</div>
-    </div>
+
 </div>
 
-<script>
+
+<div class="card">
+
+    <div class="card-body">
+        <div class="card" style='height: 400px;'>
+            <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title">Users list</h3>
+                    <a href="{% url 'admin-list-book' %}">View</a>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <!-- Book list card -->
+            <div class="card-body table-responsive p-0" style="height: 300px;">
+                <table class="table table-head-fixed text-nowrap">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">Username</th>
+                        <th style="text-align: center;">Email</th>
+                        <th style="text-align: center;">First Name</th>
+                        <th style="text-align: center;">Last Name</th>
+                        <th style="text-align: center;">Date of Birth</th>
+                        <th style="text-align: center;">Admin</th>
+                        <th style="text-align: center;">Active</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for user in users %}
+
+                    <tr>
+                        <td style="text-align: center;">{{ user.username }}</td>
+                        <td style="text-align: center;">{{ user.email }}</td>
+                        <td style="text-align: center;">{{ user.first_name }}</td>
+                        <td style="text-align: center;">{{ user.last_name }}</td>
+                        <td style="text-align: center;">{{ user.date_of_birth }}</td>
+                        <td style="text-align: center;">{{ user.is_admin }}</td>
+                        <td style="text-align: center;">{{ user.is_active }}</td>
 
 
-</script>
+
+
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'dashboard/base.html' %}
+{% load widget_tweaks %}
+
+{% block dashboard_title %}
+Users List
+{% endblock %}
+
+
+<!-- navbar address -->
+{% block navbar_address %}
+<li class="breadcrumb-item active">Books List</li>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<!-- form start -->
+<div class="content">
+
+    <div class="card-body">
+
+        <div class="card" style="height: 727px;">
+            <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title">All Users List</h3>
+                    <a href="{% url 'admin-add-user' %}">Add User</a>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <!-- Book list card -->
+            <div class="card-body table-responsive p-0" style="height: 300px;">
+                <table class="table table-head-fixed text-nowrap">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">Username</th>
+                        <th style="text-align: center;">Email</th>
+                        <th style="text-align: center;">First Name</th>
+                        <th style="text-align: center;">Last Name</th>
+                        <th style="text-align: center;">Date of Birth</th>
+                        <th style="text-align: center;">Admin</th>
+                        <th style="text-align: center;">Active</th>
+                        <th style="text-align: center;">Edit</th>
+                        <th style="text-align: center;">Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for user in users %}
+
+                    <tr>
+                        <td style="text-align: center;">{{ user.username }}</td>
+                        <td style="text-align: center;">{{ user.email }}</td>
+                        <td style="text-align: center;">{{ user.first_name }}</td>
+                        <td style="text-align: center;">{{ user.last_name }}</td>
+                        <td style="text-align: center;">{{ user.date_of_birth }}</td>
+                        <td style="text-align: center;">{{ user.is_admin }}</td>
+                        <td style="text-align: center;">{{ user.is_active }}</td>
+                        <td style="text-align: center;">
+                            <a href="{% url 'admin-edit-user' user.id %}">
+                                <i
+                                        class="fas fa-edit" style="color:black">
+                                </i>
+                            </a>
+                        </td>
+                        <td style="text-align: center;">
+                            <a data-toggle="modal" href="#admin-modal-delete-user-{{user.id}}">
+                                <i
+                                        class="fas fa-trash-alt"
+                                        style="color:red">
+                                </i>
+                                <div class="modal fade" id="admin-modal-delete-user-{{user.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content bg-danger">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Delete a User</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are yuo sure you want to delete the user?</p>
+                                                <p>Email: {{user.email}}</p>
+                                                <p>Username: {{user.username}}</p>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-outline-light"
+                                                        data-dismiss="modal">
+                                                    Close
+                                                </button>
+
+                                                <button onclick="delete_user({{user.id}})" type="button"
+                                                        class="btn btn-outline-light">Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                            </a>
+
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function delete_user(user_id){
+        $.ajax({
+            url: 'delete_user/'+parseInt(user_id),
+            type: 'get', // This is the default though, you don't actually need to always mention it
+            success: function(data) {
+                    window.location.href = '';
+            },
+            failure: function(data) {
+            }
+        });
+    }
+
+
+
+
+</script>
+
+{% endblock %}
