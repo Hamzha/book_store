@@ -1,0 +1,91 @@
+{% extends 'dashboard/base.html' %}
+{% load widget_tweaks %}
+
+{% block dashboard_title %}
+Adding User
+{% endblock %}
+
+
+<!-- navbar address -->
+{% block navbar_address %}
+<li class="breadcrumb-item active">Add User</li>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<!-- form start -->
+<div class="content">
+    <div class="container-fluid">
+        <form id="form" action="{% url 'admin-edit-user' user_id %}" method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Email</label>
+                {% render_field form.email|add_class:'input input__email' type="email" placeholder="Email" class+="form-control" %}
+
+
+            </div>
+            <div class="form-group">
+                <label>UserName</label>
+                {% render_field form.username|add_class:'input' type="text" placeholder="Username" class+="form-control" %}
+
+            </div>
+
+            <div class="form-group">
+                <label>First Name</label>
+                {% render_field form.first_name|add_class:'input' type="text" placeholder="first_name" class+="form-control" %}
+
+
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                {% render_field form.last_name|add_class:'input' type="text" placeholder="last_name" class+="form-control" %}
+
+
+            </div>
+
+            <div class="form-group">
+                <label>Date of Birth</label>
+
+                {% render_field form.date_of_birth|add_class:'input' type='date' placeholder="Date of Birth" class+="form-control" %}
+
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+
+                {% render_field form.password|add_class:'input' type="password" placeholder="password" class+="form-control" %}
+
+
+            </div>
+            <div class="form-group">
+                <label>Password Again</label>
+
+                {% render_field form.password2|add_class:'input' type="password" placeholder="password" class+="form-control" %}
+
+            </div>
+
+
+            <div class="actions-buttons">
+                <button id="submit" type="submit" class="btn btn-primary">
+                    <span class="">Submit</span>
+
+                </button>
+            </div>
+        </form>
+           {% if messages %}
+            <div style="background-color: red;margin-top: 13px;font-weight: 600;padding: 2px;font-size: 14px;color: white;">
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class=" {{ message.tags }} " {% endif %} style="padding-top:1%"> {{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+{% endblock %}

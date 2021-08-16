@@ -3,15 +3,18 @@ from django.db import models
 
 # Create your models here.
 
-class book(models.Model):
+class Book(models.Model):
     book_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length= 100)
-    year_of_publish = models.DateField()
-    no_of_pages = models.IntegerField()
-    genre = models.CharField(max_length = 100)
+    title = models.CharField(max_length=100)
+    year_of_publish = models.DateField(blank=True, null=True)
+    no_of_pages = models.IntegerField(blank=True, null=True)
+    genre = models.CharField(max_length=100)
     price = models.FloatField()
-    author = models.CharField(max_length = 100)
-    book_status = models.CharField(max_length = 100)
+    author = models.CharField(max_length=100)
+    book_status = models.CharField(max_length=100, default='Pending')
+    cover_photo = models.ImageField(null=True, blank=True, upload_to='images')
+    book_type = models.CharField(null=False, blank=False, max_length=100, default='Pending')
+    file = models.FileField( null=False, blank=False, upload_to='books', default='images/not-available.png')
 
     def __str__(self):
         return self.title

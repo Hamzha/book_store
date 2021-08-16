@@ -1,0 +1,133 @@
+{% extends 'dashboard/base.html' %}
+{% load widget_tweaks %}
+
+{% block dashboard_title %}
+Book List
+{% endblock %}
+
+
+<!-- navbar address -->
+{% block navbar_address %}
+<li class="breadcrumb-item active">Book List</li>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<!-- form start -->
+<div class="content">
+
+    <div class="card-body">
+
+        <div class="card" style="height: 727px;">
+            <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title">All books List</h3>
+                    <a href="{% url 'admin-add-book' %}">Add Book</a>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <!-- Book list card -->
+            <div class="card-body table-responsive p-0">
+                <table class="table table-head-fixed text-nowrap">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">Title</th>
+                        <th style="text-align: center;">Year of Publish</th>
+                        <th style="text-align: center;">No. of Pages</th>
+                        <th style="text-align: center;">Genre</th>
+                        <th style="text-align: center;">Price</th>
+                        <th style="text-align: center;">Author</th>
+                        <th style="text-align: center;">Book Status</th>
+                        <th style="text-align: center;">Book Type</th>
+                        <th style="text-align: center;">Cover Photo</th>
+                        <th style="text-align: center;">Edit</th>
+                        <th style="text-align: center;">Delete</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for book in books %}
+                    <tr>
+                        <td style="text-align: center;">{{ book.title }}</td>
+                        <td style="text-align: center;">{{ book.year_of_publish }}</td>
+                        <td style="text-align: center;">{{ book.no_of_pages }}</td>
+                        <td style="text-align: center;">{{ book.genre }}</td>
+                        <td style="text-align: center;">{{ book.price }}</td>
+                        <td style="text-align: center;">{{ book.author }}</td>
+                        <td style="text-align: center;">{{ book.book_status }}</td>
+                        <td style="text-align: center;">{{ book.book_type }}</td>
+                        <td style="text-align: center;"><img src="{{ book.cover_photo.url }}"
+                                                             style="width:100px;height:100px"/></td>
+                        <td style="text-align: center;">
+                            <a href="{% url 'admin-edit-book' book.book_id %}">
+                                <i
+                                        class="fas fa-edit" style="color:black">
+                                </i>
+                            </a>
+                        </td>
+                        <td style="text-align: center;">
+                            <a data-toggle="modal" href="#admin-modal-delete-book-{{book.book_id}}">
+                                <i
+                                        class="fas fa-trash-alt"
+                                        style="color:red">
+                                </i>
+                                <div class="modal fade" id="admin-modal-delete-book-{{book.book_id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content bg-danger">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Delete a Book</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are yuo sure you want to delete the book?</p>
+                                                <p>Name: {{book.title}}</p>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-outline-light"
+                                                        data-dismiss="modal">
+                                                    Close
+                                                </button>
+
+                                                <button onclick="delete_book({{book.book_id}})" type="button"
+                                                        class="btn btn-outline-light">Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                            </a>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function delete_book(book_id){
+        $.ajax({
+            url: 'delete_book/'+parseInt(book_id),
+            type: 'get', // This is the default though, you don't actually need to always mention it
+            success: function(data) {
+                    window.location.href = '';
+            },
+            failure: function(data) {
+            }
+        });
+    }
+
+</script>
+
+{% endblock %}
