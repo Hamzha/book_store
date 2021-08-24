@@ -1,8 +1,8 @@
 from django import forms
 from django.forms import widgets
 
-from .models import Book
-from ..user.models import User
+from .models import Book, DealVoucher, DealVoucherUser
+from ..user.models import User, Mode
 
 GENRE = [
     ('Action and Adventure', 'Action and Adventure'),
@@ -38,6 +38,18 @@ BOOK_TYPE = [
     ('AUDIO', 'AUDIO')
 ]
 
+VOUCHER_TYPE = [
+    ('TICK CROSS', 'TICK CROSS'),
+    ('SNAKE', 'SNAKE'),
+    ('Others', 'Others')
+]
+
+USER_STATUS = [
+    ('PENDING', 'PENDING'),
+    ('ACTIVE', 'ACTIVE'),
+    ('DE-ACTIVE', 'DE-ACVTIVE')
+]
+
 
 class add_book_form(forms.ModelForm):
     title = forms.CharField(max_length=100, required=True)
@@ -59,7 +71,7 @@ class add_book_form(forms.ModelForm):
                   'book_type', 'file')
 
 
-class RegisterForm(forms.ModelForm):
+class register_form(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, required=True)
     password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput, required=True)
 
@@ -69,12 +81,15 @@ class RegisterForm(forms.ModelForm):
     last_name = forms.CharField(label="Last name ", widget=forms.TextInput, required=False)
     date_of_birth = forms.DateField(label='Date of Birth', widget=forms.DateInput(attrs={'type': 'date'}),
                                     required=False)
+    status = forms.CharField(max_length=100, initial='PENDING', required=True,
+                             widget=forms.Select(choices=USER_STATUS))
+    mode = forms.ModelChoiceField(queryset=Mode.objects.all(), required=True)
 
     class Meta:
         model = User
         fields = ('email',
                   'username',
-                  'first_name', 'last_name', 'date_of_birth', 'password', 'password2')
+                  'first_name', 'last_name', 'date_of_birth', 'status', 'mode', 'password', 'password2')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -85,3 +100,33 @@ class RegisterForm(forms.ModelForm):
             raise forms.ValidationError("Passwords don't match")
 
         return password2
+
+
+class user_mode_form(forms.ModelForm):
+    type = forms.CharField(label="Username", widget=forms.TextInput, required=True)
+    book_limit = forms.IntegerField(required=True)
+
+    class Meta:
+        model = Mode
+        fields = ('type', 'book_limit')
+
+
+class deal_voucher_form(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea, required=True)
+    type = forms.CharField(max_length=100, initial='Tick Cross', required=True,
+                           widget=forms.Select(choices=VOUCHER_TYPE))
+    credit = forms.IntegerField(required=True, widget=forms.NumberInput)
+
+    class Meta:
+        model = DealVoucher
+        fields = ('description', 'type', 'credit')
+
+
+class user_deal_voucher_form(forms.ModelForm):
+    deal_voucher = forms.ModelChoiceField(queryset=DealVoucher.objects.all(), required=True)
+    user = forms.ModelChoiceField(queryset=User.objects.all(), required=True)
+    valid_up_to = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
+
+    class Meta:
+        model = DealVoucherUser
+        fields = ('deal_voucher', 'user', 'valid_up_to')

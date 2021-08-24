@@ -1,0 +1,61 @@
+{% extends 'dashboard/base.html' %}
+{% load widget_tweaks %}
+
+{% block dashboard_title %}
+Adding User
+{% endblock %}
+
+
+<!-- navbar address -->
+{% block navbar_address %}
+<li class="breadcrumb-item active">Add User</li>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<!-- form start -->
+<div class="content">
+    <div class="container-fluid">
+        <form id="form" action="{% url 'admin-add-deal-voucher' %}" method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>Description</label>
+                {% render_field form.description|add_class:'input' type="text" placeholder="Description" class+="form-control" %}
+
+
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                {% render_field form.type|add_class:'input' type="text" placeholder="Description" class+="form-control" %}
+            </div>
+
+            <div class="form-group">
+                <label>Credit</label>
+                {% render_field form.credit|add_class:'input' type="number" placeholder="Credit" class+="form-control" %}
+            </div>
+
+            <div class="actions-buttons">
+                <button id="submit" type="submit" class="btn btn-primary">
+                    <span class="">Submit</span>
+
+                </button>
+            </div>
+        </form>
+           {% if messages %}
+            <div style="background-color: red;margin-top: 13px;font-weight: 600;padding: 2px;font-size: 14px;color: white;">
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class=" {{ message.tags }} " {% endif %} style="padding-top:1%"> {{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}

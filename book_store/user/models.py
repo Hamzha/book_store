@@ -2,7 +2,16 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
-class User(BaseUserManager):
+class Mode(models.Model):
+    mode_id = models.AutoField(primary_key=True)
+    type = models.CharField(max_length=100, blank=False, null=False)
+    book_limit = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.type
+
+
+class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None):
         if not email:
             raise ValueError('Users must have an email address')
@@ -37,6 +46,8 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=30, default='')
     last_name = models.CharField(max_length=30, default='')
     date_of_birth = models.DateTimeField(verbose_name='date of birth', blank=True, null=True)
+    status = models.CharField(max_length=30, default='PENDING')
+    user_mode = models.ForeignKey(Mode, on_delete=models.CASCADE, null=True, blank=True)
 
     # User type id
     is_staff = models.BooleanField(default=False)
@@ -45,12 +56,12 @@ class User(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username',]
+    REQUIRED_FIELDS = ['username', ]
 
-    objects = User()
+    objects = UserManager()
 
     def __str__(self):
-        return self.email
+        return self.username
 
     # For checking permissions. to keep it simple all admin have ALL permissons
     def has_perm(self, perm, obj=None):
@@ -59,3 +70,4 @@ class User(AbstractBaseUser):
     # Does this user have permission to view this app? (ALWAYS YES FOR SIMPLICITY)
     def has_module_perms(self, app_label):
         return True
+

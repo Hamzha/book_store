@@ -6,6 +6,7 @@
 - install posgresql
 - set up a db in postgresql
 - Configure the django settings according postgresql configuration in settings.py
+- Run migrations
 - Create a super user using the command
   - python manage.py createsuperuser
 - run the project 

@@ -52,7 +52,7 @@
                         <li class="nav-item">
                             <a href="{% url 'admin-add-book' %}"
                                class="nav-link {% if url_name == 'admin-add-book' %}active{% endif %}">
-                                <i class="nav-icon fas fa-edit"></i>
+                                <i class="nav-icon fas fa-plus"></i>
                                 <p>
                                     Add Book
                                 </p>
@@ -85,7 +85,7 @@
                         <li class="nav-item">
                             <a href="{% url 'admin-add-user' %}"
                                class="nav-link {% if url_name == 'admin-add-user' %}active{% endif %}">
-                                <i class="nav-icon fas fa-user-edit"></i>
+                                <i class="nav-icon fas fa-plus"></i>
                                 <p>
                                     Add User
                                 </p>
@@ -100,12 +100,103 @@
                                     User List
                                 </p>
                             </a>
-
                         </li>
 
                     </ul>
                 </li>
 
+                <li class="nav-item {% if url_name == 'admin-add-user-mode' %}menu-is-opening menu-open{% endif %} {% if url_name == 'admin-list-user-mode' %}menu-is-opening menu-open{% endif %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            User Mode Menu
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'admin-add-user-mode' %}"
+                               class="nav-link {% if url_name == 'admin-add-user-mode' %}active{% endif %}">
+                                <i class="nav-icon fas fa-plus"></i>
+                                <p>
+                                    Add User Mode
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'admin-list-user-mode' %}"
+                               class="nav-link {% if url_name == 'admin-list-user-mode' %}active{% endif %}">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>
+                                    List User Mode
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="nav-item {% if url_name == 'admin-add-deal-voucher' %}menu-is-opening menu-open{% endif %} {% if url_name == 'admin-list-deal-voucher' %}menu-is-opening menu-open{% endif %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            Deal Voucher Menu
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'admin-add-deal-voucher' %}"
+                               class="nav-link {% if url_name == 'admin-add-deal-voucher' %}active{% endif %}">
+                                <i class="nav-icon fas fa-plus"></i>
+                                <p>
+                                    Add Deal Voucher
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin-list-deal-voucher' %}"
+                               class="nav-link {% if url_name == 'admin-list-deal-voucher' %}active{% endif %} ">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>
+                                    Deal Voucher List
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="nav-item {% if url_name == 'admin-add-user-deal-voucher' %}menu-is-opening menu-open{% endif %} {% if url_name == 'admin-list-user-deal-voucher' %}menu-is-opening menu-open{% endif %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            User Voucher Menu
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'admin-add-user-deal-voucher' %}"
+                               class="nav-link {% if url_name == 'admin-add-user-deal-voucher' %}active{% endif %}">
+                                <i class="nav-icon fas fa-plus"></i>
+                                <p>
+                                    Add Voucher to User
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin-list-user-deal-voucher' %}"
+                               class="nav-link {% if url_name == 'admin-list-user-deal-voucher' %}active{% endif %}">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>
+                                    List Voucher User
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
 
             </ul>
             {% endwith %}
