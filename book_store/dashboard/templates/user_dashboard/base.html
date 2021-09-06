@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="zxx">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>The Book Co.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Use Minified Plugins Version For Fast Page Load -->
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'user_dashboard/css/plugins.css' %}"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'user_dashboard/css/main.css' %}"/>
+    <link rel="shortcut icon" type="image/x-icon" href="image/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="site-wrapper" id="top">
+    {% include 'user_dashboard/navbar.html' %}
+
+    <section class="breadcrumb-section">
+        <h2 class="sr-only">Site Breadcrumb</h2>
+        <div class="container">
+            <div class="breadcrumb-contents">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        {% block navbar_address %}
+                        {% endblock navbar_address %}
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </section>
+    <!--=============================================
+=            Login Register page content         =
+=============================================-->
+    {% block content %}
+
+    {% endblock content %}
+
+</div>
+<!--=================================
+Brands Slider
+===================================== -->
+
+<!--=================================
+Footer Area
+===================================== -->
+{% include 'user_dashboard/footer.html' %}
+<!-- Use Minified Plugins Version For Fast Page Load -->
+<script src="{% static 'user_dashboard/js/plugins.js' %}"></script>
+<script src="{% static 'user_dashboard/js/ajax-mail.js' %}"></script>
+<script src="{% static 'user_dashboard/js/custom.js' %}"></script>
+</body>
+
+</html>

@@ -40,7 +40,8 @@ INSTALLED_APPS = [
 
     # My apps
     'book_store.user',
-    'book_store.admin_dashboard'
+    'book_store.admin_dashboard',
+    'book_store.dashboard'
 ]
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
@@ -69,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -133,3 +135,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 STATICFILES_DIRS = [BASE_DIR / 'static/']
+
+X_FRAME_OPTIONS = 'ALLOWALL'
+
+XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']

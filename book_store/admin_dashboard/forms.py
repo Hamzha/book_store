@@ -34,6 +34,7 @@ BOOK_STATUS = [
 ]
 
 BOOK_TYPE = [
+    ('BOTH', 'BOTH'),
     ('PDF', 'PDF'),
     ('AUDIO', 'AUDIO')
 ]
@@ -44,14 +45,8 @@ VOUCHER_TYPE = [
     ('Others', 'Others')
 ]
 
-USER_STATUS = [
-    ('PENDING', 'PENDING'),
-    ('ACTIVE', 'ACTIVE'),
-    ('DE-ACTIVE', 'DE-ACVTIVE')
-]
 
-
-class add_book_form(forms.ModelForm):
+class book_form(forms.ModelForm):
     title = forms.CharField(max_length=100, required=True)
     year_of_publish = forms.DateField(required=False, widget=widgets.DateInput(attrs={'type': 'date'}))
     no_of_pages = forms.IntegerField(required=False)
@@ -63,12 +58,13 @@ class add_book_form(forms.ModelForm):
                                   widget=forms.Select(choices=BOOK_STATUS))
     cover_photo = forms.ImageField(required=True)
     book_type = forms.CharField(required=True, widget=forms.Select(choices=BOOK_TYPE))
-    file = forms.FileField(required=True)
+    pdf = forms.FileField(required=False)
+    audio = forms.FileField(required=False)
 
     class Meta:
         model = Book
         fields = ('title', 'year_of_publish', 'no_of_pages', 'genre', 'price', 'author', 'book_status', 'cover_photo',
-                  'book_type', 'file')
+                  'book_type', 'audio', 'pdf')
 
 
 class register_form(forms.ModelForm):
@@ -81,15 +77,12 @@ class register_form(forms.ModelForm):
     last_name = forms.CharField(label="Last name ", widget=forms.TextInput, required=False)
     date_of_birth = forms.DateField(label='Date of Birth', widget=forms.DateInput(attrs={'type': 'date'}),
                                     required=False)
-    status = forms.CharField(max_length=100, initial='PENDING', required=True,
-                             widget=forms.Select(choices=USER_STATUS))
-    mode = forms.ModelChoiceField(queryset=Mode.objects.all(), required=True)
 
     class Meta:
         model = User
         fields = ('email',
                   'username',
-                  'first_name', 'last_name', 'date_of_birth', 'status', 'mode', 'password', 'password2')
+                  'first_name', 'last_name', 'date_of_birth', 'password', 'password2')
 
     def clean_password2(self):
         # Check that the two password entries match

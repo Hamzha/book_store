@@ -1,43 +1,45 @@
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import logout
 
 # Create your views here.
-from book_store.admin_dashboard.forms import add_book_form, register_form, user_mode_form, deal_voucher_form, \
+from book_store.admin_dashboard.forms import book_form, register_form, user_mode_form, deal_voucher_form, \
     user_deal_voucher_form
 from book_store.admin_dashboard.models import Book, DealVoucher, DealVoucherUser
 from book_store.user.models import User, Mode
 
 
-@staff_member_required(login_url='/')
+@login_required(login_url='/')
 def index(request):
     books = Book.objects.all()
     users = User.objects.all()
 
     data = {
         'books': books,
-        'users': users
+        'users': users,
     }
     return render(request, 'dashboard/dashboard.html', data)
 
 
-@staff_member_required(login_url='/')
+@login_required(login_url='/')
 def add_book(request):
     if request.method == 'POST':
-        form = add_book_form(request.POST, request.FILES)
+        form = book_form(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            print('validate')
             return redirect('admin-home')
         else:
             for field, items in form.errors.items():
                 for item in items:
+                    print('{}: {}'.format(field, item))
                     messages.error(request, '{}: {}'.format(field, item))
     else:
-        form = add_book_form()
-
+        form = book_form()
+    print('test')
     return render(request, 'dashboard/add_book.html', {'form': form})
 
 
@@ -45,7 +47,7 @@ def add_book(request):
 def edit_book(request, book_id):
     if request.method == 'POST':
         obj = get_object_or_404(Book, book_id=book_id)
-        form = add_book_form(request.POST, request.FILES, instance=obj)
+        form = book_form(request.POST, request.FILES, instance=obj)
         if form.is_valid():
             form.save()
             print('validate')
@@ -55,7 +57,7 @@ def edit_book(request, book_id):
                 for item in items:
                     messages.error(request, '{}: {}'.format(field, item))
     else:
-        form = add_book_form(instance=Book.objects.filter(book_id=book_id).first())
+        form = book_form(instance=Book.objects.filter(book_id=book_id).first())
 
     return render(request, 'dashboard/edit_book.html', {'form': form, 'book_id': book_id})
 
@@ -85,6 +87,7 @@ def add_user(request):
             print('valid')
             user.password = make_password(user.password)
             user.save()
+            return redirect('admin-home')
         else:
             for field, items in form.errors.items():
                 for item in items:
@@ -224,7 +227,7 @@ def list_user_deal_voucher(request):
     return render(request, 'dashboard/user_deal_voucher_list.html', {'vouchers': vouchers})
 
 
-def delete_user_deal_voucher(request , deal_voucher_user_id):
+def delete_user_deal_voucher(request, deal_voucher_user_id):
     DealVoucherUser.objects.filter(deal_voucher_user_id=deal_voucher_user_id).delete()
     return HttpResponse({'Success': 'True'})
 
@@ -241,6 +244,13 @@ def admin_edit_user_deal_voucher(request, deal_voucher_user_id):
                 for item in items:
                     messages.error(request, '{}: {}'.format(field, item))
     else:
-        form = user_deal_voucher_form(instance=DealVoucherUser.objects.filter(deal_voucher_user_id=deal_voucher_user_id).first())
+        form = user_deal_voucher_form(
+            instance=DealVoucherUser.objects.filter(deal_voucher_user_id=deal_voucher_user_id).first())
 
-    return render(request, 'dashboard/edit_user_deal_voucher.html', {'form': form, 'deal_voucher_user_id': deal_voucher_user_id})
+    return render(request, 'dashboard/edit_user_deal_voucher.html',
+                  {'form': form, 'deal_voucher_user_id': deal_voucher_user_id})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('/')

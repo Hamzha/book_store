@@ -2,7 +2,7 @@
 {% load widget_tweaks %}
 
 {% block dashboard_title %}
-<E></E>dit Book
+Edit Book
 {% endblock %}
 
 
@@ -65,13 +65,19 @@
 
                 </div>
 
+
                 <div class="form-group">
                     <label >Book Status</label>
                     {% render_field form.book_type|add_class:'input' type="text" placeholder="book_status" class+="form-control" %}
                 </div>
-                <div class="form-group">
-                    <label >File</label>
-                    {% render_field form.file|add_class:'input' type="file" placeholder="file" %}
+                <div class="form-group form-pdf">
+                    <label >PDF</label>
+                    {% render_field form.pdf|add_class:'input' type="file" placeholder="file" %}
+                </div>
+
+                <div class="form-group form-audio">
+                    <label >Audio</label>
+                    {% render_field form.audio|add_class:'input' type="file" placeholder="file" %}
                 </div>
 
 
@@ -85,5 +91,32 @@
     </div>
 
 </div>
+<script>
+$(document).ready(function(){
+    $('#id_book_type').change(function(){
+        if ($(this).val() == 'PDF'){
+            $('.form-audio').hide();
+            $('.form-pdf').show();
+
+            $("#id_pdf").prop('required',true);
+            $("#id_audio").prop('required',false);
+        }
+        if ($(this).val() == 'AUDIO'){
+            $('.form-pdf').hide();
+            $('.form-audio').show();
+
+            $("#id_pdf").prop('required',false);
+            $("#id_audio").prop('required',true);
+        }
+        if ($(this).val() == 'BOTH'){
+            $('.form-pdf').show();
+            $('.form-audio').show();
+
+            $("#id_audio").prop('required',true);
+            $("#id_pdf").prop('required',true);
+        }
+    });
+});
+</script>
 
 {% endblock %}

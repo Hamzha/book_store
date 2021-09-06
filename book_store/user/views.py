@@ -13,25 +13,6 @@ from . import forms
 from .forms import RegisterForm
 
 
-@csrf_exempt
-def login(request):
-    if request.method == "POST":
-        email = request.POST['email']
-        password = request.POST['password']
-        print(email, password)
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login_user(request, user)
-            if user.is_admin:
-                return redirect('admin-home')
-
-            return JsonResponse({'Login': 'Pass'})
-        else:
-            return render(request, 'user/login.html', {'error': "Please enter correct credentials"})
-
-    return render(request, 'user/login.html', {})
-
-
 def register(request):
     print('called')
     if request.method == 'POST':

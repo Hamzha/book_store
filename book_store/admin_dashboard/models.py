@@ -1,6 +1,5 @@
 from django.db import models
 
-
 # Create your models here.
 from book_store.user.models import Mode, User
 
@@ -16,7 +15,8 @@ class Book(models.Model):
     book_status = models.CharField(max_length=100, default='Pending')
     cover_photo = models.ImageField(null=True, blank=True, upload_to='images')
     book_type = models.CharField(null=False, blank=False, max_length=100, default='Pending')
-    file = models.FileField(null=False, blank=False, upload_to='books', default='images/not-available.png')
+    pdf = models.FileField(null=True, blank=True, upload_to='books', default='images/not-available.png')
+    audio = models.FileField(null=True, blank=True, upload_to='books', default='images/not-available.png')
     book_mode = models.ForeignKey(Mode, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):

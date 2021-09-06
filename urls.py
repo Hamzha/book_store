@@ -20,10 +20,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('book_store.user.urls')),
+    path('', include('book_store.dashboard.urls')),
     path('admin_dashboard/', include('book_store.admin_dashboard.urls'))
 ]
 urlpatterns += static(settings.MEDIA_URL,
                       document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 # amena@gmail.com
 # amena123

@@ -46,7 +46,6 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=30, default='')
     last_name = models.CharField(max_length=30, default='')
     date_of_birth = models.DateTimeField(verbose_name='date of birth', blank=True, null=True)
-    status = models.CharField(max_length=30, default='PENDING')
     user_mode = models.ForeignKey(Mode, on_delete=models.CASCADE, null=True, blank=True)
 
     # User type id
