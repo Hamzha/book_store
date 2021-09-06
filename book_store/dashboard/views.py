@@ -35,12 +35,10 @@ def login(request):
 
 @login_required(login_url='/')
 def dashboard(request):
-    book = Book.objects.filter(book_id=16).values().first()
+    book = Book.objects.all()
     return render(request, 'user_dashboard/dashboard.html', {'books': book})
 
 
 def get_book(request, book_id):
     book = Book.objects.filter(book_id=16).values().first()
-    # print('media/'.book.pdf)
     return HttpResponse('media/'+book['pdf'])
-    # return FileResponse(open(book.pdf, 'r'), content_type='application/pdf')
