@@ -91,7 +91,7 @@
     </div>
 
     <div style="width: 30%; height: 300px;">
-        <button class="btn btn-primary" onclick="save_bookmark()">BookMark this page</button>
+        <button class="btn btn-primary" onclick="save_bookmark({{book.book_id}})">BookMark this page</button>
     </div>
 
 </div>
@@ -113,7 +113,7 @@ $.ajax({
 
 
         let pdfDoc = null,
-          pageNum = 1,
+          pageNum = {{page_number}},
           pageIsRendering = false,
           pageNumIsPending = null;
 
@@ -231,8 +231,21 @@ function search_online(){
     });
 }
 
-function save_bookmark(){
-    alert('test');
+function save_bookmark(book_id){
+    let page = $('#page-num').text();
+    let url_save_bookmark = '/save_bookmark/' + book_id + '/' + page;
+
+    $.ajax({
+        url: url_save_bookmark,
+        type: 'get', // This is the default though, you don't actually need to always mention it
+            success: function(data) {
+                alert('Saved');
+            },
+            failure: function(data) {
+                alert('Got an error dude');
+            }
+    });
+
 }
 
 </script>

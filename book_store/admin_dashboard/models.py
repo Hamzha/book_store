@@ -38,3 +38,11 @@ class DealVoucherUser(models.Model):
     deal_voucher = models.ForeignKey(DealVoucher, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     valid_up_to = models.DateField(blank=False, null=False)
+
+
+class BookMark(models.Model):
+    bookmark_id = models.AutoField(primary_key=True)
+    bookmark_book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    bookmark_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    bookmark_page_number = models.IntegerField()
+    bookmark_text = models.TextField(max_length=200, null=True, blank=True)
