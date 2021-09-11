@@ -37,11 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'widget_tweaks',
+    'rest_framework',
+    'rest_framework.authtoken',
 
     # My apps
     'book_store.user',
     'book_store.admin_dashboard',
-    'book_store.dashboard'
+    'book_store.dashboard',
+    'book_store.api'
 ]
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
@@ -75,7 +78,11 @@ TEMPLATES = [
         },
     },
 ]
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # <-- And here
+    ],
+}
 # WSGI_APPLICATION = 'book_store.wsgi.application'
 AUTH_USER_MODEL = 'user.user'
 # Database
@@ -138,4 +145,4 @@ STATICFILES_DIRS = [BASE_DIR / 'static/']
 
 X_FRAME_OPTIONS = 'ALLOWALL'
 
-XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+XS_SHARING_ALLOWED_METHODS = ['POST', 'GET', 'OPTIONS', 'PUT', 'DELETE']

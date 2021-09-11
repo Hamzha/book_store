@@ -1,4 +1,4 @@
-#!c:\users\hamza\documents\amena\book_store_fyp\venv\scripts\python.exe
+#!C:\Users\seeker\Documents\Django\book_store\venv\Scripts\python.exe
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 
