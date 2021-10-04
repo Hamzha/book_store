@@ -99,14 +99,16 @@
                     <div class="main-navigation flex-lg-right">
                         <ul class="main-menu menu-right ">
                             <li class="menu-item">
-                                <a href="cart.html" class="cart-link link-icon"><i class="ion-bag"></i></a>
+                                <a onclick="cart_click()" class="cart-link link-icon"><i class="ion-bag"></i></a>
                             </li>
-                            <li class="menu-item">
-                                <a href="#" class="wishlist-link"><i class="far fa-heart"></i></a>
-                            </li>
+
                             <li class="menu-item">
                                 <a href="#" class="account-link"><i class="far fa-user"></i></a>
                             </li>
+                            <li class="menu-item">
+                                <a  href="{% url 'admin-logout' %}" class="account-link"><i class="fas fa-sign-out-alt"></i></a>
+                            </li>
+
                         </ul>
                     </div>
                 </div>

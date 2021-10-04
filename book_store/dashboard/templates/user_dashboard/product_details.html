@@ -37,7 +37,7 @@
               "focusOnSelect": true
               }'>
                     <div class="single-slide">
-                        <img src="{{ book.cover_photo.url }}" alt="">
+                        <img src="{{ book.cover_photo.url }}" alt="Book Cover Photo">
                     </div>
 
                 </div>
@@ -61,19 +61,7 @@
                     <div class="add-to-cart-row">
 
                         <div class="add-cart-btn">
-                            <div class="dropdown show">
-                                <a class="btn btn-outlined&#45;&#45;primary dropdown-toggle" href="#" role="button"
-                                   id="dropdownMenuLink"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    BookMark
-                                </a>
-
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    {% for mark in bookMarks %}
-                                    <a class="dropdown-item" href="{% url 'user-read-book' book.book_id mark.bookmark_page_number %}">Page {{mark.bookmark_page_number}}</a>
-                                    {% endfor %}
-                                </div>
-                            </div>
+                          
                             <a href="{% url 'user-read-book' book.book_id 0 %}" class="btn btn-outlined&#45;&#45;primary">Read
                                 Now</a>
                         </div>

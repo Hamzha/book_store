@@ -19,7 +19,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
             integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
             crossorigin="anonymous"></script>
-
+    <script src="{% static 'user_dashboard/js/pspdfkit.js' %}"></script>
+<link href='https://fonts.googleapis.com/css?family=Allerta' rel='stylesheet'>
 </head>
 
 <body>
@@ -32,7 +33,7 @@
             <div class="breadcrumb-contents">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'user-dashboard' %}">Home</a></li>
                         {% block navbar_address %}
                         {% endblock navbar_address %}
                     </ol>
@@ -40,9 +41,7 @@
             </div>
         </div>
     </section>
-    <!--=============================================
-=            Login Register page content         =
-=============================================-->
+
     {% block content %}
 
     {% endblock content %}

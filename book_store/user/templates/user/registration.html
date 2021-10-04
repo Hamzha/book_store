@@ -431,7 +431,7 @@ stroke-dashoffset: 0;
                 Already have an account?
                 <a class="link login-anchor" href="/">Log in</a>
             </p>
-            <form id="form" action="{% url 'user-register' %}" method="post">
+            <form id="form" action="{% url 'user-signup' %}" method="post">
                 {% csrf_token %}
 
                 <div class="form-control">

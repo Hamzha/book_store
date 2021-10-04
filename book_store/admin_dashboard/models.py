@@ -46,3 +46,28 @@ class BookMark(models.Model):
     bookmark_user = models.ForeignKey(User, on_delete=models.CASCADE)
     bookmark_page_number = models.IntegerField()
     bookmark_text = models.TextField(max_length=200, null=True, blank=True)
+
+    def __str__(self):
+        return self.bookmark_page_number
+
+
+class QuickNote(models.Model):
+    QuickNote_id = models.AutoField(primary_key=True)
+    QuickNote_book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    QuickNote_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    QuickNote_page_number = models.IntegerField()
+    QuickNote_text = models.TextField(max_length=200, null=True, blank=True)
+
+
+class Wishlist(models.Model):
+    wishlist_id = models.AutoField(primary_key=True)
+    wishlist_book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    wishlist_user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Cart(models.Model):
+    cart_id = models.AutoField(primary_key=True)
+    cart_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cart_book = models.ManyToManyField(Book)
+    payment_status = models.CharField(max_length=200, null=True, blank=True)
+    cart_detail = models.CharField(max_length=200, null=True, blank=True)
