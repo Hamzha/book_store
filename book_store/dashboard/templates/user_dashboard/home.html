@@ -260,6 +260,7 @@
                         ]'>
 
                         {% for book in books %}
+
                         <div class="single-slide">
                             <div class="product-card">
                                 <div class="product-header">
@@ -273,12 +274,14 @@
                                         <img src="{{ book.cover_photo.url }}" alt="Book Cover image"
                                              style="height: 250px; width: 100%">
                                         <div class="hover-contents">
-                                            <a href="{% url 'user-product-detail' book.book_id %}"s class="hover-image">
+                                            <a href="{% url 'user-product-detail' book.book_id %}" class="hover-image">
                                             </a>
                                             <div class="hover-btns">
+                                                {% if not book.is_buy %}
                                                 <a onclick="add_to_cart({{book.book_id}})" class="single-btn">
                                                     <i id="cart-{{book.book_id}}"  class="fas fa-shopping-basket" title="Add to cart"></i>
                                                 </a>
+                                                {% endif %}
                                                 {% if book.book_wishlist %}
                                                     <a onclick="remove_to_wishlist({{book.book_id}})" class="single-btn">
                                                         <i id="wishlist-{{book.book_id}}" class="fas fa-heart red-icon"

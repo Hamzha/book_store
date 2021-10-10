@@ -56,9 +56,15 @@ def login(request):
 @login_required(login_url='/')
 def product_detail(request, product_id):
     book = Book.objects.filter(book_id=product_id).first()
-    print(book.book_type)
+    carts  = Cart.objects.filter(cart_user = request.user)
+
+    book = to_dict(book)
+    for cart in carts:
+        for book_tmp in cart.cart_book.all():
+            if book['book_id'] == book_tmp.book_id:
+                book['is_buy'] = True
     return render(request, 'user_dashboard/product_details.html',
-                  {'book': book, 'book_id': book.book_id})
+                  {'book': book, 'book_id': book['book_id']})
 
 
 # def dashboard(request):
@@ -172,8 +178,11 @@ def to_dict(instance):
 def dashboard(request):
     books = Book.objects.all()
     wishlists = Wishlist.objects.filter(wishlist_user=request.user)
+    carts = Cart.objects.filter(cart_user = request.user)
+
     book_list = []
     wishlist_list = []
+
     for book in books:
         book_list.append(to_dict(book))
     for wishlist in wishlists:
@@ -183,7 +192,11 @@ def dashboard(request):
         for wishlist_index, wishlist_item in enumerate(wishlist_list):
             if book_item['book_id'] == wishlist_item['wishlist_book']:
                 book_list[book_index]['book_wishlist'] = wishlist_item
-    #
+        for cart in carts:
+            for book in cart.cart_book.all():
+                if book_item['book_id'] == book.book_id:
+                    book_list[book_index]['is_buy'] = True
+
     # for book in books:
     #     for wishlist in wishlists:
     #         if book.book_id == wishlist.wishlist_book.book_id:
@@ -218,7 +231,6 @@ def add_to_cart(request, book_id):
 
 
 def set_cart(request):
-
     if request.method == 'GET':
         tmp = request.GET.dict()['cart']
         request.session['book_list'] = tmp
@@ -227,15 +239,15 @@ def set_cart(request):
 
 
 def cart(request):
-    book_list_ids =request.session.get('book_list', False)
-    book_list_ids = list(book_list_ids.replace('[','').replace(']','').split(","))
+    book_list_ids = request.session.get('book_list', False)
+    book_list_ids = list(book_list_ids.replace('[', '').replace(']', '').split(","))
     book_list_ids = [int(x) for x in book_list_ids]
     print(type(book_list_ids), book_list_ids)
-    books = Book.objects.filter(pk__in = book_list_ids)
+    books = Book.objects.filter(pk__in=book_list_ids)
     total = 0
     for book in books:
         total = book.price + total
-    return render(request, 'user_dashboard/cart.html', {'books':books, 'total': total})
+    return render(request, 'user_dashboard/cart.html', {'books': books, 'total': total})
 
 
 def cart_payment(request):
@@ -244,8 +256,17 @@ def cart_payment(request):
     book_list_ids = [int(x) for x in book_list_ids]
     print(type(book_list_ids), book_list_ids)
     books = Book.objects.filter(pk__in=book_list_ids)
-    cart = Cart.objects.create(cart_user = request.user, payment_status = 'Paid', cart_detail='Paid')
+    cart = Cart.objects.create(cart_user=request.user, payment_status='Paid', cart_detail='Paid')
     for book in books:
         cart.cart_book.add(book)
     cart.save()
     return HttpResponse('Success')
+
+
+def user_portal(request):
+    wishlist = Wishlist.objects.filter(wishlist_user=request.user)
+    print(wishlist)
+    carts = Cart.objects.filter(cart_user = request.user)
+    
+    print(carts)
+    return render(request, 'user_dashboard/user_portal.html', {'wishlists': wishlist, 'user': request.user, 'carts': carts})

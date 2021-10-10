@@ -61,9 +61,14 @@
                     <div class="add-to-cart-row">
 
                         <div class="add-cart-btn">
-                          
+                            {% if book.is_buy %}
                             <a href="{% url 'user-read-book' book.book_id 0 %}" class="btn btn-outlined&#45;&#45;primary">Read
                                 Now</a>
+                            {% else %}
+                            <a onclick="add_to_cart({{book.book_id}})" class="btn btn-outlined&#45;&#45;primary">
+                                Add To Cart</a>
+
+                            {% endif %}
                         </div>
                     </div>
 
@@ -75,7 +80,64 @@
         </div>
     </div>
 </main>
-<!-- <div class="tab-product-details">
+<script>
+    var cart = []
 
+function add_to_cart(book_id){
+    cart.push(book_id);
+
+}
+function cart_click(){
+    if(cart.length == 0){
+        alert('Empty Cart')
+    }
+    else{
+        console.log(cart)
+         $.ajax({
+            url:"/set_cart",
+            type: 'GET',
+            data: {
+                "cart": JSON.stringify(cart)
+                },
+            success: function(data){
+                window.location = "{% url 'user-cart' %}"
+            },
+            failure(data){
+
+            }
+        });
+    }
+}
+
+  function add_to_wishlist(book_id){
+        $.ajax({
+            url:"set_wishlist/"+parseInt(book_id),
+            type: 'get',
+            success: function(data){
+                alert('Added to Wishlist')
+                $('#wishlist-'+book_id).addClass('red-icon')
+            },
+            failure(data){
+
+            }
+        });
+    }
+
+    function remove_to_wishlist(book_id){
+        $.ajax({
+            url:"remove_wishlist/"+parseInt(book_id),
+            type: 'get',
+            success: function(data){
+                alert('Removed from Wishlist')
+                    $('#wishlist-'+book_id).removeClass('red-icon')
+
+            },
+            failure(data){
+
+            }
+        });
+    }
+
+</script>
 
 {% endblock %}

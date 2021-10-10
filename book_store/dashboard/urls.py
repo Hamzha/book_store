@@ -21,5 +21,6 @@ urlpatterns = [
     path('set_cart', views.set_cart, name='user-set-cart'),
     path('cart', views.cart, name='user-cart'),
     path('cart_payment', views.cart_payment, name='user-cart-payment'),
+    path('user_portal', views.user_portal, name='user-portal')
 
 ]
