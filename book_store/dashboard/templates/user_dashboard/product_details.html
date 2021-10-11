@@ -62,7 +62,7 @@
 
                         <div class="add-cart-btn">
                             {% if book.is_buy %}
-                            <a href="{% url 'user-read-book' book.book_id 0 %}" class="btn btn-outlined&#45;&#45;primary">Read
+                            <a href="{% url 'user-read-book' book.book_id 1 %}" class="btn btn-outlined&#45;&#45;primary">Read
                                 Now</a>
                             {% else %}
                             <a onclick="add_to_cart({{book.book_id}})" class="btn btn-outlined&#45;&#45;primary">

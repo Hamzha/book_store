@@ -78,8 +78,7 @@ def booK_reader(request, book_id, page_number=1):
     bookmarks = BookMark.objects.filter(bookmark_book=book, bookmark_user=request.user)
 
     if book.book_type != 'AUDIO':
-
-        return render(request, 'user_dashboard/book_read_2.html',
+        return render(request, 'user_dashboard/book_read.html',
                       {'book': book, 'page_number': page_number, 'bookMarks': bookmarks})
     else:
         bookmark_list = []
@@ -95,7 +94,8 @@ def booK_reader(request, book_id, page_number=1):
 
 def get_book(request, book_id):
     book = Book.objects.filter(book_id=book_id).values().first()
-    if book['book_type'] == 'pdf':
+    print(book['book_type'])
+    if book['book_type'] == 'PDF':
         return HttpResponse('/media/' + book['pdf'])
     else:
         return HttpResponse('/media/' + book['audio'])
@@ -116,11 +116,12 @@ def remove_bookmark(request, book_id, page_num):
         bookmark_user=request.user,
         bookmark_page_number=page_num
     ).delete()
+
     return HttpResponse('Success')
 
 
-def get_bookmark(request):
-    bookMarks = BookMark.objects.all()
+def get_bookmark(request,book_id):
+    bookMarks = BookMark.objects.filter(bookmark_book = book_id)
     bookMarks = serializers.serialize('json', bookMarks)
     return HttpResponse(bookMarks, content_type="text/json-comment-filtered")
 

@@ -134,7 +134,6 @@
     "
     >
         <canvas id="pdf-render" style="width: 100%"></canvas>
-        <div id="annotation-layer"></div>
 
     </div>
     <div style="width: 30%; height: 300px">
@@ -195,11 +194,13 @@
 <!--    <button id="open" type="button">Open Modal</button>-->
 <!--</div>-->
 <script>
+var book_mark = '/get_bookmark/'+{{book.book_id}};
+
 document.addEventListener("DOMContentLoaded", function() {
     var bookmarks = [];
     var quick_notes = [];
     $.ajax({
-        url: '/get_bookmark',
+        url: book_mark,
         type: 'get',
         dataType: 'json',
         success: function(data) {
@@ -215,7 +216,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         console.log('insert');
                         $('.bookmark-true').show();
                         $('.bookmark-false').hide();
-
                         break;
                     } else {
                         $('.bookmark-true').hide();
@@ -247,7 +247,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         break;
                     }
                 }
-            }, 2000);
+            }, 050);
         },
         failure: function(data) {
             console.log(data)
@@ -299,7 +299,7 @@ $.ajax({
 var bookmarks = [];
 
 $.ajax({
-    url: '/get_bookmark',
+    url: book_mark,
     type: 'get',
     dataType: 'json',
     success: function(data) {
@@ -324,7 +324,7 @@ $.ajax({
 
 let url_pdf = null;
 $.ajax({
-    url: '{% url "user-get-book" 16 %}',
+    url: '{% url "user-get-book" book.book_id %}',
     type: 'get', // This is the default though, you don't actually need to always mention it
     success: function(data) {
         url_pdf = data;
@@ -469,8 +469,9 @@ function save_bookmark(book_id) {
 
 function remove_bookmark(book_id) {
     let page = $('#page-num').text();
-    let url_save_bookmark = '/remove_bookmark/' + book_id + '/' + page;
 
+    let url_save_bookmark = '/remove_bookmark/' + book_id + '/' + page;
+    console.log(url_save_bookmark)
     $.ajax({
         url: url_save_bookmark,
         type: 'get', // This is the default though, you don't actually need to always mention it
