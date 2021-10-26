@@ -1,6 +1,10 @@
 {% extends 'user_dashboard/base.html' %}
 {% load static %}
 {% block navbar_address %}
+<li class="breadcrumb-item"><a href="{% url 'user-product-detail' book.book_id %}">Product Detail</a></li>
+
+<li class="breadcrumb-item active">{{book.title}}</li>
+
 {% endblock navbar_address %}
 {% block content %}
 
@@ -48,56 +52,77 @@
     width: 100%;
     height: 100%;
 }
+
+
+
+
 </style>
 
-<div class="top-bar-book">
-    <button class="btn" id="prev-page">
-        <i class="fas fa-arrow-circle-left"></i>
-        &ensp; Prev Page
-    </button>
-    <button class="btn" id="next-page">
-        Next Page &ensp;<i class="fas fa-arrow-circle-right"></i>
-    </button>
-    <span class="page-info">
+<div class="top-bar-book row" style="margin-left: 21%; width: 79%">
+    <div style="width: 30%; font-size: 10px">
+        <button class="btn" id="prev-page" style="padding-left:18px; padding-right: 18px; font-size: 10px">
+            <i class="fas fa-arrow-circle-left"></i>
+            &ensp; Prev Page
+        </button>
+        <span class="page-info" style="margin-left: 2%; margin-right: 2%">
     Page <span id="page-num"></span> of <span id="page-count"></span>
-  </span>
-</div>
+    </span>
+        <button class="btn" id="next-page" style="padding-left:18px; padding-right: 18px; font-size: 10px">
+            Next Page &ensp;<i class="fas fa-arrow-circle-right"></i>
+        </button>
+    </div>
+    <div class="input-group" style="width: 30%; margin-left:5%">
+        <input
+                type="text"
+                class="form-control"
+                placeholder="Enter a word"
+                aria-label="Enter a word"
+                aria-describedby="basic-addon2"
+                id="search_word"
+                style="    height: auto;"
+        />
+        <div class="input-group-append">
+            <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    style="box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); padding-left: 20px;padding-right: 20px"
+                    onclick="search_online()"
+                    data-toggle="modal"
+                    data-target="#myModal"
+            >
+                Search
+            </button>
+        </div>
+    </div>
+    <div style="width:22%; margin-left:2%">
+        <button class="bookmark-false" title="Add Bookamrk" style="height: 50px;">
+            <img
+                    src="{% static 'user_dashboard/image/bookmark-false.png' %}"
+                    style="height: 50px"
+                    onclick="save_bookmark({{book.book_id}})"
+            />
+        </button>
 
-<div class="input-group mb-3 col-md-4 col-7" style="margin: auto">
-    <input
-            type="text"
-            class="form-control"
-            placeholder="Enter a word"
-            aria-label="Enter a word"
-            aria-describedby="basic-addon2"
-            id="search_word"
-    />
-    <div class="input-group-append">
-        <button
-                class="btn btn-outline-secondary"
-                type="button"
-                style="box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2)"
-                onclick="search_online()"
-                data-toggle="modal"
-                data-target="#myModal"
-        >
-            Search
+        <button class="bookmark-true" title="Remove Bookmark" style="height: 50px;">
+            <img
+                    src="{% static 'user_dashboard/image/bookmark-true.png' %}"
+                    style="height: 50px"
+                    onclick="remove_bookmark({{book.book_id}})"
+            />
         </button>
     </div>
 </div>
 
-<div id="myModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="search-modal-title"
-                        style="font-size: 38px; font-weight: bold"
-                ></h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    &times;
+                <h5 class="modal-title" id="exampleModalLabel">Word: </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" style="padding: 5%">
+            <div class="modal-body">
                 <div>
                     <p style="font-size: 20px">Origin:</p>
                     <p class="search-modal-origin"></p>
@@ -105,7 +130,7 @@
                     <p style="font-size: 20px">Part of Speech:</p>
                     <p class="search-modal-part-of-speech"></p>
 
-                    <p style="font-size: 20px">definition:</p>
+                    <p style="font-size: 20px">Definition:</p>
                     <p class="search-modal-definition"></p>
 
                     <p style="font-size: 20px">Example:</p>
@@ -115,30 +140,24 @@
                     <p class="search-modal-synonyms"></p>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    Close
-                </button>
-            </div>
+
         </div>
     </div>
 </div>
-
-<div class="row">
+<div class="row" style="margin-left: 21%; width: 79%; margin-bottom: 20px " >
     <div
             style="
       margin-top: 50px;
-      margin: 0 auto;
       box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.8);
-      width: 60%;
+      width: 40%;
     "
     >
         <canvas id="pdf-render" style="width: 100%"></canvas>
 
     </div>
-    <div style="width: 30%; height: 300px">
+    <div style="width: 30%; margin-top: 50px;height: fit-content; margin-left: 5%">
         <!--        <button class="btn btn-primary" onclick="save_bookmark({{book.book_id}})">BookMark this page</button>-->
-        <div class="dropdown show" style="margin-bottom: 20px">
+        <div class="dropdown show" style="margin-bottom: 20px; ">
             <a
                     class="btn btn-outlined&#45;&#45;primary dropdown-toggle"
                     href="#"
@@ -147,41 +166,35 @@
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
+                     style=" padding-left:20px; padding-right: 20px; font-size: 10px"
             >
                 BookMark
             </a>
 
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="width: 110px; min-width:110px">
                 {% for mark in bookMarks %}
                 <a
-                        class="dropdown-item"
+                        class="dropdown-item" style="font-size: 10px; width: 110px"
                         href="{% url 'user-read-book' book.book_id mark.bookmark_page_number %}"
                 >Page {{mark.bookmark_page_number}}</a>
                 {% endfor %}
             </div>
         </div>
         <div>
-            <button class="bookmark-false" title="Add Bookamrk">
-                <img
-                        src="{% static 'user_dashboard/image/bookmark-false.png' %}"
-                        style="height: 100px"
-                        onclick="save_bookmark({{book.book_id}})"
-                />
-            </button>
 
-            <button class="bookmark-true" title="Remove Bookmark">
-                <img
-                        src="{% static 'user_dashboard/image/bookmark-true.png' %}"
-                        style="height: 100px"
-                        onclick="remove_bookmark({{book.book_id}})"
-                />
-            </button>
 
         </div>
         <h3 style="margin-top: 50px;"> Quick Notes</h3>
-        <textarea style="margin-top: 00px;width: 350px; height: 400px; padding: 10px" id="book_quick_notes"></textarea>
+        <textarea style="margin-top: 00px;width: 50%; height: 50%; padding: 10px" id="book_quick_notes"></textarea>
         <div>
-            <button class="btn" style="margin-top: 10px;background: grey; width:auto" onclick="save_quick_notes({{book.book_id}})"> Save</button>
+            <button class="btn" style="margin-top: 10px;background: grey;color: white;font-size:15px; width:50px"
+                    onclick="save_quick_notes({{book.book_id}})"> Save
+            </button>
+        </div>
+        <div style="margin-top:15px" id="quiz-attempt">
+            <button class="btn" style="margin-top: 10x;background: grey;color: white;font-size: 15px;width: 180px;padding-left: 5px;padding-right: 5px;"
+                    ><a href="{% url 'user_attempt_quiz' book.book_id %}">Attempt the quiz</a>
+            </button>
         </div>
     </div>
 
@@ -199,6 +212,8 @@ var book_mark = '/get_bookmark/'+{{book.book_id}};
 document.addEventListener("DOMContentLoaded", function() {
     var bookmarks = [];
     var quick_notes = [];
+            $('#quiz-attempt').hide();
+
     $.ajax({
         url: book_mark,
         type: 'get',
@@ -222,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         $('.bookmark-false').show();
                     }
                 }
-            }, 2000);
+            }, 1000);
         },
         failure: function(data) {
             console.log(data)
@@ -230,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     $.ajax({
-        url: '/get_quick_notes',
+        url: '/get_quick_notes/',
         type: 'get',
         dataType: 'json',
         success: function(data) {
@@ -253,8 +268,6 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log(data)
         }
     });
-
-
 });
 
 function save_quick_notes(book_id) {
@@ -324,6 +337,7 @@ $.ajax({
 
 let url_pdf = null;
 $.ajax({
+
     url: '{% url "user-get-book" book.book_id %}',
     type: 'get', // This is the default though, you don't actually need to always mention it
     success: function(data) {
@@ -428,21 +442,27 @@ $.ajax({
 });
 
 function search_online() {
+
     let word = $('#search_word').val();
     $.ajax({
         url: 'https://api.dictionaryapi.dev/api/v2/entries/en/' + word,
         type: 'get', // This is the default though, you don't actually need to always mention it
         success: function(data) {
+            $('#exampleModalLabel').text('Word: '+word)
             $('.search-modal-title').text($('#search_word').val());
             $('.search-modal-origin').text(data[0].origin);
             $('.search-modal-part-of-speech').text(data[0].meanings[0].partOfSpeech);
             $('.search-modal-definition').text(data[0].meanings[0].definitions[0].definition);
             $('.search-modal-example').text(data[0].meanings[0].definitions[0].example);
-            $('.search-modal-synonyms').text(data[0].meanings[0].definitions[0].synonyms);
-
-
-            $(".btn").click(function() {
-                $("#myModal").modal('show');
+            console.log((data[0].meanings[0].definitions[0].synonyms))
+            var synonyms = '';
+            console.log(data[0].meanings[0].definitions[0].synonyms.length)
+            for(var i=0; i < data[0].meanings[0].definitions[0].synonyms.length; i++){
+                synonyms = synonyms + data[0].meanings[0].definitions[0].synonyms[i]+', ';
+            }
+            $('.search-modal-synonyms').text(synonyms);
+            $('#myModal').on('shown.bs.modal', function () {
+                $('#myInput').trigger('focus')
             });
         },
         failure: function(data) {
@@ -486,7 +506,6 @@ function remove_bookmark(book_id) {
 }
 
 
-
 $('#next-page').click(function() {
 
     for (let i = 0; i < bookmarks.length; i++) {
@@ -510,6 +529,12 @@ $('#next-page').click(function() {
             $('#book_quick_notes').text('');
         }
     }
+    console.log('test',$('#page-num').text() , $('#page-count').text())
+    if (parseInt($('#page-num').text())+1 == parseInt($('#page-count').text())){
+        console.log('Last Page');
+        $('#quiz-attempt').show();
+    }
+    console.log('test')
 
 });
 
@@ -539,6 +564,10 @@ $('#prev-page').click(function() {
     }
 
 });
+
+
+
+
 
 
 </script>

@@ -1,0 +1,115 @@
+{% extends 'dashboard/base.html' %}
+{% load widget_tweaks %}
+
+{% block dashboard_title %}
+Deal List
+{% endblock %}
+
+
+<!-- navbar address -->
+{% block navbar_address %}
+<li class="breadcrumb-item active">Deal List</li>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<!-- form start -->
+<div class="content">
+
+    <div class="card-body">
+
+        <div class="card" style="height: 727px;">
+            <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title">All Deal List</h3>
+                    <a href="{% url 'admin-add-deal' %}">Add New Deal</a>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <!-- Book list card -->
+            <div class="card-body table-responsive p-0">
+
+                <table class="table table-head-fixed text-nowrap">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">Deal Name</th>
+                        <th style="text-align: center;">valid Upto</th>
+                        <th style="text-align: center;">Percentage off</th>
+                        <th style="text-align: center;">Books</th>
+                        <th style="text-align: center;">Delete </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for deal in deals %}
+                    <tr>
+                        <td style="text-align: center;    vertical-align: middle;">{{ deal.deal_title }}</td>
+                        <td style="text-align: center;     vertical-align: middle;">{{ deal.deal_valid_upto }}</td>
+                        <td style="text-align: center;    vertical-align: middle;">{{ deal.deal_percentage }}%</td>
+                        <td style="text-align: center;    vertical-align: middle;">{% for book in deal.deal_book.all %} {{book.title}}</br> {% endfor %}</td>
+                         <td style="text-align: center;">
+                            <a data-toggle="modal" href="#admin-modal-delete-deal-{{deal.deal_id}}">
+                                <i
+                                        class="fas fa-trash-alt"
+                                        style="color:red">
+                                </i>
+                                <div class="modal fade" id="admin-modal-delete-deal-{{deal.deal_id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content bg-danger">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Delete a Deal</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are yuo sure you want to delete This Deal?</p>
+                                                <p>Name: {{deal.deal_title}}</p>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-outline-light"
+                                                        data-dismiss="modal">
+                                                    Close
+                                                </button>
+
+                                                <button onclick="delete_deal({{deal.deal_id}})" type="button"
+                                                        class="btn btn-outline-light">Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                            </a>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.card-body -->
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function delete_deal(deal_id){
+        $.ajax({
+            url: 'delete_deal/'+parseInt(deal_id),
+            type: 'get', // This is the default though, you don't actually need to always mention it
+            success: function(data) {
+                window.location.href = '';
+            },
+            failure: function(data) {
+                alert('Not successful!');
+            }
+        });
+    }
+
+</script>
+
+{% endblock %}

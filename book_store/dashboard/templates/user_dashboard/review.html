@@ -1,0 +1,136 @@
+{% extends 'user_dashboard/base.html' %}
+
+{% load static %}
+{% block navbar_address %}
+
+<li class="breadcrumb-item">
+    <a href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a>
+</li>
+
+<li class="breadcrumb-item active">Review</li>
+
+{% endblock navbar_address %}
+{% block content %}
+
+<!--<embed src="{% url 'user-get-book' 16 %}" type="application/pdf" height="700px" width="500">-->
+
+<!--<embed src='{{books.pdf}}' style="width:718px; height:700px;" frameborder="0">-->
+
+<style>
+.star-rating form {
+    display: none;
+}
+.star-rating .thanks-msg {
+    display: none;
+    font-size: 20px;
+    margin: 40px auto;
+    color: #4caf50;
+    background-color: rgba(76, 175, 80, 0.1411764705882353);
+    padding: 8px 20px;
+    border-left: 3px solid #4caf50;
+    border-radius: 20px;
+}
+.star-rating input {
+    display: none;
+}
+.star-rating label {
+    padding: 10px;
+    float: right;
+    font-size: 20px;
+    color: #eee;
+}
+.star-rating input:not(:checked) ~ label:hover,
+.star-rating input:not(:checked) ~ label:hover ~ label {
+    color: #ffc107;
+}
+.star-rating input:checked ~ label {
+    color: #ffc107;
+}
+.star-rating form .rating-reaction:before {
+    width: 100%;
+    float: left;
+    color: #ffc107;
+}
+.star-rating #rating-1:checked ~ form .rating-reaction:before {
+    content: "I hate it";
+}
+.star-rating #rating-2:checked ~ form .rating-reaction:before {
+    content: "I don't like it";
+}
+.star-rating #rating-3:checked ~ form .rating-reaction:before {
+    content: "It is good";
+}
+.star-rating #rating-4:checked ~ form .rating-reaction:before {
+    content: "I like it";
+}
+.star-rating #rating-5:checked ~ form .rating-reaction:before {
+    content: "I love it";
+}
+.star-rating input:checked ~ form {
+    border-top: 1px solid #ddd;
+    width: 100%;
+    padding-top: 15px;
+    margin-top: 15px;
+    display: inline-block;
+}
+.star-rating form .rating-reaction {
+    font-size: 24px;
+    float: left;
+    text-transform: capitalize;
+}
+
+
+
+</style>
+<div style="margin-left: 21%;margin-right:21%">
+    <div class="row">
+        <img src="{{book.cover_photo.url}}"/>
+        <form class="star-rating" id="myForm" style="margin-left: 5%" onsubmit="return mySubmitFunction(event)" >
+            <h2 style="font-weight: 600">Ratings</h2>
+            <div class="star-input" style="margin-left: -22px;">
+                <input type="radio" value="5" name="rating" id="rating-5">
+                <label for="rating-5" class="fas fa-star"></label>
+                <input type="radio" value="4" name="rating" id="rating-4">
+                <label for="rating-4" class="fas fa-star"></label>
+                <input type="radio" value="3" name="rating" id="rating-3">
+                <label for="rating-3" class="fas fa-star"></label>
+                <input type="radio" value="2" name="rating" id="rating-2">
+                <label for="rating-2" class="fas fa-star"></label>
+                <input type="radio" value="1" name="rating" id="rating-1">
+                <label for="rating-1" class="fas fa-star"></label>
+            </div>
+             <textarea class="review" style="width:150%;height: 250px;padding: 2%;"></textarea>
+            <button class="btn btn-primary" type="submit" style="padding-left:8%; padding-right:8%"> Submit </button>
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+function mySubmitFunction(e) {
+    e.preventDefault();
+    var rating =  $('input[name=rating]:checked', '#myForm').val()
+    if(rating === undefined){
+        alert('Please Give your Ratings!')
+    }else if($('.review').val().length == 0){
+        alert('Please Write your Reviews!')
+    }else{
+        var obj = new Object();
+        obj.rating = rating;
+        obj.review = $('.review').val();
+        obj.csrfmiddlewaretoken = "{{csrf_token}}";
+        var jsonString= JSON.stringify(obj);
+        $.ajax({
+            url: "{% url 'user-save-review' book.book_id %}",
+            type: 'get',
+            data: {'data' : jsonString},
+            success: function(data) {
+            },
+            failure: function(data) {}
+        });
+    }
+  return false;
+}
+</script>
+{% endblock %}

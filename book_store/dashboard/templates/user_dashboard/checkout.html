@@ -1,0 +1,201 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+{% block navbar_address %}
+<li class="breadcrumb-item active">Cart</li>
+
+
+{% endblock navbar_address %}
+{% block content %}
+<main id="content" class="page-section inner-page-sec-padding-bottom space-db--20">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Checkout Form s-->
+                <div class="checkout-form">
+                    <div class="row row-40">
+                        <div class="col-12">
+                            <h1 class="quick-title">Checkout</h1>
+
+
+                            <!-- Slide Down Trigger  -->
+<!--                            <div class="checkout-quick-box">-->
+<!--                                <p><i class="far fa-sticky-note"></i>Have a coupon? <a href="javascript:"-->
+<!--                                                                                       class="slide-trigger"-->
+<!--                                                                                       data-target="#quick-cupon">-->
+<!--                                    Click here to enter your code</a></p>-->
+<!--                            </div>-->
+                            <!-- Slide Down Blox ==> Cupon Box -->
+<!--                            <div class="checkout-slidedown-box" id="quick-cupon">-->
+<!--                                <form action="./">-->
+<!--                                    <div class="checkout_coupon">-->
+<!--                                        <input type="text" class="mb-0" placeholder="Coupon Code">-->
+<!--                                        <a href="" class="btn btn-outlined">Apply coupon</a>-->
+<!--                                    </div>-->
+<!--                                </form>-->
+<!--                            </div>-->
+                        </div>
+                        <div class="col-lg-7 mb--20">
+                            <!-- Billing Address -->
+                            <div id="billing-form" class="mb-40">
+                                <h4 class="checkout-title">Payment Details</h4>
+                                <div class="row">
+                                    <div class="col-md-6 col-12 mb--20">
+                                        <label>First Name*</label>
+                                        <input type="text" id="first_name" placeholder="First Name">
+                                    </div>
+                                    <div class="col-md-6 col-12 mb--20">
+                                        <label>Last Name*</label>
+                                        <input type="text" placeholder="Last Name" id="last_name">
+                                    </div>
+
+                                    <div class="col-12 col-12 mb--20">
+                                        <label>Card Holder Name</label>
+
+                                        <input type="Card Holder Name" placeholder="Card Holder Name" id="card_holder_name">
+                                    </div>
+                                    <div class="col-md-6 col-12 mb--20">
+                                        <label>Email Address*</label>
+                                        <input type="email" placeholder="Email Address" id="email_address">
+                                    </div>
+                                    <div class="col-md-6 col-12 mb--20">
+                                        <label>Phone no*</label>
+                                        <input type="number" placeholder="Phone number" id="phone_number">
+                                    </div>
+                                    <div class="col-lg-6 col-12 mb--20">
+                                        <label>Card Number*</label>
+                                        <input type="number" placeholder="Credit Card Number" id="card_holder_number">
+
+
+                                        <p><img style="width: 40px; height: 20px;"
+                                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Former_Visa_%28company%29_logo.svg/3072px-Former_Visa_%28company%29_logo.svg.png">
+                                            <img style="width: 40px; height: 20px;"
+                                                 src="https://w7.pngwing.com/pngs/92/785/png-transparent-mastercard-logo-mastercard-credit-card-payment-visa-nyse-ma-mastercard-logo-text-logo-sign.png">
+                                        </p>
+
+
+                                    </div>
+                                    <div class="col-md-3 col-3 mb--20">
+                                        <label>Expiry Month*</label>
+                                        <select class="nice-select">
+                                            <option>01</option>
+                                            <option>02</option>
+                                            <option>03</option>
+                                            <option>04</option>
+                                            <option>05</option>
+                                            <option>06</option>
+                                            <option>07</option>
+                                            <option>08</option>
+                                            <option>09</option>
+                                            <option>10</option>
+                                            <option>11</option>
+                                            <option>12</option>
+                                        </select>
+
+
+                                    </div>
+                                    <div class="col-md-3 col-3 mb--20">
+                                        <label>Expiry Year</label>
+                                        <select class="nice-select">
+                                            <option>21</option>
+                                            <option>22</option>
+                                            <option>23</option>
+                                            <option>24</option>
+                                            <option>25</option>
+                                            <option>26</option>
+                                            <option>27</option>
+                                            <option>28</option>
+                                            <option>29</option>
+                                            <option>30</option>
+                                            <option>31</option>
+                                            <option>32</option>
+                                        </select>
+
+
+                                    </div>
+                                    <div class="col-md-6 col-12 mb--20">
+                                        <label>Security Code*</label>
+                                        <input type="number" placeholder="Security Code" id="security_code">
+
+                                        <p style="color:grey; font-size: smaller;"><img
+                                                style="width: 40px; height: 20px;"
+                                                src="https://img.favpng.com/14/4/11/card-security-code-credit-card-debit-card-payment-card-number-mastercard-png-favpng-gaQfTnLjrmr2GUKmYCChuwyCx.jpg">
+                                            3 digits on back of card</p>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="row">
+                                <!-- Cart Total -->
+                                <div class="col-12">
+                                    <div class="checkout-cart-total">
+                                        <h2 class="checkout-title">YOUR ORDER</h2>
+                                        <h4>Product <span>Total</span></h4>
+                                        <ul>
+                                            {% for book in books %}
+                                            <li><span class="left">{{book.title}}</span> <span
+                                                    class="right"><strong>Rs</strong> {{book.price}}</span></li>
+                                            {% endfor %}
+                                        </ul>
+                                        <p>Sub Total <span><strong>Rs</strong> {{book_total}}</span></p>
+                                        <p>Discount <span><strong>Rs</strong> {{discount}}</span></p>
+                                        <h4>Grand Total <span><strong>Rs</strong> {{amount}}</span></h4>
+
+                                        <div class="term-block">
+                                            <input type="checkbox" id="accept_terms2">
+                                            <label for="accept_terms2">I’ve read and accept the terms &
+                                                conditions</label>
+                                        </div>
+                                        <button onclick="check_parameters()" class="place-order w-100">Place order</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<script>
+    function check_parameters(){
+        if($('#first_name').val().length == 0){
+            alert('please input First Name')
+        }else if($('#last_name').val().length == 0){
+            alert('Please input Last Name')
+        }else if($('#card_holder_name').val().length == 0){
+            alert('Please input Card Holder Name')
+        }else if($('#email_address').val().length == 0){
+            alert('Please input Email Address')
+        }else if($('#phone_number').val().length == 0){
+            alert('Please input Phone Number')
+        }else if($('#card_holder_number').val().length == 0){
+            alert('Please input Card Holder Number')
+        }else if($('#card_holder_number').val().length == 0){
+            alert('Please input Card Holder Number')
+        }else if($('#security_code').val().length == 0){
+            alert('Please input Security Code')
+        }else if($('#accept_terms2').is(":checked") == false){
+            alert('Please Accept the Term and Condition')
+        }else{
+            $.ajax({
+                url:"payment_final",
+                type: 'GET',
+                success: function(data){
+                    window.location = "{% url 'user-dashboard' %}"
+                },
+                failure(data){}
+            });
+        }
+
+    }
+</script>
+
+{% endblock content %}

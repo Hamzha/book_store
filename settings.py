@@ -48,7 +48,9 @@ INSTALLED_APPS = [
 ]
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
-
+AUTHENTICATION_BACKENDS = (
+        'django.contrib.auth.backends.ModelBackend',
+    )
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -91,7 +93,7 @@ AUTH_USER_MODEL = 'user.user'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'book_store_fyp',
+        'NAME': 'new_book_store',
         'USER': 'postgres',
         'PASSWORD': 'hamza',
         'HOST': 'localhost'

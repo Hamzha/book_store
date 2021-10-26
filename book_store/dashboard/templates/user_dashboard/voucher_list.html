@@ -1,0 +1,51 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+{% block navbar_address %}
+
+<li class="breadcrumb-item">Vouchers</li>
+{% endblock navbar_address %}
+
+
+{% block content %}
+
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+</style>
+
+
+<div class="col-12" style="    text-align: -webkit-center;; margin-bottom: 50px">
+
+    <table class="col-8">
+        <tr>
+            <th>Detail</th>
+            <th>Credit</th>
+            <th>Code</th>
+        </tr>
+
+        {% for voucher in vouchers %}
+        <tr>
+            <td>{{voucher.voucher.description}}</td>
+            <td>{{voucher.voucher.credit}}</td>
+            <td>{{voucher.voucher.code}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+{% endblock %}

@@ -198,6 +198,68 @@
                     </ul>
                 </li>
 
+                <li class="nav-item {% if url_name == 'admin-add-quiz' %}menu-is-opening menu-open{% endif %} {% if url_name == 'admin-list-quiz' %}menu-is-opening menu-open{% endif %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            Quiz Menu
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'admin-add-quiz' %}"
+                               class="nav-link {% if url_name == 'admin-add-quiz' %}active{% endif %}">
+                                <i class="nav-icon fas fa-plus"></i>
+                                <p>
+                                    Add Quiz
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin-list-quiz' %}"
+                               class="nav-link {% if url_name == 'admin-list-quiz' %}active{% endif %}">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>
+                                    List Quiz
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="nav-item {% if url_name == 'admin-add-deal' %}menu-is-opening menu-open{% endif %} {% if url_name == 'admin-list-deal' %}menu-is-opening menu-open{% endif %}">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            Deals Menu
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'admin-add-deal' %}"
+                               class="nav-link {% if url_name == 'admin-add-deal' %}active{% endif %}">
+                                <i class="nav-icon fas fa-plus"></i>
+                                <p>
+                                    Add Deal
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'admin-list-quiz' %}"
+                               class="nav-link {% if url_name == 'admin-list-deal' %}active{% endif %}">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>
+                                    List Deal
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
             </ul>
             {% endwith %}
 

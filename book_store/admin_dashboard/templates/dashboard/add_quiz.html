@@ -1,0 +1,198 @@
+{% extends 'dashboard/base.html' %}
+{% load widget_tweaks %}
+
+{% block dashboard_title %}
+Add Quiz
+{% endblock %}
+
+
+<!-- navbar address -->
+{% block navbar_address %}
+<li class="breadcrumb-item active">Add Quiz</li>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<!-- form start -->
+<div class="form-group">
+    <label>Question Type</label>
+    <select name="book_type" class="form-control input" id="id_quiz_type">
+        <option >Select the Type</option>
+
+        <option value="MCQ">MCQs</option>
+
+        <option value="FITB">Question</option>
+    </select>
+</div>
+<!--    MCQs    -->
+<form method="post" id="mcq_form" >
+    {% csrf_token %}
+    <h3>MCQ</h3>
+    <div class="form-group">
+        <label>Question Title</label>
+        <textarea class="form-control input" required placeholder="Question Title" id="mcq_question_title"></textarea>
+    </div>
+
+    <div class="row form-group" style="margin-left:0.1%">
+        <div class="form-group" style="width:30%">
+            <label>Option 1</label>
+            <input class="form-control input" required placeholder="Option" id="mcq_option_1"/>
+        </div>
+
+        <div class="form-group" style="width: 30%; margin-left:5%">
+            <label>Option 2</label>
+            <input class="form-control input" required placeholder="Option" id="mcq_option_2"/>
+        </div>
+
+    </div>
+
+    <div class="row form-group" style="margin-left:0.1%">
+        <div class="form-group" style="width:30%">
+            <label>Option 3</label>
+            <input class="form-control input" required placeholder="Option" id="mcq_option_3"/>
+        </div>
+
+        <div class="form-group" style="width: 30%; margin-left:5%">
+            <label>Option 4</label>
+            <input class="form-control input" required placeholder="Option" id="mcq_option_4"/>
+        </div>
+
+    </div>
+    <div class="form-group" style="width: 10%" >
+        <label>Correct Option</label>
+        <input class="form-control input" required placeholder="Correct option" id="mcq_answer"/>
+    </div>
+     <div class="form-group" style="width:30%">
+        <label> Select Books</label>
+            <select class="form-control selectpicker" required aria-label="size 3 select example" id="mcq_book">
+                {% for book in books %}
+                <option value="{{book.book_id}}">{{book.title}}</option>
+                {% endfor %}
+            </select>
+    </div>
+    <div class="card-footer">
+        <button type="submit" value="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<form method="post" id="question_form">
+
+    <h3>Question</h3>
+    <div class="form-group">
+        <label>Question Title</label>
+        <textarea class="form-control input" placeholder="Question Title" id="question_title"></textarea>
+    </div>
+
+    <div class="form-group" style="width:30%">
+        <label>Answer</label>
+        <input class="form-control input" placeholder="Option" id="question_answer"/>
+    </div>
+     <div class="form-group" style="width:30%">
+        <label> Select Books</label>
+
+            <select class="form-control selectpicker" required aria-label="size 3 select example" id="question_book">
+                {% for book in books %}
+                <option value="{{book.book_id}}">{{book.title}}</option>
+                {% endfor %}
+            </select>
+    </div>
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+</form>
+
+
+<script>
+$(document).ready(function(){
+    $('#mcq_form').hide();
+    $('#question_form').hide();
+
+    $('#id_quiz_type').change(function(){
+        if ( $(this).val() == 'MCQ' ){
+            $('#mcq_form').show();
+            $('#question_form').hide();
+            $('#game_form').hide();
+        }
+        if ( $(this).val() == 'FITB' ){
+            $('#mcq_form').hide();
+            $('#question_form').show();
+            $('#game_form').hide();
+        }
+        if ( $(this).val() == 'GAME' ){
+            $('#mcq_form').hide();
+            $('#question_form').hide();
+            $('#game_form').show();
+        }
+    })
+
+    $("#mcq_form").on('submit', function (e) {
+        //ajax call here
+        console.log('test')
+        e.preventDefault();
+
+        question = $('#mcq_question_title').val();
+        option_1 = $('#mcq_option_1').val();
+        option_2 = $('#mcq_option_2').val();
+        option_3 = $('#mcq_option_3').val();
+        option_4 = $('#mcq_option_4').val();
+        mcq_answer = $('#mcq_answer').val();
+        var obj = new Object();
+        obj.question = question;
+        obj.option_1 = option_1;
+        obj.option_2 = option_2;
+        obj.option_3 = option_3;
+        obj.option_4 = option_4;
+        obj.mcq_answer = mcq_answer
+        obj.mcq_book = $('#mcq_book').val();
+        obj.csrfmiddlewaretoken = "{{csrf_token}}";
+        var jsonString= JSON.stringify(obj);
+        console.log(jsonString)
+        
+        $.ajax({
+            url: "{% url 'admin-save-mcqs' %}",
+            type: 'get',
+            data: {'data' : jsonString},
+            success: function(data) {
+                window.location = "{% url 'admin-list-quiz' %}"
+            },
+            failure: function(data) {}
+        });
+        console.log(question, option_1, option_2, option_3, option_4);
+        //stop form submission
+    });
+
+    $("#question_form").on('submit', function (e) {
+        //ajax call here
+        console.log('test')
+        e.preventDefault();
+
+        question = $('#question_title').val();
+        answer = $('#question_answer').val();
+
+        var obj = new Object();
+        obj.question = question;
+        obj.answer = answer;
+        obj.question_book = $('#question_book').val();
+        obj.csrfmiddlewaretoken = "{{csrf_token}}";
+        var jsonString= JSON.stringify(obj);
+        console.log(jsonString)
+        $.ajax({
+            url: "{% url 'admin-save-question' %}",
+            type: 'get',
+            data: {'data' : jsonString},
+            success: function(data) {
+                window.location = "{% url 'admin-list-quiz' %}"
+            },
+            failure: function(data) {}
+        });
+        console.log(question, answer);
+        //stop form submission
+    });
+
+
+});
+
+</script>
+
+{% endblock %}

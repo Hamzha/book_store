@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import widgets
 
-from .models import Book, DealVoucher, DealVoucherUser
+from .models import Book, Voucher, VoucherUser
 from ..user.models import User, Mode
 
 GENRE = [
@@ -34,9 +34,8 @@ BOOK_STATUS = [
 ]
 
 BOOK_TYPE = [
-    ('BOTH', 'BOTH'),
+    ('BOTH', 'BOTH AUDIO AND PDF'),
     ('PDF', 'PDF'),
-    ('AUDIO', 'AUDIO')
 ]
 
 VOUCHER_TYPE = [
@@ -54,17 +53,21 @@ class book_form(forms.ModelForm):
     genre = forms.CharField(widget=forms.Select(choices=GENRE))
     price = forms.FloatField(required=True)
     author = forms.CharField(max_length=100, required=True)
-    book_status = forms.CharField(max_length=100, initial='Pending', required=True,
-                                  widget=forms.Select(choices=BOOK_STATUS))
+
     cover_photo = forms.ImageField(required=True)
     book_type = forms.CharField(required=True, widget=forms.Select(choices=BOOK_TYPE))
     pdf = forms.FileField(required=False)
     audio = forms.FileField(required=False)
+    adult_mode = forms.BooleanField(required=False,widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    free_book = forms.BooleanField(required=False)
+    best_seller =forms.BooleanField(required=False)
+    summary = forms.Textarea()
 
     class Meta:
         model = Book
-        fields = ('title', 'year_of_publish', 'no_of_pages', 'genre', 'price', 'author', 'book_status', 'cover_photo',
-                  'book_type', 'audio', 'pdf')
+        fields = (
+        'title', 'year_of_publish', 'no_of_pages', 'genre', 'price', 'author', 'adult_mode', 'summary', 'cover_photo',
+        'book_type', 'audio', 'pdf', 'free_book', 'best_seller')
 
 
 class register_form(forms.ModelForm):
@@ -111,15 +114,15 @@ class deal_voucher_form(forms.ModelForm):
     credit = forms.IntegerField(required=True, widget=forms.NumberInput)
 
     class Meta:
-        model = DealVoucher
+        model = Voucher
         fields = ('description', 'type', 'credit')
 
 
 class user_deal_voucher_form(forms.ModelForm):
-    deal_voucher = forms.ModelChoiceField(queryset=DealVoucher.objects.all(), required=True)
+    deal_voucher = forms.ModelChoiceField(queryset=Voucher.objects.all(), required=True)
     user = forms.ModelChoiceField(queryset=User.objects.all(), required=True)
     valid_up_to = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
 
     class Meta:
-        model = DealVoucherUser
+        model = VoucherUser
         fields = ('deal_voucher', 'user', 'valid_up_to')

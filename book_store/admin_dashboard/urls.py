@@ -32,7 +32,26 @@ urlpatterns = [
     path('delete_user_deal_voucher/<int:deal_voucher_user_id>', views.delete_user_deal_voucher,
          name='admin-delete-deal-voucher-user-id'),
     path('admin_edit_user_deal_voucher/<int:deal_voucher_user_id>', views.admin_edit_user_deal_voucher,
-         name='admin-edit-user-deal-voucher')
+         name='admin-edit-user-deal-voucher'),
+
+    path('add_quiz', views.add_quiz, name='admin-add-quiz'),
+    path('list_quiz', views.list_quiz, name='admin-list-quiz'),
+    path('save_game', views.save_game, name='admin-save-game'),
+    path('save_mcqs', views.save_mcqs, name='admin-save-mcqs'),
+    path('save_question', views.save_question, name='admin-save-question'),
+
+    path('add_deal', views.add_deal , name= 'admin-add-deal'),
+    path('list_deal', views.list_deal, name='admin-list-deal'),
+    path('save_deal', views.save_deal, name='admin-save-deal'),
+    path('delete_deal/<int:deal_id>', views.delete_deal, name='admin_delete_deal'),
+
+    path('delete_quiz/<int:quiz_id>', views.delete_quiz, name='admin_delete_quiz'),
+
+    # path('delete_user_deal_voucher/<int:deal_voucher_user_id>', views.delete_user_deal_voucher,
+    #      name='admin-delete-deal-voucher-user-id'),
+    # path('admin_edit_user_deal_voucher/<int:deal_voucher_user_id>', views.admin_edit_user_deal_voucher,
+    #      name='admin-edit-user-deal-voucher')
+    #
     # path('delete_deal_voucher/<int:deal_voucher_id>', views.delete_deal_voucher, name='admin-delete-deal-voucher'),
 
 ]

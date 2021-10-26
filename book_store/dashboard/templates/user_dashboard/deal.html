@@ -1,0 +1,73 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+{% load filters_user %}
+{% block navbar_address %}
+<li class="breadcrumb-item active">Deals and Discounts</li>
+
+
+{% endblock navbar_address %}
+{% block content %}
+
+
+<section class="section-margin">
+    <div class="container-fluid">
+
+        <div class="product-slider with-countdown  slider-border-single-row sb-slick-slider" data-slick-setting='{
+                "autoplay": true,
+                "autoplaySpeed": 8000,
+                "slidesToShow": 6,
+                "dots":true
+            }' data-slick-responsive='[
+                {"breakpoint":1400, "settings": {"slidesToShow": 6} },
+                {"breakpoint":1200, "settings": {"slidesToShow": 5} },
+                {"breakpoint":992, "settings": {"slidesToShow": 4} },
+                {"breakpoint":768, "settings": {"slidesToShow": 3} },
+                {"breakpoint":575, "settings": {"slidesToShow": 2} },
+                {"breakpoint":490, "settings": {"slidesToShow": 1} }
+            ]'>
+            {% for deal in deals %}
+            {% for book in deal.deal_book.all %}
+            <div class="single-slide">
+                <div class="product-card">
+
+                    <div class="product-card--body" style="text-align: -webkit-center;">
+                        <div class="card-image">
+                            <img class="cardimg"
+                                 src="{{book.cover_photo.url}}"
+                                 alt="">
+
+                        </div>
+                        <div class="product-header">
+
+                            <h3>
+                                <a href="{% url 'user-product-detail' book.book_id %}">{{book.title}}
+                                </a>
+                            </h3>
+                        </div>
+
+                        <div class="price-block">
+                                <span class="price">Rs. {{ book.price|calculate_price:deal.deal_percentage}}</span>
+                            <del class="price-old">Rs. {{book.price}}</del>
+                            <span class="price-discount">{{deal.deal_percentage}}%</span>
+                        </div>
+
+                        <div class="count-down-block">
+
+                            <div class="product-countdown" data-countdown="{{ deal.deal_valid_upto|expire_time}}"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+<script>
+
+</script>
+
+{% endblock content %}

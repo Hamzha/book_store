@@ -1,7 +1,9 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 # Create your models here.
 from book_store.user.models import Mode, User
+import datetime
 
 
 class Book(models.Model):
@@ -16,28 +18,34 @@ class Book(models.Model):
     cover_photo = models.ImageField(null=True, blank=True, upload_to='images')
     book_type = models.CharField(null=False, blank=False, max_length=100, default='Pending')
     pdf = models.FileField(null=True, blank=True, upload_to='books', default='images/not-available.png')
-    audio = models.FileField(null=True, blank=True, upload_to='books', default='images/not-available.png')
     book_mode = models.ForeignKey(Mode, on_delete=models.CASCADE, blank=True, null=True)
+    summary = models.TextField(max_length=500, default='Not Available')
+    adult_mode = models.BooleanField(default=False)
+    free_book = models.BooleanField(default=False)
+    audio = models.FileField(null=True, blank=True, upload_to='books', default='images/not-available.png')
+    best_seller = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
 
 
-class DealVoucher(models.Model):
-    deal_voucher_id = models.AutoField(primary_key=True)
+class BookAudio(models.Model):
+    audio_id = models.AutoField(primary_key=True)
+    audio = models.FileField(null=True, blank=True, upload_to='books', default='images/not-available.png')
+    book = models.ManyToManyField(Book, null=True)
+
+
+class Voucher(models.Model):
+    voucher_id = models.AutoField(primary_key=True)
     description = models.CharField(max_length=200, blank=False, null=False)
-    type = models.CharField(max_length=100, blank=False, null=False)
     credit = models.IntegerField(null=False, blank=False)
-
-    def __str__(self):
-        return self.type
+    code = models.CharField(default='', max_length=10)
 
 
-class DealVoucherUser(models.Model):
-    deal_voucher_user_id = models.AutoField(primary_key=True)
-    deal_voucher = models.ForeignKey(DealVoucher, on_delete=models.CASCADE)
+class VoucherUser(models.Model):
+    voucher_user_id = models.AutoField(primary_key=True)
+    voucher = models.ForeignKey(Voucher, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    valid_up_to = models.DateField(blank=False, null=False)
 
 
 class BookMark(models.Model):
@@ -71,3 +79,49 @@ class Cart(models.Model):
     cart_book = models.ManyToManyField(Book)
     payment_status = models.CharField(max_length=200, null=True, blank=True)
     cart_detail = models.CharField(max_length=200, null=True, blank=True)
+
+
+class Quiz(models.Model):
+    quiz_id = models.AutoField(primary_key=True)
+    quiz_type = models.CharField(max_length=100)
+    quiz_question_statement = models.CharField(max_length=1000)
+    quiz_option_1 = models.CharField(max_length=200)
+    quiz_option_2 = models.CharField(max_length=200)
+    quiz_option_3 = models.CharField(max_length=200)
+    quiz_option_4 = models.CharField(max_length=200)
+    quiz_answer = models.CharField(max_length=200, default='')
+    quiz_book = models.ForeignKey(Book, on_delete=models.CASCADE, blank=True, null=True)
+
+
+class QuizUser(models.Model):
+    quiz_user_id = models.AutoField(primary_key=True)
+    quiz_user_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz_user_quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    quiz_user_option = models.CharField(max_length=20)
+
+
+class QuizBook(models.Model):
+    quiz_book_id = models.AutoField(primary_key=True)
+    quiz_book_score = models.IntegerField()
+    quiz_book_quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    quiz_book_book = models.ForeignKey(Book, on_delete=models.CASCADE)
+
+
+class Review(models.Model):
+    review_id = models.AutoField(primary_key=True)
+    review_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review_book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    review_text = models.TextField(max_length=500, default='')
+    review_date = models.DateField(default=datetime.datetime.now)
+    review_rate = models.IntegerField(default=0, validators=[
+        MaxValueValidator(5),
+        MinValueValidator(0)
+    ])
+
+
+class Deal(models.Model):
+    deal_id = models.AutoField(primary_key=True)
+    deal_title = models.TextField(max_length=500, default='')
+    deal_valid_upto = models.DateField(default=datetime.datetime.now)
+    deal_percentage = models.FloatField(default=00)
+    deal_book = models.ManyToManyField(Book)

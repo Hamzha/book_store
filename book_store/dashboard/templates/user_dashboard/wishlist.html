@@ -1,0 +1,48 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+{% load filters_user %}
+
+{% block navbar_address %}
+<li class="breadcrumb-item active">Wishlist</li>
+{% endblock navbar_address %}
+
+{% block content %}
+<div class="container" style="margin-bottom: 100px">
+    <div class="row">
+        {% for wishlist in wishlists %}
+        <div class="col-2">
+            <div class="product-card">
+
+                <div class="product-card--body">
+                    <div class="card-image">
+                        <img src="{{ wishlist.wishlist_book.cover_photo.url }}"
+                             style="height:250px; width: -webkit-fill-available;" alt="NOt Available">
+                        <a href="{% url 'user-product-detail' wishlist.wishlist_book.book_id %}"><h5>{{wishlist.wishlist_book}}</h5></a>
+                        <div class="hover-contents">
+                            <p>{{ wishlist.wishlist_book.title }}</p>
+                            <div class="row" style="font-size: small;">
+                                <div class="col-4"><span class="price">{{wishlist.wishlist_book.price}}</span></div>
+                                <div class="col-4"><span class="pub_year">{{wishlist.wishlist_book.year_of_publish.year}}</span></div>
+                                <div class="col-4"><span class="price">{{wishlist.wishlist_book.no_of_pages}}</span></div>
+
+                            </div>
+                            <p style="font-size: small;">
+                                {{wishlist.wishlist_book.summary}}
+                            </p>
+
+                            <p style="font-size: small;"><strong>Author: </strong>{{wishlist.wishlist_book.author}}</p>
+                            <p style="font-size: small;"><strong>Genre: </strong>{{wishlist.wishlist_book.genre}}</p>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

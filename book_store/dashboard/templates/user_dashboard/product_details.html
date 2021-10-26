@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block navbar_address %}
-<li class="breadcrumb-item active">Product Details</li>
+<li class="breadcrumb-item active">Product Detail</li>
 {% endblock navbar_address %}
 
 {% block content %}
@@ -62,8 +62,13 @@
 
                         <div class="add-cart-btn">
                             {% if book.is_buy %}
-                            <a href="{% url 'user-read-book' book.book_id 1 %}" class="btn btn-outlined&#45;&#45;primary">Read
-                                Now</a>
+                                {% if book.book_type == 'PDF' %}
+                                    <a href="{% url 'user-read-book' book.book_id 1 %}" class="btn btn-outlined&#45;&#45;primary">Read
+                                        Now</a>
+                                {% else %}
+                                    <a href="{% url 'user-read-book' book.book_id 1 %}" class="btn btn-outlined&#45;&#45;primary">Listen now</a>
+                                {% endif %}
+
                             {% else %}
                             <a onclick="add_to_cart({{book.book_id}})" class="btn btn-outlined&#45;&#45;primary">
                                 Add To Cart</a>
@@ -72,9 +77,6 @@
                         </div>
                     </div>
 
-                    <div class="compare-wishlist-row">
-                        <a href="" class="add-link"><i class="fas fa-heart"></i>Add to Wish List</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -82,10 +84,9 @@
 </main>
 <script>
     var cart = []
-
 function add_to_cart(book_id){
     cart.push(book_id);
-
+    alert('Added to Cart!')
 }
 function cart_click(){
     if(cart.length == 0){
@@ -108,35 +109,6 @@ function cart_click(){
         });
     }
 }
-
-  function add_to_wishlist(book_id){
-        $.ajax({
-            url:"set_wishlist/"+parseInt(book_id),
-            type: 'get',
-            success: function(data){
-                alert('Added to Wishlist')
-                $('#wishlist-'+book_id).addClass('red-icon')
-            },
-            failure(data){
-
-            }
-        });
-    }
-
-    function remove_to_wishlist(book_id){
-        $.ajax({
-            url:"remove_wishlist/"+parseInt(book_id),
-            type: 'get',
-            success: function(data){
-                alert('Removed from Wishlist')
-                    $('#wishlist-'+book_id).removeClass('red-icon')
-
-            },
-            failure(data){
-
-            }
-        });
-    }
 
 </script>
 

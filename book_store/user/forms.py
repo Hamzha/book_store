@@ -30,3 +30,8 @@ class RegisterForm(forms.ModelForm):
 
         return password2
 
+from django import forms
+from django.forms import DateField
+
+from . import models
+

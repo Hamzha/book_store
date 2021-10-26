@@ -1,0 +1,46 @@
+{% extends 'dashboard/base.html' %}
+{% load widget_tweaks %}
+
+{% block dashboard_title %}
+Edit User
+{% endblock %}
+
+
+<!-- navbar address -->
+{% block navbar_address %}
+<li class="breadcrumb-item active">Edit User</li>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<!-- form start -->
+<div class="content">
+    <div class="container-fluid">
+        <form id="form" action="{% url 'admin-edit-user' user_id %}" method="post">
+            {% csrf_token %}
+
+
+
+            <div class="actions-buttons">
+                <button id="submit" type="submit" class="btn btn-primary">
+                    <span class="">Submit</span>
+
+                </button>
+            </div>
+        </form>
+           {% if messages %}
+            <div style="background-color: red;margin-top: 13px;font-weight: 600;padding: 2px;font-size: 14px;color: white;">
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li {% if message.tags %} class=" {{ message.tags }} " {% endif %} style="padding-top:1%"> {{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+{% endblock %}

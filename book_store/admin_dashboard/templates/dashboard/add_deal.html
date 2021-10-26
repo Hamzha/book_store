@@ -1,0 +1,90 @@
+{% extends 'dashboard/base.html' %}
+{% load widget_tweaks %}
+
+{% block dashboard_title %}
+Add Deal
+{% endblock %}
+
+
+<!-- navbar address -->
+{% block navbar_address %}
+<li class="breadcrumb-item active">Add Deal</li>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+
+<style>
+    .dropdown-toggle{
+        color: black;
+        background: white;
+    }
+</style>
+
+<form method="post" id="deal_form">
+    {% csrf_token %}
+    <div class="form-group">
+        <label>Discount Percentage</label>
+        <input class="form-control input" required placeholder="Discount Title" id="discount_title"/>
+    </div>
+
+    <div class="form-group" style="width:30%">
+        <label>Percentage</label>
+        <input class="form-control input" type="number" required placeholder="Option" id="discount_percentage"/>
+    </div>
+    <div class="form-group" style="width:30%">
+        <label> Select Books</label>
+
+            <select class="form-control selectpicker" required multiple aria-label="size 3 select example" id="discount_books">
+                {% for book in books %}
+                <option value="{{book.book_id}}">{{book.title}}</option>
+                {% endfor %}
+            </select>
+    </div>
+    <div class="form-group" style="width:30%">
+        <label> Valid Upto </label>
+        <input class="form-control input" type="date" required placeholder="Valid Upto" id="valid_upto"/>
+
+    </div>
+
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+
+<script>
+$(document).ready(function(){
+    $("#deal_form").on('submit', function (e) {
+        console.log('test')
+        e.preventDefault();
+
+        var obj = new Object();
+        obj.title = $('#discount_title').val();
+        obj.percentage = $('#discount_percentage').val();
+        obj.percentage = $('#discount_percentage').val();
+        obj.discounted_books = $('#discount_books').val();
+        obj.valid_upto = $('#valid_upto').val()
+
+        obj.csrfmiddlewaretoken = "{{csrf_token}}";
+        var jsonString= JSON.stringify(obj);
+        $.ajax({
+            url: "{% url 'admin-save-deal' %}",
+            type: 'get',
+            data: {'data' : jsonString},
+            success: function(data) {
+                window.location = '{% url 'admin-list-deal' %}'
+            },
+            failure: function(data) {
+            }
+        });
+    });
+
+});
+
+
+
+
+</script>
+
+{% endblock %}

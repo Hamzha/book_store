@@ -21,6 +21,7 @@ Adding Book
             <div class="card-body">
                 <div class="form-group">
                     <label>Book Title</label>
+
                     {% render_field form.title|add_class:'input input__text' type="text" placeholder="Book Title" class+="form-control" %}
                 </div>
                 <div class="form-group">
@@ -36,7 +37,6 @@ Adding Book
                 <div class="form-group">
                     <label >Genre of the Book</label>
                     {% render_field form.genre|add_class:'input' type="option" placeholder="Year of publish" class+="form-control" %}
-
                 </div>
 
 
@@ -53,17 +53,35 @@ Adding Book
 
                 </div>
 
-                 <div class="form-group">
-                    <label >Book Status</label>
-                    {% render_field form.book_status|add_class:'input' type="text" placeholder="book_status" class+="form-control" %}
+                    <div class="form-group">
+                        <label style="margin-right:2%">Adult Mode?</label>
+                        {% render_field form.adult_mode|add_class:'input' type="checkbox" placeholder="Adult Mode" %}
+                    </div>
 
+
+                    <div class="form-group">
+                        <label style="margin-right:2%">Best Seller?</label>
+                        {% render_field form.best_seller|add_class:'input' type="checkbox" placeholder="Best Seller" %}
+                    </div>
+
+
+                    <div class="form-group">
+                        <label style="margin-right:2%">Free?</label>
+                        {% render_field form.free_book|add_class:'input' type="checkbox" placeholder="Free Book" %}
+                    </div>
+
+
+
+                <div class="form-group">
+                    <label style="margin-right:2%">Summary</label>
+                    {% render_field form.summary|add_class:'input col-12' type="text" placeholder="Cover Photo" %}
                 </div>
-
                 <div class="form-group">
                     <label >Cover Photo</label>
                     {% render_field form.cover_photo|add_class:'file' accept='image/*' type="file" placeholder="Cover Photo" %}
 
                 </div>
+
 
                 <div class="form-group">
                     <label >Book Status</label>
@@ -90,7 +108,6 @@ Adding Book
     </div>
 
 </div>
-
 
 <script>
 $(document).ready(function(){

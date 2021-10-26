@@ -1,0 +1,194 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+{% load filters_user %}
+
+{% block navbar_address %}
+<li class="breadcrumb-item active" xmlns:padding-top="http://www.w3.org/1999/xhtml">Product Detail</li>
+{% endblock navbar_address %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+            <div class="container">
+                <div class="card" style="width:100%">
+                    <img class="card-img-top"
+                         src="{{book.cover_photo.url}}"
+                         alt="Card image" style="width:100%">
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-6 col-sm-12 col-xs-12">
+            <div class="row" style="margin:auto">
+                <h5>
+                    <strong>{{book.title}}</strong>
+                </h5>
+                <div class="add-to-cart-row" style="margin-left: 200px">
+
+                    <div class="add-cart-btn">
+                        {% if book.is_buy %}
+                        {% if book.book_type == 'PDF' %}
+                        <a href="{% url 'user-read-book' book.book_id 1 %}" class="btn btn-outlined&#45;&#45;primary">Read
+                            Now</a>
+                        <a href="{% url 'user_review_book' book.book_id %}" class="btn btn-outlined&#45;&#45;primary">
+                            Review </a>
+                        {% else %}
+                        <a href="{% url 'user-read-book' book.book_id 1 %}" class="btn btn-outlined&#45;&#45;primary">Listen
+                            now</a>
+                        {% endif %}
+
+                        {% else %}
+                        <a onclick="add_to_cart({{book.book_id}})" class="btn btn-outlined&#45;&#45;primary">
+                            Add To Cart</a>
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-left: 13px;">
+                {% for rating in ratings|times %}
+                <i class="fas fa-star" style="color: orange;"></i>
+                {% endfor %}
+            </div>
+            <p>by {{book.author}}</p>
+            <p style="padding-top:5px"><strong>Rs.</strong> {{book.price}}</p>
+            <p style="text-align: justify;font-size: smaller;">{{summary.0}}<span
+                    id="dots">...</span><span id="more" style="display: none">{{summary.1}}</span>
+            </p>
+            <button onclick="myFunction()" id="myBtn">Read more</button>
+
+            <div class="row" style="text-align: center;">
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+                    <strong>GENRE</strong>
+                    <p style="font-size: small;">{{book.genre}}
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6" style="border-left: 1px solid black;">
+                    <strong>RELEASED</strong>
+                    <p style="font-size: small;"><strong style="font-size: large;">{{year}}</strong><br/>{{month}}
+                        {{day}}</p>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6" style="border-left: 1px solid black;">
+                    <strong>Adult Mode</strong>
+                    <p style="font-size: small;"><strong style="font-size: large;">{{book.adult_mode}}</strong></p>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6" style="border-left: 1px solid black;">
+                    <strong>LENGTH</strong>
+                    <p style="font-size: small;"><strong style="font-size: large;">{{book.no_of_pages}}</strong><br/>pages
+                    </p>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div>
+        {% if reviews %}
+        <h6 style="padding-top: 20px;"><strong>Community Reviews</strong></h6>
+        {% endif %}
+        <div class="row row-cols-1 row-cols-lg-3 g-4" style="padding-top: 10px; padding-bottom: 20px;">
+            {% for review in reviews %}
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="card h-100" style="border: 1px solid black; border-radius: 10px;">
+
+                    <div class="card-body" style="padding-left:5px; padding-right:5px; padding-top:7px">
+
+
+                        <div class="col-8">
+                            <p><span style="font-weight: 700"> Customer:  </span> {{review.review_user.first_name}}
+                                {{review.review_user.last_name}}</p>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-6">
+                                <p>
+                                    {% for i in review.review_rate|times %}
+                                        <span class="fa fa-star" style="color:orange;font-size:13px"></span>
+                                        {% endfor %}
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <p style="font-size:13px; padding-top:2px">{{review.review_date}}</p>
+                            </div>
+                        </div>
+
+
+                        <p class="card-text" style="font-size:12px; text-align:justify">{{review.review_text}}</p>
+                    </div>
+
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+function myFunction() {
+  var dots = document.getElementById("dots");
+  var moreText = document.getElementById("more");
+  var btnText = document.getElementById("myBtn");
+
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = "Read more";
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = "Read less";
+    moreText.style.display = "inline";
+  }
+}
+
+
+var cart = []
+function add_to_cart(book_id){
+    cart.push(book_id);
+}
+
+function cart_click(){
+    if(cart.length == 0){
+        alert('Empty Cart')
+    }
+    else{
+        console.log(cart)
+         $.ajax({
+            url:"/set_cart",
+            type: 'GET',
+            data: {
+                "cart": JSON.stringify(cart)
+                },
+            success: function(data){
+                window.location = "{% url 'user-cart' %}"
+            },
+            failure(data){
+
+            }
+        });
+    }
+}
+
+
+
+
+
+
+
+
+</script>
+
+{% endblock %}

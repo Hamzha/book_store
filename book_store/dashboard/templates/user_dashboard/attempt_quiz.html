@@ -1,0 +1,101 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+{% block navbar_address %}
+<li class="breadcrumb-item" xmlns="http://www.w3.org/1999/html"><a href="{% url 'user-product-detail' book.book_id %}">Product Detail</a></li>
+
+<li class="breadcrumb-item active">{{book.title}}</li>
+
+{% endblock navbar_address %}
+{% block content %}
+<style>
+    .div{
+        margin-left:21%; height:fit-content; width:60%;
+        margin-bottom:50px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.07),
+        0 2px 4px rgba(0,0,0,0.07),
+        0 4px 8px rgba(0,0,0,0.07),
+        0 8px 16px rgba(0,0,0,0.07),
+        0 16px 32px rgba(0,0,0,0.07),
+        0 32px 64px rgba(0,0,0,0.07);
+        padding: 1%;
+    }
+</style>
+
+{% for quiz in quizs %}
+
+        <div class="div" >
+            {% if quiz.quiz_type == 'QUESTION' %}
+                <p id="quiz_id_{{forloop.counter}}" style="visibility: hidden">{{quiz.quiz_id}}</p>
+                <p><span style="font-weight:700">Question Statement: &nbsp;</span>{{quiz.quiz_question_statement}}</p>
+                <div class="row" style="margin-left:1%; font-size: 18px">
+                    <p><span style="font-weight:700">Answer: &nbsp;</span><input id="question_answer"/></p>
+                </div>
+            {% else %}
+                <p id="quiz_id_{{forloop.counter}}" style="visibility: hidden">{{quiz.quiz_id}}</p>
+                <p><span style="font-weight:700">Question Statement: &nbsp;</span>{{quiz.quiz_question_statement}}</p>
+                <div style="margin:2%;width:100%">
+                    <div class="row">
+                        <p style="width:30%">Option A: <span style="font-weight:700">{{quiz.quiz_option_1}}</span></p>
+                        <p style="width:30%">Option B: <span style="font-weight:700">{{quiz.quiz_option_2}}</span></p>
+                    </div>
+                    <div class="row">
+                        <p style="width:30%">Option C: <span style="font-weight:700">{{quiz.quiz_option_3}}</span></p>
+                        <p style="width:30%">Option D: <span style="font-weight:700">{{quiz.quiz_option_4}}</span></p>
+                    </div>
+                </div>
+                <div class="row" style="margin-left:1%; font-size: 18px">
+                    <p><span style="font-weight:700">Enter your Option: &nbsp;</span><input id="question_answer"/></p>
+                </div>
+            {% endif %}
+        </div>
+
+
+{% endfor %}
+<button style="margin-left:21%; margin-bottom:30px" onclick="submit({{book.id}})" id="display_submit" class="btn btn-primary"> Submit </button>
+<button style="margin-left:21%; margin-bottom:30px" id="display_voucher" class="btn btn-primary"><a href="{% url 'user-profile' %}" > Vouchers</a>  </button>
+
+<script>
+var count = 1
+
+$(document).ready(function(){
+    $('#display_voucher').hide()
+});
+
+function submit(book_id, quiz_id){
+    var pass = 0
+    obj = [];
+    var count = 1;
+    $("[id]").each(function(){
+        if($(this).attr("id")=="question_answer"){
+            tmp = new Object()
+            tmp.answer = $(this).val()
+            tmp.quiz_id = $('#quiz_id_'+parseInt(count).toString()).text()
+            var jsonString= JSON.stringify(tmp);
+            obj.push(tmp)
+            count = count +1
+
+        }
+    });
+    final_obj = new Object();
+    final_obj.obj = obj
+    var jsonString= JSON.stringify(final_obj);
+    console.log(jsonString)
+    $.ajax({
+        url: "{% url 'user_check_answer' %}",
+        type: 'get',
+        data: {'data' : jsonString},
+        success: function(data) {
+            console.log(data)
+            $('#display_voucher').show()
+            $('#display_submit').hide()
+            alert('Your total score is ' + data['result']+' out of '+ count);
+        },
+        failure: function(data) {}
+    });
+    console.log(JSON.stringify(obj))
+}
+
+
+</script>
+
+{% endblock content %}
