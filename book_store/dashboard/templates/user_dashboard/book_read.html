@@ -8,9 +8,6 @@
 {% endblock navbar_address %}
 {% block content %}
 
-<!--<embed src="{% url 'user-get-book' 16 %}" type="application/pdf" height="700px" width="500">-->
-
-<!--<embed src='{{books.pdf}}' style="width:718px; height:700px;" frameborder="0">-->
 
 <style>
   .btn {
@@ -112,7 +109,11 @@
         </button>
     </div>
 </div>
-
+<div class="row" style="margin-left:21%; margin-top:1%; align-items: center;">
+    <h3>Go to Page#</h3>
+    <input style="margin-left:1%; width:5%; text-align: center;" type="number" min="1" id="goto_page"/>
+    <button style="margin-left: 1%;background: silver; height:30px; width: 50px" onclick="goto_page()"> Go </button>
+</div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -209,6 +210,8 @@
 <script>
 var book_mark = '/get_bookmark/'+{{book.book_id}};
 
+
+
 document.addEventListener("DOMContentLoaded", function() {
     var bookmarks = [];
     var quick_notes = [];
@@ -245,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     $.ajax({
-        url: '/get_quick_notes/',
+        url: '/get_quick_notes/'+{{book.book_id}},
         type: 'get',
         dataType: 'json',
         success: function(data) {
@@ -273,10 +276,15 @@ document.addEventListener("DOMContentLoaded", function() {
 function save_quick_notes(book_id) {
     let page = $('#page-num').text();
     let url_save_quick_note = '/save_quick_note/' + book_id + '/' + page;
+    obj.type = 'pdf';
+    obj.text = $('#book_quick_notes').val();
+
+    var jsonString= JSON.stringify(obj);
+
     $.ajax({
         url: url_save_quick_note,
         type: 'get',
-        data: {'data': $('#book_quick_notes').val()},
+        data: {'data': jsonString},
         success: function(data) {
             alert('Saved');
         },
@@ -286,7 +294,7 @@ function save_quick_notes(book_id) {
 var quick_notes = [];
 
 $.ajax({
-    url: '/get_quick_notes',
+    url: '/get_quick_notes/'+{{book.book_id}},
     type: 'get',
     dataType: 'json',
     success: function(data) {
@@ -336,14 +344,15 @@ $.ajax({
 });
 
 let url_pdf = null;
+var obj = new Object();
+obj.type = 'pdf';
+var jsonString= JSON.stringify(obj);
 $.ajax({
-
-    url: '{% url "user-get-book" book.book_id %}',
+    url: '{% url "user-get-book" book.book_id 0 %}',
     type: 'get', // This is the default though, you don't actually need to always mention it
+    data: {'data':jsonString},
     success: function(data) {
         url_pdf = data;
-
-
         let pdfDoc = null,
             pageNum = {{page_number}},
             pageIsRendering = false,
@@ -435,6 +444,9 @@ $.ajax({
         // Button Events
         document.querySelector('#prev-page').addEventListener('click', showPrevPage);
         document.querySelector('#next-page').addEventListener('click', showNextPage);
+
+
+
     },
     failure: function(data) {
         alert('Got an error dude');
@@ -480,9 +492,13 @@ function save_bookmark(book_id) {
         type: 'get', // This is the default though, you don't actually need to always mention it
         success: function(data) {
             alert('Saved');
+            $('.bookmark-false').hide()
+            $('.bookmark-true').show()
         },
         failure: function(data) {
             alert('Got an error dude');
+            $('.bookmark-false').hide()
+            $('.bookmark-true').show()
         }
     });
 }
@@ -497,9 +513,14 @@ function remove_bookmark(book_id) {
         type: 'get', // This is the default though, you don't actually need to always mention it
         success: function(data) {
             alert('Removed');
+            $('.bookmark-false').show()
+            $('.bookmark-true').hide()
         },
         failure: function(data) {
             alert('Got an error dude');
+
+            $('.bookmark-false').show()
+            $('.bookmark-true').hide()
         }
     });
 
@@ -566,6 +587,9 @@ $('#prev-page').click(function() {
 });
 
 
+function goto_page(){
+    window.location = "/book_reader/"+{{book.book_id}}+"/"+$('#goto_page').val();
+}
 
 
 

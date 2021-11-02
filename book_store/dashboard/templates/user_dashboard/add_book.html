@@ -1,22 +1,25 @@
-{% extends 'dashboard/base.html' %}
+{% extends 'user_dashboard/base.html' %}
 {% load widget_tweaks %}
 
 {% block dashboard_title %}
-Adding Book
+
 {% endblock %}
 
 
 <!-- navbar address -->
 {% block navbar_address %}
-<li class="breadcrumb-item active">Add Book</li>
+
+<li class="breadcrumb-item"><a href="{% url 'user_author_menu' %}">Author Menu</a></li>
+
+<li class="breadcrumb-item active">Adding Book</li>
 {% endblock %}
 
 <!-- Main Content -->
 {% block content %}
 <!-- form start -->
-<div class="content">
+<div class="content" style="margin-left:19.5%; margin-right: 15%">
     <div class="container-fluid">
-        <form enctype="multipart/form-data" method="post" action="/admin_dashboard/add_book">
+        <form enctype="multipart/form-data" method="post" action="/user_author_add_book">
             {% csrf_token %}
             <input type="hidden" name="csrfmiddlewaretoken"
                    value="xsswrQ4bTS2QMNjFGNkvhQTST63Ikd1WqxOLKmniaC8ZKMKmrBfoLHR2h4AbhDZ8">

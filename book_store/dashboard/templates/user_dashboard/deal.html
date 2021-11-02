@@ -11,7 +11,10 @@
 
 <section class="section-margin">
     <div class="container-fluid">
-
+    {% for deal in deals %}
+        <div style="width: 100%" class="promo-section-heading">
+            <h2>{{deal.deal_percentage}}% off till {{deal.deal_valid_upto}}</h2>
+        </div>
         <div class="product-slider with-countdown  slider-border-single-row sb-slick-slider" data-slick-setting='{
                 "autoplay": true,
                 "autoplaySpeed": 8000,
@@ -24,8 +27,8 @@
                 {"breakpoint":768, "settings": {"slidesToShow": 3} },
                 {"breakpoint":575, "settings": {"slidesToShow": 2} },
                 {"breakpoint":490, "settings": {"slidesToShow": 1} }
-            ]'>
-            {% for deal in deals %}
+            ]' style="margin-bottom:2%">
+
             {% for book in deal.deal_book.all %}
             <div class="single-slide">
                 <div class="product-card">
@@ -37,6 +40,7 @@
                                  alt="">
 
                         </div>
+
                         <div class="product-header">
 
                             <h3>
@@ -60,10 +64,11 @@
                 </div>
             </div>
             {% endfor %}
-            {% endfor %}
 
         </div>
     </div>
+                {% endfor %}
+
 </section>
 
 <script>

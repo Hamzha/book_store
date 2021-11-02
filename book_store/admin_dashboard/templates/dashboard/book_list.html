@@ -40,7 +40,7 @@ Book List
                         <th style="text-align: center;">Book Status</th>
                         <th style="text-align: center;">Book Type</th>
                         <th style="text-align: center;">Cover Photo</th>
-                        <th style="text-align: center;">Edit</th>
+<!--                        <th style="text-align: center;">Edit</th>-->
                         <th style="text-align: center;">Delete</th>
 
                     </tr>
@@ -59,13 +59,13 @@ Book List
                         <td style="text-align: center;">{{ book.book_type }}</td>
                         <td style="text-align: center;"><img src="{{ book.cover_photo.url }}"
                                                              style="width:100px;height:100px"/></td>
-                        <td style="text-align: center;">
-                            <a href="{% url 'admin-edit-book' book.book_id %}">
-                                <i
-                                        class="fas fa-edit" style="color:black">
-                                </i>
-                            </a>
-                        </td>
+<!--                        <td style="text-align: center;">-->
+<!--                            <a href="{% url 'admin-edit-book' book.book_id %}">-->
+<!--                                <i-->
+<!--                                        class="fas fa-edit" style="color:black">-->
+<!--                                </i>-->
+<!--                            </a>-->
+<!--                        </td>-->
                         <td style="text-align: center;">
                             <a data-toggle="modal" href="#admin-modal-delete-book-{{book.book_id}}">
                                 <i

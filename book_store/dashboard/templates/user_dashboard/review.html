@@ -12,9 +12,6 @@
 {% endblock navbar_address %}
 {% block content %}
 
-<!--<embed src="{% url 'user-get-book' 16 %}" type="application/pdf" height="700px" width="500">-->
-
-<!--<embed src='{{books.pdf}}' style="width:718px; height:700px;" frameborder="0">-->
 
 <style>
 .star-rating form {
@@ -126,6 +123,9 @@ function mySubmitFunction(e) {
             type: 'get',
             data: {'data' : jsonString},
             success: function(data) {
+                alert('Thanks for your Review!')
+                window.location.href = "{% url 'user-product-detail' book.book_id %}";
+
             },
             failure: function(data) {}
         });

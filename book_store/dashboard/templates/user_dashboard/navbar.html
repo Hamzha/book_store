@@ -107,6 +107,14 @@
 
                                     </ul>
                                 </li>
+
+                                {% if request.user.is_author %}
+                                <li class="cat-item">
+                                    <a href="{% url 'user_author_menu' %}">Author</a>
+
+                                </li>
+                                {% endif %}
+
                                 <li class="cat-item">
                                     <a href="#">Dashboard</a>
 

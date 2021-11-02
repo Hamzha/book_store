@@ -15,7 +15,7 @@
 
 let url_pdf = null;
 $.ajax({
-    url: '{% url "user-get-book" 16 %}',
+    url: '{% url "user-get-book" book.book_id 1 %}',
     type: 'get', // This is the default though, you don't actually need to always mention it
     success: function(data) {
 		PSPDFKit.load({

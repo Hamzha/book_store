@@ -10,6 +10,7 @@ from time import gmtime, strftime
 from django.contrib.auth import authenticate, login as login_user, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
+from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse, HttpResponse, FileResponse
 from django.shortcuts import render, redirect
 from django.core import serializers
@@ -17,10 +18,11 @@ from django.forms.models import model_to_dict
 
 # Create your views here.
 from django.contrib.auth.hashers import make_password
+from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 
 from book_store.admin_dashboard.models import Book, BookMark, QuickNote, Wishlist, Cart, Review, Deal, VoucherUser, \
-    Voucher, Quiz
+    Voucher, Quiz, BookAudio
 from book_store.user.forms import RegisterForm
 from book_store.user.models import User
 
@@ -78,7 +80,6 @@ def product_detail(request, product_id):
     summary = book['summary'][:int(len(book['summary']) / 2)], book['summary'][int(len(book['summary']) / 2):]
 
     reviews = Review.objects.filter(review_book=book['book_id'])
-    print(reviews)
     rating = 0
     for review in reviews:
         rating = rating + review.review_rate
@@ -86,10 +87,11 @@ def product_detail(request, product_id):
         rating = int(rating / len(reviews))
     except:
         rating = 0
+    audio = BookAudio.objects.filter(book=book['book_id'])
     return render(request, 'user_dashboard/product_details_2.html',
                   {'book': book, 'book_id': book['book_id'], 'summary': summary, 'year': book['year_of_publish'].year,
                    'month': book['year_of_publish'].strftime("%b"), 'day': book['year_of_publish'].day,
-                   'reviews': reviews, 'ratings': rating})
+                   'reviews': reviews, 'ratings': rating, 'audios': audio})
 
 
 # def dashboard(request):
@@ -101,39 +103,54 @@ def booK_reader(request, book_id, page_number=1):
     book = Book.objects.filter(book_id=book_id).first()
 
     bookmarks = BookMark.objects.filter(bookmark_book=book, bookmark_user=request.user)
+    return render(request, 'user_dashboard/book_read.html',
+                  {'book': book, 'page_number': page_number, 'bookMarks': bookmarks})
 
-    if book.book_type != 'AUDIO':
-        return render(request, 'user_dashboard/book_read.html',
-                      {'book': book, 'page_number': page_number, 'bookMarks': bookmarks})
-    else:
-        bookmark_list = []
-        for bookmark in bookmarks:
-            tmp = to_dict(bookmark)
-            tmp['bookmark_page_number_sec'] = strftime("%H:%M:%S", gmtime(tmp['bookmark_page_number']))
-            bookmark_list.append(tmp)
-            print(tmp)
-
-    return render(request, 'user_dashboard/book_listen.html',
-                  {'book': book, 'bookMarks': bookmark_list})
+    # if book.book_type != 'BOTH':
+    #     return render(request, 'user_dashboard/book_read.html',
+    #                   {'book': book, 'page_number': page_number, 'bookMarks': bookmarks})
+    # else:
+    #     bookmark_list = []
+    #     for bookmark in bookmarks:
+    #         tmp = to_dict(bookmark)
+    #         tmp['bookmark_page_number_sec'] = strftime("%H:%M:%S", gmtime(tmp['bookmark_page_number']))
+    #         bookmark_list.append(tmp)
+    #
+    # return render(request, 'user_dashboard/book_listen.html',
+    #               {'book': book, 'bookMarks': bookmark_list})
 
 
 @login_required(login_url='/')
-def get_book(request, book_id):
+def get_book(request, book_id, chapter_id):
     book = Book.objects.filter(book_id=book_id).values().first()
-    print(book['book_type'])
     if book['book_type'] == 'PDF':
         return HttpResponse('/media/' + book['pdf'])
     else:
-        return HttpResponse('/media/' + book['audio'])
+
+        type = json.loads(request.GET.dict()['data'])
+        if (type['type'] == 'pdf'):
+            return HttpResponse('/media/' + book['pdf'])
+        else:
+            audio = BookAudio.objects.filter(book=Book.objects.filter(book_id=book_id).first(),
+                                             audio_id=chapter_id).first()
+        return HttpResponse('/media/' + str(audio.audio))
 
 
 @login_required(login_url='/')
 def save_bookmark(request, book_id, page_num):
-    BookMark.objects.create(
+    bookmark = BookMark.objects.create(
         bookmark_book=Book.objects.filter(book_id=book_id).first(),
         bookmark_user=request.user,
         bookmark_page_number=page_num
-    ).save()
+    )
+    try:
+        if request.method == 'GET':
+            if request.GET['chapter'] != None:
+                audio = BookAudio.objects.filter(audio_id=request.GET['chapter']).first()
+                bookmark.bookmark_audio = audio
+                bookmark.save()
+    except:
+        pass
     return HttpResponse('Success')
 
 
@@ -157,19 +174,52 @@ def get_bookmark(request, book_id):
 
 @login_required(login_url='/')
 def get_quick_notes(request, book_id):
-    quick_notes = QuickNote.objects.all()
+    quick_notes = QuickNote.objects.filter(QuickNote_book=Book.objects.filter(book_id=book_id).first())
     quick_notes = serializers.serialize('json', quick_notes)
     return HttpResponse(quick_notes, content_type="text/json-comment-filtered")
 
 
 @login_required(login_url='/')
 def save_quick_notes(request, book_id, page_num):
-    QuickNote.objects.create(
-        QuickNote_book=Book.objects.filter(book_id=book_id).first(),
-        QuickNote_user=request.user,
-        QuickNote_page_number=page_num,
-        QuickNote_text=request.GET['data']
-    ).save()
+    print(book_id, page_num, 'test')
+
+    if request.method == 'GET':
+        data = json.loads(request.GET['data'])
+        if data['type'] == 'audio':
+
+            if QuickNote.objects.filter(QuickNote_book=Book.objects.filter(book_id=book_id).first(),
+                                        QuickNote_user=request.user,
+                                        QuickNote_page_number=page_num,
+                                        ).exists():
+                QuickNote.objects.filter(QuickNote_book=Book.objects.filter(book_id=book_id).first(),
+                                         QuickNote_user=request.user,
+                                         QuickNote_page_number=page_num,
+                                         ).delete()
+
+            QuickNote.objects.create(
+                QuickNote_book=Book.objects.filter(book_id=book_id).first(),
+                QuickNote_user=request.user,
+                QuickNote_page_number=page_num,
+                QuickNote_audio_book=BookAudio.objects.filter(audio_id=page_num).first(),
+                QuickNote_text=data['text']
+            ).save()
+        else:
+            if QuickNote.objects.filter(QuickNote_book=Book.objects.filter(book_id=book_id).first(),
+                                        QuickNote_user=request.user,
+                                        QuickNote_page_number=page_num,
+                                        ).exists():
+                QuickNote.objects.filter(QuickNote_book=Book.objects.filter(book_id=book_id).first(),
+                                         QuickNote_user=request.user,
+                                         QuickNote_page_number=page_num,
+                                         ).delete()
+
+            QuickNote.objects.create(
+                QuickNote_book=Book.objects.filter(book_id=book_id).first(),
+                QuickNote_user=request.user,
+                QuickNote_page_number=page_num,
+                QuickNote_text=data['text']
+            ).save()
+            print('test')
     return HttpResponse('success')
 
 
@@ -184,8 +234,16 @@ def signup(request):
             user = form.save(commit=False)
             user.password = make_password(user.password)
             user.save()
-            voucherUser = VoucherUser.objects.create(user=user, voucher=Voucher.objects.filter(voucher_id=1).first())
-            voucherUser.save()
+
+            code = uuid.uuid4().hex.upper()[0:6]
+
+            Voucher.objects.create(description='Signup Voucher',
+                                   credit=200, code=code).save()
+            voucher = Voucher.objects.filter(
+                voucher_id=Voucher.objects.filter(code=code).first().voucher_id
+            ).first()
+
+            VoucherUser.objects.create(voucher=voucher, user=user).save()
             return render(request, 'user_dashboard/login.html', {})
 
         else:
@@ -424,12 +482,14 @@ def deal_discounts(request):
     return render(request, 'user_dashboard/deal.html', {'deals': deals})
 
 
+@login_required(login_url='/')
 def voucher_list(request):
     vouchers = VoucherUser.objects.filter(user=request.user)
     print(vouchers)
     return render(request, 'user_dashboard/voucher_list.html', {'vouchers': vouchers})
 
 
+@login_required(login_url='/')
 def voucher_check(request):
     if request.method == 'GET':
         final = None
@@ -450,6 +510,7 @@ def voucher_check(request):
     return HttpResponse(json_data, content_type="application/json")
 
 
+@login_required(login_url='/')
 def attempt_quiz(request, book_id):
     book = Book.objects.filter(book_id=book_id).first()
     quiz = Quiz.objects.filter(quiz_book=book)
@@ -457,10 +518,12 @@ def attempt_quiz(request, book_id):
     return render(request, 'user_dashboard/attempt_quiz.html', {'book': book, 'quizs': quiz})
 
 
+@login_required(login_url='/')
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
+@login_required(login_url='/')
 def check_answer(request):
     if request.method == 'GET':
         data = json.loads(request.GET.dict()['data'])
@@ -469,7 +532,7 @@ def check_answer(request):
             quiz_id = elmt['quiz_id']
             answer = elmt['answer']
             print(elmt)
-            print('quiz_id',quiz_id)
+            print('quiz_id', quiz_id)
             quiz = Quiz.objects.filter(quiz_id=quiz_id).first()
             if quiz.quiz_answer == answer:
                 code = uuid.uuid4().hex.upper()[0:6]
@@ -480,9 +543,133 @@ def check_answer(request):
                 ).first()
 
                 VoucherUser.objects.create(voucher=voucher, user=request.user).save()
-                score = score +1
+                score = score + 1
 
     json_data = json.dumps({'result': score})
 
     # return HttpResponse('Success')
     return HttpResponse(json_data, content_type="application/json")
+
+
+@login_required(login_url='/')
+def booK_listen(request, book_id):
+    book = Book.objects.filter(book_id=book_id).first()
+    audio = BookAudio.objects.filter(book=book)
+    return render(request, 'user_dashboard/book_listen_2.html', {'book': book, 'audio': audio})
+
+
+@login_required(login_url='/')
+def booK_listen_chapter(request, book_id, chapter):
+    print(book_id, chapter)
+    book = Book.objects.filter(book_id=book_id).first()
+    print(book)
+    audio = BookAudio.objects.filter(book=book, audio_id=chapter).first()
+    print(audio)
+    bookmark = BookMark.objects.filter(bookmark_book=book, bookmark_user=request.user, bookmark_audio=audio)
+    quickNote = QuickNote.objects.filter(QuickNote_book=book, QuickNote_user=request.user, QuickNote_audio_book=audio)
+    print(quickNote)
+    for index, mark in enumerate(bookmark):
+        mark.time = strftime("%H:%M:%S", gmtime(mark.bookmark_page_number))
+    return render(request, 'user_dashboard/book_listen_2.html',
+                  {'book': book, 'audio': audio, 'bookmarks': bookmark, 'quickNote': quickNote})
+
+
+def user_author_menu(request):
+    books = Book.objects.filter(book_user=request.user)
+    print(books)
+    return render(request, 'user_dashboard/user_author_menu.html', {'books': books})
+
+
+@csrf_exempt
+def user_author_add_book(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+
+        year_of_publish = request.POST.get('year_of_publish')
+        no_of_pages = request.POST.get('no_of_pages')
+        genre = request.POST.get('genre')
+        price = request.POST.get('price')
+        author = request.POST.get('author')
+        adult_mode = request.POST.get('adult_mode')
+        best_seller = request.POST.get('best_seller')
+        free_book = request.POST.get('free_book')
+        summary = request.POST.get('summary')
+        cover_photo = request.FILES['cover_photo']
+
+        book_type = request.POST.get('book_type')
+        pdf = request.FILES['pdf']
+        fs = FileSystemStorage()
+        pdf = fs.save(pdf.name, pdf)
+        cover_photo = fs.save(cover_photo.name, cover_photo)
+
+        year_of_publish = datetime(int(year_of_publish), month=1, day=1).date()
+        print(adult_mode)
+        if adult_mode is None:
+            adult_mode = False
+        else:
+            adult_mode = True
+        if free_book is None:
+            free_book = False
+        else:
+            free_book = True
+        if best_seller is None:
+            best_seller = False
+        else:
+            best_seller = True
+
+        audios = []
+        if book_type == 'BOTH':
+            audios = request.FILES.getlist("file[]")
+            book = Book.objects.create(
+                title=title,
+                year_of_publish=year_of_publish,
+                no_of_pages=no_of_pages,
+                genre=genre,
+                price=price,
+                author=author,
+                cover_photo=cover_photo,
+                book_type=book_type,
+                pdf=pdf,
+                summary=summary,
+                adult_mode=adult_mode,
+                free_book=free_book,
+                best_seller=best_seller,
+                book_user=request.user
+            )
+            book.save()
+            if book.free_book:
+                for user in User.objects.all():
+                    cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
+                    cart.cart_book.add(Book.objects.filter(book_id=book.book_id).first())
+            for audio in audios:
+                audio_file = fs.save(audio.name, audio)
+                BookAudio.objects.create(book=book,
+                                         audio=audio_file).save()
+        else:
+            book = Book.objects.create(
+                title=title,
+                year_of_publish=year_of_publish,
+                no_of_pages=no_of_pages,
+                genre=genre,
+                price=price,
+                author=author,
+                cover_photo=cover_photo,
+                book_type=book_type,
+                pdf=pdf,
+                summary=summary,
+                adult_mode=adult_mode,
+                free_book=free_book,
+                best_seller=best_seller,
+                book_user=request.user
+            )
+            book.save()
+            if book.free_book:
+                for user in User.objects.all():
+                    cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
+                    cart.cart_book.add(Book.objects.filter(book_id=book.book_id).first())
+    return render(request, 'user_dashboard/add_book.html', {})
+
+
+def user_delete_book(request, book_id):
+    Book.objects.filter(book_id=book_id).delete()
+    return HttpResponse('Success')

@@ -1,9 +1,12 @@
+import datetime
 import json
+import uuid
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
+from django.core.files.storage import FileSystemStorage
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
@@ -13,8 +16,9 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 from book_store.admin_dashboard.forms import book_form, register_form, user_mode_form, deal_voucher_form, \
     user_deal_voucher_form
-from book_store.admin_dashboard.models import Book, Voucher, VoucherUser, Quiz, Deal, Cart
+from book_store.admin_dashboard.models import Book, Voucher, VoucherUser, Quiz, Deal, Cart, BookAudio
 from book_store.user.models import User, Mode
+from mailjet_rest import Client
 
 
 @staff_member_required(login_url='/')
@@ -31,25 +35,112 @@ def index(request):
 
 @staff_member_required(login_url='/')
 def add_book(request):
+    # if request.method == 'POST':
+    #     form = book_form(request.POST, request.FILES)
+    #     if form.is_valid():
+    #         save = form.save()
+    #
+    #         if save.free_book:
+    #             for user in User.objects.all():
+    #                 cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
+    #                 cart.cart_book.add(Book.objects.filter(book_id = save.book_id).first())
+    #         return redirect('admin-home')
+    #     else:
+    #         for field, items in form.errors.items():
+    #             for item in items:
+    #                 print('{}: {}'.format(field, item))
+    #                 messages.error(request, '{}: {}'.format(field, item))
+    # else:
+    #     form = book_form()
     if request.method == 'POST':
-        form = book_form(request.POST, request.FILES)
-        if form.is_valid():
-            save = form.save()
+        title = request.POST.get('title')
 
-            if save.free_book:
+        year_of_publish = request.POST.get('year_of_publish')
+        no_of_pages = request.POST.get('no_of_pages')
+        genre = request.POST.get('genre')
+        price = request.POST.get('price')
+        author = request.POST.get('author')
+        adult_mode = request.POST.get('adult_mode')
+        best_seller = request.POST.get('best_seller')
+        free_book = request.POST.get('free_book')
+        summary = request.POST.get('summary')
+        cover_photo = request.FILES['cover_photo']
+
+
+
+        book_type = request.POST.get('book_type')
+        pdf = request.FILES['pdf']
+        fs = FileSystemStorage()
+        pdf = fs.save(pdf.name, pdf)
+        cover_photo = fs.save(cover_photo.name, cover_photo)
+
+        year_of_publish = datetime.datetime(int(year_of_publish), month=1, day=1).date()
+        print(adult_mode)
+        if adult_mode is None:
+            adult_mode = False
+        else:
+            adult_mode = True
+        if free_book is None:
+            free_book = False
+        else:
+            free_book = True
+        if best_seller is None:
+            best_seller = False
+        else:
+            best_seller = True
+
+        audios = []
+        if book_type == 'BOTH':
+            audios = request.FILES.getlist("file[]")
+            book = Book.objects.create(
+                title=title,
+                year_of_publish=year_of_publish,
+                no_of_pages=no_of_pages,
+                genre=genre,
+                price=price,
+                author=author,
+                cover_photo=cover_photo,
+                book_type=book_type,
+                pdf=pdf,
+                summary=summary,
+                adult_mode=adult_mode,
+                free_book=free_book,
+                best_seller=best_seller,
+                book_user= request.user
+            )
+            book.save()
+            if book.free_book:
                 for user in User.objects.all():
                     cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
-                    cart.cart_book.add(Book.objects.filter(book_id = save.book_id).first())
-            return redirect('admin-home')
+                    cart.cart_book.add(Book.objects.filter(book_id = book.book_id).first())
+            for audio in audios:
+                audio_file = fs.save(audio.name, audio)
+                BookAudio.objects.create(book=book,
+                                         audio=audio_file).save()
         else:
-            for field, items in form.errors.items():
-                for item in items:
-                    print('{}: {}'.format(field, item))
-                    messages.error(request, '{}: {}'.format(field, item))
-    else:
-        form = book_form()
-    print('test')
-    return render(request, 'dashboard/add_book.html', {'form': form})
+            book = Book.objects.create(
+                title=title,
+                year_of_publish=year_of_publish,
+                no_of_pages=no_of_pages,
+                genre=genre,
+                price=price,
+                author=author,
+                cover_photo=cover_photo,
+                book_type=book_type,
+                pdf=pdf,
+                summary=summary,
+                adult_mode=adult_mode,
+                free_book=free_book,
+                best_seller=best_seller,
+                book_user=request.user
+            )
+            book.save()
+            if book.free_book:
+                for user in User.objects.all():
+                    cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
+                    cart.cart_book.add(Book.objects.filter(book_id = book.book_id).first())
+    return render(request, 'dashboard/add_book.html', {})
+    # return HttpResponse('test')
 
 
 @staff_member_required(login_url='/')
@@ -89,16 +180,22 @@ def delete_book(request, book_id):
 
 @staff_member_required(login_url='/')
 def add_user(request):
-    form = register_form()
     if request.method == 'POST':
         form = register_form(request.POST)
 
-        print(form.is_valid())
         if form.is_valid():
             user = form.save(commit=False)
-            print('valid')
             user.password = make_password(user.password)
-            user.save()
+
+            code = uuid.uuid4().hex.upper()[0:6]
+
+            Voucher.objects.create(description='Signup Voucher',
+                                   credit=200, code=code).save()
+            voucher = Voucher.objects.filter(
+                voucher_id=Voucher.objects.filter(code=code).first().voucher_id
+            ).first()
+
+            VoucherUser.objects.create(voucher=voucher, user=user).save()
             return redirect('admin-home')
         else:
             for field, items in form.errors.items():
@@ -350,7 +447,7 @@ def save_question(request):
             quiz_type='QUESTION',
             quiz_question_statement=question,
             quiz_answer=answer,
-            quiz_book = Book.objects.filter(book_id=question_book[0]).first()
+            quiz_book=Book.objects.filter(book_id=question_book[0]).first()
         ).save()
 
         print(question, answer)
@@ -359,7 +456,6 @@ def save_question(request):
 
 def add_deal(request):
     books = Book.objects.all()
-    print(books)
     return render(request, 'dashboard/add_deal.html', {'books': books})
 
 
@@ -379,7 +475,8 @@ def save_deal(request):
         deal = Deal.objects.create()
         deal.deal_valid_upto = valid_upto
         deal.deal_percentage = percentage
-        deal.title = title
+        print(title)
+        deal.deal_title = title
         [deal.deal_book.add(book) for book in books]
         deal.save()
     return HttpResponse('Success')
@@ -393,3 +490,49 @@ def delete_deal(request, deal_id):
 def delete_quiz(request, quiz_id):
     Quiz.objects.filter(quiz_id=quiz_id).delete()
     return redirect('admin-list-deal')
+
+
+def test_mail(request):
+    api_key = '21b0378ce48d6aa976e690ccaef126cc'
+    api_secret = '6e3f27dce05716d6b7e45739dcdd93ac'
+    mailjet = Client(auth=(api_key, api_secret), version='v3.1')
+    data = {
+        'Messages': [
+            {
+                "From": {
+                    "Email": "ayesharaig786@gmail.com",
+                    "Name": "Ayesha"
+                },
+                "To": [
+                    {
+                        "Email": "ayesharaig786@gmail.com",
+                        "Name": "Ayesha"
+                    }
+                ],
+                "Subject": "Greetings from Mailjet.",
+                "TextPart": "My first Mailjet email",
+                "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
+                "CustomID": "AppGettingStartedTest"
+            }
+        ]
+    }
+    result = mailjet.send.create(data=data)
+    print(result.status_code)
+    print(result.json())
+    return HttpResponse('test')
+
+
+def make_author_user(request,user_id):
+    user = User.objects.filter(id = user_id).first()
+    user.is_author = True
+    user.save()
+    return HttpResponse('Success')
+
+
+def make_admin_user(request,user_id):
+    user = User.objects.filter(id = user_id).first()
+    user.is_admin = True
+    user.is_staff = True
+
+    user.save()
+    return HttpResponse('Success')

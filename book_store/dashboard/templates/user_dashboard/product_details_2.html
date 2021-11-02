@@ -26,19 +26,32 @@
                 <h5>
                     <strong>{{book.title}}</strong>
                 </h5>
-                <div class="add-to-cart-row" style="margin-left: 200px">
+                <div class="row" style="margin-left: 200px">
 
-                    <div class="add-cart-btn">
+                    <div class="add-cart-btn row" >
                         {% if book.is_buy %}
-                        {% if book.book_type == 'PDF' %}
-                        <a href="{% url 'user-read-book' book.book_id 1 %}" class="btn btn-outlined&#45;&#45;primary">Read
-                            Now</a>
-                        <a href="{% url 'user_review_book' book.book_id %}" class="btn btn-outlined&#45;&#45;primary">
-                            Review </a>
-                        {% else %}
-                        <a href="{% url 'user-read-book' book.book_id 1 %}" class="btn btn-outlined&#45;&#45;primary">Listen
-                            now</a>
-                        {% endif %}
+                            {% if book.book_type == 'PDF' %}
+                                <a href="{% url 'user-read-book' book.book_id 1 %}" style="margin-right:0.5%" class="btn btn-outlined&#45;&#45;primary">Read
+                                    Now</a>
+                                <a href="{% url 'user_review_book' book.book_id %}" style="margin-right:0.5%" class="btn btn-outlined&#45;&#45;primary">
+                                    Review </a>
+                            {% else %}
+                                <a href="{% url 'user-read-book' book.book_id 1 %}" style="margin-right:0.5%" class="btn btn-outlined&#45;&#45;primary">Read
+                                    Now</a>
+                                <div class="dropdown" style="margin-right:0.5%">
+                                    <button class="btn btn-secondary dropdown-toggle"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Listen
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        {% for audio in audios %}
+                                            <a class="dropdown-item" href="{% url 'user-listen_chapter-book' book.book_id audio.audio_id %}"> Chapter# {{forloop.counter}}</a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <a href="{% url 'user_review_book' book.book_id %}" style="margin-right:0.5%" class="btn btn-outlined&#45;&#45;primary">
+                                    Review </a>
+                            {% endif %}
+
 
                         {% else %}
                         <a onclick="add_to_cart({{book.book_id}})" class="btn btn-outlined&#45;&#45;primary">
@@ -158,6 +171,7 @@ function myFunction() {
 var cart = []
 function add_to_cart(book_id){
     cart.push(book_id);
+    alert("Book added to cart!");
 }
 
 function cart_click(){

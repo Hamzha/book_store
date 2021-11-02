@@ -37,9 +37,12 @@ Users List
                         <th style="text-align: center;">Last Name</th>
                         <th style="text-align: center;">Date of Birth</th>
                         <th style="text-align: center;">Admin</th>
-                        <th style="text-align: center;">Active</th>
+                        <th style="text-align: center;">Author</th>
                         <th style="text-align: center;">Edit</th>
                         <th style="text-align: center;">Delete</th>
+                        <th style="text-align: center;">Make Author</th>
+                        <th style="text-align: center;">Make Admin</th>
+
                     </tr>
                     </thead>
                     <tbody>
@@ -52,7 +55,7 @@ Users List
                         <td style="text-align: center;">{{ user.last_name }}</td>
                         <td style="text-align: center;">{{ user.date_of_birth }}</td>
                         <td style="text-align: center;">{{ user.is_admin }}</td>
-                        <td style="text-align: center;">{{ user.is_active }}</td>
+                        <td style="text-align: center;">{{ user.is_author }}</td>
                         <td style="text-align: center;">
                             <a href="{% url 'admin-edit-user' user.id %}">
                                 <i
@@ -100,6 +103,84 @@ Users List
 
                         </td>
 
+                        <td style="text-align: center;">
+                            <a data-toggle="modal" href="#admin-modal-author-user-{{user.id}}">
+                                <i
+                                        class="fas fa-users-cog"
+                                        style="color:gray">
+                                </i>
+                                <div class="modal fade" id="admin-modal-author-user-{{user.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content bg-danger">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Make Author this User</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are yuo sure you want to Make Author this user?</p>
+                                                <p>Username: {{user.username}}</p>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-outline-light"
+                                                        data-dismiss="modal">
+                                                    Close
+                                                </button>
+
+                                                <button onclick="make_author_user({{user.id}})" type="button"
+                                                        class="btn btn-outline-light">Make Author
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                            </a>
+
+                        </td>
+
+                        <td style="text-align: center;">
+                            <a data-toggle="modal" href="#admin-modal-make-admin-user-{{user.id}}">
+                                <i
+                                        class="fas fa-user-lock"
+                                        style="color:green">
+                                </i>
+                                <div class="modal fade" id="admin-modal-make-admin-user-{{user.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content bg-danger">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Make Admin the User</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are yuo sure you want to make Admin this user?</p>
+                                                <p>Username: {{user.username}}</p>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-outline-light"
+                                                        data-dismiss="modal">
+                                                    Close
+                                                </button>
+
+                                                <button onclick="make_admin_user({{user.id}})" type="button"
+                                                        class="btn btn-outline-light">Make Admin
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                            </a>
+
+                        </td>
+
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -123,8 +204,28 @@ Users List
             }
         });
     }
-
-
+    function make_author_user(user_id){
+        $.ajax({
+            url: 'make_author_user/'+parseInt(user_id),
+            type: 'get', // This is the default though, you don't actually need to always mention it
+            success: function(data) {
+                    window.location.href = '';
+            },
+            failure: function(data) {
+            }
+        });
+    }
+    function make_admin_user(user_id){
+        $.ajax({
+            url: 'make_admin_user/'+parseInt(user_id),
+            type: 'get', // This is the default though, you don't actually need to always mention it
+            success: function(data) {
+                    window.location.href = '';
+            },
+            failure: function(data) {
+            }
+        });
+    }
 
 
 </script>

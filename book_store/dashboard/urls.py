@@ -10,11 +10,15 @@ urlpatterns = [
     path('product_detail/<int:product_id>', views.product_detail, name='user-product-detail'),
 
     path('book_reader/<int:book_id>/<int:page_number>', views.booK_reader, name='user-read-book'),
-    path('get_book/<int:book_id>', views.get_book, name='user-get-book'),
+    path('book_listen/<int:book_id>', views.booK_listen, name='user-listen-book'),
+    path('book_listen_chapter/<int:book_id>/<int:chapter>', views.booK_listen_chapter, name='user-listen_chapter-book'),
+
+    path('get_book/<int:book_id>/<int:chapter_id>', views.get_book, name='user-get-book'),
 
     path('save_bookmark/<int:book_id>/<int:page_num>', views.save_bookmark, name='user-bookmark-save'),
+
     path('remove_bookmark/<int:book_id>/<int:page_num>', views.remove_bookmark, name='user-bookmark-save'),
-    path('save_quick_note/<int:book_id>/<int:page_num>', views.save_quick_notes, name='user-quick-notes'),
+    path('save_quick_note/<int:book_id>/<int:page_num>', views.save_quick_notes, name='user-save-quick-notes'),
     path('get_bookmark/<int:book_id>', views.get_bookmark, name='user-bookmark'),
 
     path('get_quick_notes/<int:book_id>', views.get_quick_notes, name='user-quick-notes'),
@@ -39,5 +43,10 @@ urlpatterns = [
 
     path('check_voucher', views.voucher_check, name='user_check_voucher'),
     path('attempt_quiz/<int:book_id>', views.attempt_quiz, name='user_attempt_quiz'),
-    path('check_answer', views.check_answer, name='user_check_answer')
+    path('check_answer', views.check_answer, name='user_check_answer'),
+
+    path('user_author_menu', views.user_author_menu, name= 'user_author_menu'),
+    path('user_author_add_book', views.user_author_add_book, name= 'user_author_add_book'),
+    path('user_delete_book/<int:book_id>', views.user_delete_book, name = 'user_delete_book')
+
 ]

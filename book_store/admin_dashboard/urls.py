@@ -16,6 +16,8 @@ urlpatterns = [
     path('list_user', views.list_user, name='admin-list-user'),
     path('edit_user/<int:user_id>', views.edit_user, name='admin-edit-user'),
     path('delete_user/<int:user_id>', views.delete_user, name='admin-delete-user'),
+    path('make_author_user/<int:user_id>', views.make_author_user, name='admin-make-author-user'),
+    path('make_admin_user/<int:user_id>', views.make_admin_user, name='admin-make_admin_user'),
 
     path('add_user_mode', views.add_mode, name='admin-add-user-mode'),
     path('list_user_mode', views.list_user_mode, name='admin-list-user-mode'),
@@ -47,6 +49,7 @@ urlpatterns = [
 
     path('delete_quiz/<int:quiz_id>', views.delete_quiz, name='admin_delete_quiz'),
 
+    path('check_mail',views.test_mail)
     # path('delete_user_deal_voucher/<int:deal_voucher_user_id>', views.delete_user_deal_voucher,
     #      name='admin-delete-deal-voucher-user-id'),
     # path('admin_edit_user_deal_voucher/<int:deal_voucher_user_id>', views.admin_edit_user_deal_voucher,

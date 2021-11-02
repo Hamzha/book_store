@@ -22,8 +22,9 @@ class Book(models.Model):
     summary = models.TextField(max_length=500, default='Not Available')
     adult_mode = models.BooleanField(default=False)
     free_book = models.BooleanField(default=False)
-    audio = models.FileField(null=True, blank=True, upload_to='books', default='images/not-available.png')
     best_seller = models.BooleanField(default=False)
+    book_user = models.ForeignKey(User, null=True,on_delete=models.CASCADE)
+    book_key = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -32,7 +33,7 @@ class Book(models.Model):
 class BookAudio(models.Model):
     audio_id = models.AutoField(primary_key=True)
     audio = models.FileField(null=True, blank=True, upload_to='books', default='images/not-available.png')
-    book = models.ManyToManyField(Book, null=True)
+    book = models.ForeignKey(Book, null=True, on_delete=models.CASCADE)
 
 
 class Voucher(models.Model):
@@ -52,17 +53,19 @@ class BookMark(models.Model):
     bookmark_id = models.AutoField(primary_key=True)
     bookmark_book = models.ForeignKey(Book, on_delete=models.CASCADE)
     bookmark_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    bookmark_page_number = models.IntegerField()
+    bookmark_audio = models.ForeignKey(BookAudio, on_delete=models.CASCADE, null=True, blank=True)
+    bookmark_page_number = models.IntegerField(null=True)
     bookmark_text = models.TextField(max_length=200, null=True, blank=True)
 
     def __str__(self):
-        return self.bookmark_page_number
+        return str(self.bookmark_id)
 
 
 class QuickNote(models.Model):
     QuickNote_id = models.AutoField(primary_key=True)
     QuickNote_book = models.ForeignKey(Book, on_delete=models.CASCADE)
     QuickNote_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    QuickNote_audio_book = models.ForeignKey(BookAudio, on_delete=models.CASCADE, null=True, blank=True)
     QuickNote_page_number = models.IntegerField()
     QuickNote_text = models.TextField(max_length=200, null=True, blank=True)
 
