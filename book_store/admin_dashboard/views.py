@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
 
 # Create your views here.
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
 from book_store.admin_dashboard.forms import book_form, register_form, user_mode_form, deal_voucher_form, \
     user_deal_voucher_form
@@ -33,25 +33,9 @@ def index(request):
     return render(request, 'dashboard/dashboard.html', data)
 
 
+@csrf_exempt
 @staff_member_required(login_url='/')
 def add_book(request):
-    # if request.method == 'POST':
-    #     form = book_form(request.POST, request.FILES)
-    #     if form.is_valid():
-    #         save = form.save()
-    #
-    #         if save.free_book:
-    #             for user in User.objects.all():
-    #                 cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
-    #                 cart.cart_book.add(Book.objects.filter(book_id = save.book_id).first())
-    #         return redirect('admin-home')
-    #     else:
-    #         for field, items in form.errors.items():
-    #             for item in items:
-    #                 print('{}: {}'.format(field, item))
-    #                 messages.error(request, '{}: {}'.format(field, item))
-    # else:
-    #     form = book_form()
     if request.method == 'POST':
         title = request.POST.get('title')
 
@@ -65,8 +49,6 @@ def add_book(request):
         free_book = request.POST.get('free_book')
         summary = request.POST.get('summary')
         cover_photo = request.FILES['cover_photo']
-
-
 
         book_type = request.POST.get('book_type')
         pdf = request.FILES['pdf']
@@ -106,17 +88,19 @@ def add_book(request):
                 adult_mode=adult_mode,
                 free_book=free_book,
                 best_seller=best_seller,
-                book_user= request.user
+                book_user=request.user
             )
             book.save()
+            send_mail(book)
             if book.free_book:
                 for user in User.objects.all():
                     cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
-                    cart.cart_book.add(Book.objects.filter(book_id = book.book_id).first())
+                    cart.cart_book.add(Book.objects.filter(book_id=book.book_id).first())
             for audio in audios:
                 audio_file = fs.save(audio.name, audio)
                 BookAudio.objects.create(book=book,
                                          audio=audio_file).save()
+
         else:
             book = Book.objects.create(
                 title=title,
@@ -135,10 +119,11 @@ def add_book(request):
                 book_user=request.user
             )
             book.save()
+            send_mail(book)
             if book.free_book:
                 for user in User.objects.all():
                     cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
-                    cart.cart_book.add(Book.objects.filter(book_id = book.book_id).first())
+                    cart.cart_book.add(Book.objects.filter(book_id=book.book_id).first())
     return render(request, 'dashboard/add_book.html', {})
     # return HttpResponse('test')
 
@@ -441,13 +426,13 @@ def save_question(request):
         data = json.loads(request.GET.dict()['data'])
         question = data['question']
         answer = data['answer']
-        question_book = list(map(int, data['question_book']))
+        question_book = data['question_book']
 
         quiz = Quiz.objects.create(
             quiz_type='QUESTION',
             quiz_question_statement=question,
             quiz_answer=answer,
-            quiz_book=Book.objects.filter(book_id=question_book[0]).first()
+            quiz_book=Book.objects.filter(book_id=question_book).first()
         ).save()
 
         print(question, answer)
@@ -492,7 +477,7 @@ def delete_quiz(request, quiz_id):
     return redirect('admin-list-deal')
 
 
-def test_mail(request):
+def send_mail(book):
     api_key = '21b0378ce48d6aa976e690ccaef126cc'
     api_secret = '6e3f27dce05716d6b7e45739dcdd93ac'
     mailjet = Client(auth=(api_key, api_secret), version='v3.1')
@@ -505,14 +490,15 @@ def test_mail(request):
                 },
                 "To": [
                     {
-                        "Email": "ayesharaig786@gmail.com",
+                        "Email": "ahmedhamza884@gmail.com",
                         "Name": "Ayesha"
                     }
                 ],
-                "Subject": "Greetings from Mailjet.",
+                "Subject": "New Book Added",
                 "TextPart": "My first Mailjet email",
-                "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!",
-                "CustomID": "AppGettingStartedTest"
+                "HTMLPart": "Dear beloved customer! A new Book is added in the Book Store. <br /> Name: " + book.title +
+                            "<br />Author: " + book.author + "<br /> Feel Free to visit anytime.<br /> Regards Book Store Co.",
+
             }
         ]
     }
@@ -522,15 +508,15 @@ def test_mail(request):
     return HttpResponse('test')
 
 
-def make_author_user(request,user_id):
-    user = User.objects.filter(id = user_id).first()
+def make_author_user(request, user_id):
+    user = User.objects.filter(id=user_id).first()
     user.is_author = True
     user.save()
     return HttpResponse('Success')
 
 
-def make_admin_user(request,user_id):
-    user = User.objects.filter(id = user_id).first()
+def make_admin_user(request, user_id):
+    user = User.objects.filter(id=user_id).first()
     user.is_admin = True
     user.is_staff = True
 

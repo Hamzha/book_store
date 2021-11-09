@@ -99,7 +99,73 @@
     </div>
     </div>
 </main>
+<section class="section-margin">
+    <div class="container">
+        <div class="section-title section-title--bordered">
+            <h2>RECOMMENDED FOR YOU</h2>
+        </div>
+        <div class="product-slider sb-slick-slider slider-border-single-row" data-slick-setting='{
+                "autoplay": true,
+                "autoplaySpeed": 8000,
+                "slidesToShow": 6,
+                "dots":true
+            }' data-slick-responsive='[
+                {"breakpoint":1200, "settings": {"slidesToShow": 5} },
+                {"breakpoint":992, "settings": {"slidesToShow": 4} },
+                {"breakpoint":768, "settings": {"slidesToShow": 3} },
+                {"breakpoint":480, "settings": {"slidesToShow": 2} },
+                {"breakpoint":320, "settings": {"slidesToShow": 1} }
+            ]'>
+            {% for book in recommandation %}
+                <div class="single-slide">
+                <div class="product-card">
 
+                    <div class="product-card--body">
+                        <div class="card-image">
+                            <img src="{{book.cover_photo.url}}" alt="">
+                            <div class="hover-contents">
+                               <h6>{{book.title}}</h6>
+                               <div class="row" style="font-size: small;">
+                                <div class="col-4"><span class="price">{{book.price}}</span></div>
+                            <div class="col-4"><span class="pub_year">{{book.year_of_publish}}</span></div>
+                            <div class="col-4"><span class="price">{{book.no_of_pages}}</span></div>
+
+                            </div>
+                                <p style="font-size: small;">
+                                    {{book.summary}}
+                                </p>
+
+                                <p style="font-size: small;"><strong>Author: </strong>{{book.author}}</p>
+                                <p style="font-size: small;"><strong>Genre: </strong>{{book.genre}}</p>
+
+
+
+                                <div class="hover-btns">
+                                    <a href="{% url 'user-product-detail' book.book_id %}"
+                                        class="single-btn">
+                                        Read Now
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="price-block">
+                            <div class="product-header">
+                                <h6><strong><a href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a></strong></h6>
+                            </div>
+                            <div class="row">
+                                <div class="col-6"><span class="price">{{book.price}} PKR</span></div>
+                            <div class="col-6"><span class="pub_year">{{book.year_of_publish}}</span></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 <script>
   $(document).ready(function(){
     var voucher = '';

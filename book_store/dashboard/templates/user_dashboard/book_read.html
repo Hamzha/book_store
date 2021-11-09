@@ -53,6 +53,7 @@
 
 
 
+
 </style>
 
 <div class="top-bar-book row" style="margin-left: 21%; width: 79%">
@@ -112,7 +113,7 @@
 <div class="row" style="margin-left:21%; margin-top:1%; align-items: center;">
     <h3>Go to Page#</h3>
     <input style="margin-left:1%; width:5%; text-align: center;" type="number" min="1" id="goto_page"/>
-    <button style="margin-left: 1%;background: silver; height:30px; width: 50px" onclick="goto_page()"> Go </button>
+    <button style="margin-left: 1%;background: silver; height:30px; width: 50px" onclick="goto_page()"> Go</button>
 </div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -145,16 +146,19 @@
         </div>
     </div>
 </div>
-<div class="row" style="margin-left: 21%; width: 79%; margin-bottom: 20px " >
-    <div
-            style="
+
+
+<div class="row" style="margin-left: 21%; width: 79%; margin-bottom: 20px ">
+
+    <div style="
       margin-top: 50px;
       box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.8);
       width: 40%;
-    "
-    >
-        <canvas id="pdf-render" style="width: 100%"></canvas>
+      height: 800px;
+      overflow:scroll;
+    ">
 
+        <canvas id="pdf-render" style="width: 100%"></canvas>
     </div>
     <div style="width: 30%; margin-top: 50px;height: fit-content; margin-left: 5%">
         <!--        <button class="btn btn-primary" onclick="save_bookmark({{book.book_id}})">BookMark this page</button>-->
@@ -167,7 +171,7 @@
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
-                     style=" padding-left:20px; padding-right: 20px; font-size: 10px"
+                    style=" padding-left:20px; padding-right: 20px; font-size: 10px"
             >
                 BookMark
             </a>
@@ -193,13 +197,23 @@
             </button>
         </div>
         <div style="margin-top:15px" id="quiz-attempt">
-            <button class="btn" style="margin-top: 10x;background: grey;color: white;font-size: 15px;width: 180px;padding-left: 5px;padding-right: 5px;"
-                    ><a href="{% url 'user_attempt_quiz' book.book_id %}">Attempt the quiz</a>
+            <button class="btn"
+                    style="margin-top: 10x;background: grey;color: white;font-size: 15px;width: 180px;padding-left: 5px;padding-right: 5px;"
+            ><a href="{% url 'user_attempt_quiz' book.book_id %}">Attempt the quiz</a>
             </button>
         </div>
     </div>
 
 </div>
+<div class="row" style="margin-left:21%; margin-top:1%;margin-bottom: 2%">
+           <button class="btn" onclick="zoom_in()" style="padding-left:18px; padding-right: 18px; font-size: 10px">
+            Zoom In</i>
+        </button>
+    <button class="btn" onclick="zoom_out()" style="margin-left:2%;padding-left:18px; padding-right: 18px; font-size: 10px">
+            Zoom out</i>
+        </button>
+</div>
+<!-- Button trigger modal -->
 
 
 <!-- Scrollable modal -->
@@ -271,6 +285,43 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log(data)
         }
     });
+
+
+
+    var canvas = document.getElementById("pdf-render");
+    var context = canvas.getContext("2d");
+    var scale = 1.5;
+    var originx = 0;
+    var originy = 0;
+
+    canvas.onmousewheel = function (event){
+        var mousex = event.clientX - canvas.offsetLeft;
+        var mousey = event.clientY - canvas.offsetTop;
+        var wheel = event.wheelDelta/120;//n or -n
+
+
+        //according to Chris comment
+        var zoom = Math.pow(1 + Math.abs(wheel)/2 , wheel > 0 ? 1 : -1);
+
+        context.translate(
+            originx,
+            originy
+        );
+        context.scale(zoom,zoom);
+        context.translate(
+            -( mousex / scale + originx - mousex / ( scale * zoom ) ),
+            -( mousey / scale + originy - mousey / ( scale * zoom ) )
+        );
+
+        originx = ( mousex / scale + originx - mousex / ( scale * zoom ) );
+        originy = ( mousey / scale + originy - mousey / ( scale * zoom ) );
+        scale *= zoom;
+    }
+
+
+
+
+
 });
 
 function save_quick_notes(book_id) {
@@ -347,6 +398,11 @@ let url_pdf = null;
 var obj = new Object();
 obj.type = 'pdf';
 var jsonString= JSON.stringify(obj);
+
+var zoom_factor = 1;
+var page_number = 1;
+
+
 $.ajax({
     url: '{% url "user-get-book" book.book_id 0 %}',
     type: 'get', // This is the default though, you don't actually need to always mention it
@@ -365,15 +421,15 @@ $.ajax({
         // Render the page
         const renderPage = num => {
             pageIsRendering = true;
-
+            page_number = num;
             // Get page
             pdfDoc.getPage(num).then(page => {
                 // Set scale
                 const viewport = page.getViewport({
                     scale
                 });
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+                canvas.height = viewport.height * zoom_factor;
+                canvas.width = viewport.width * zoom_factor;
 
                 const renderCtx = {
                     canvasContext: ctx,
@@ -444,6 +500,13 @@ $.ajax({
         // Button Events
         document.querySelector('#prev-page').addEventListener('click', showPrevPage);
         document.querySelector('#next-page').addEventListener('click', showNextPage);
+        $(document).on("click", "#zoom", function () {
+            //your code
+            zoom_factor = 0.5
+
+            renderPage(page_number)
+
+        });
 
 
 
@@ -591,8 +654,30 @@ function goto_page(){
     window.location = "/book_reader/"+{{book.book_id}}+"/"+$('#goto_page').val();
 }
 
+var width = $('#pdf-render').width()
 
+function zoomed(){
+    if($('#pdf-render').width() == 2000){
+        $('#pdf-render').width(300);
+    } else{
+        $('#pdf-render').width(2000);
+    }
+}
 
+function zoom_in(){
+    $('#pdf-render').width($('#pdf-render').width() * 1.5);
+}
+
+function zoom_out(){
+
+    $('#pdf-render').width($('#pdf-render').width() / 1.5);
+}
+
+jQuery(document).ready(function(){
+   $("#wrapper").mouseover(function(e){
+      $('#status').html(e.pageX +', '+ e.pageY);
+   });
+})
 
 </script>
 

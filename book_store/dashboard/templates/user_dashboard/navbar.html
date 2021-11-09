@@ -1,3 +1,5 @@
+{% load filters_user %}
+
 <div class="site-header d-none d-lg-block">
     <div class="header-middle pt--10 pb--10">
         <div class="container">
@@ -25,36 +27,36 @@
 
                                     <li class="cus-col-33">
                                         <ul class="mega-single-block">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Adventure</a></li>
-                                            <li><a href="#">Art/ Architecture</a></li>
-                                            <li><a href="#">Autobiography</a></li>
-                                            <li><a href="#">Anthology</a></li>
-                                            <li><a href="#">Biography</a></li>
-                                            <li><a href="#">Business</a></li>
-                                            <li><a href="#">Children</a></li>
-                                            <li><a href="#">Classic</a></li>
-                                            <li><a href="#">Comic Book</a></li>
-                                            <li><a href="#">Crime</a></li>
-                                            <li><a href="#">Drama</a></li>
+                                            <li><a href="user_genre/Action">Action</a></li>
+                                            <li><a href="user_genre/Adventure">Adventure</a></li>
+                                            <li><a href="user_genre/Art/Architecture">Art/Architecture</a></li>
+                                            <li><a href="user_genre/Autobiography">Autobiography</a></li>
+                                            <li><a href="user_genre/Anthology">Anthology</a></li>
+                                            <li><a href="user_genre/Biography">Biography</a></li>
+                                            <li><a href="user_genre/Business">Business</a></li>
+                                            <li><a href="user_genre/Children">Children</a></li>
+                                            <li><a href="user_genre/Classic">Classic</a></li>
+                                            <li><a href="user_genre/ComicBook">Comic Book</a></li>
+                                            <li><a href="user_genre/Crime">Crime</a></li>
+                                            <li><a href="user_genre/Drama">Drama</a></li>
 
 
                                         </ul>
                                     </li>
                                     <li class="cus-col-33">
                                         <ul class="mega-single-block">
-                                            <li><a href="#">FairyTail</a></li>
-                                            <li><a href="#">Fantasy</a></li>
-                                            <li><a href="#">Health/Fitness</a></li>
-                                            <li><a href="#">History</a></li>
-                                            <li><a href="#">Historical Fiction</a></li>
-                                            <li><a href="#">Humor</a></li>
-                                            <li><a href="#">Horror</a></li>
-                                            <li><a href="#">Mystery</a></li>
-                                            <li><a href="#">Paranormal romance</a></li>
-                                            <li><a href="#">Philosophy</a></li>
-                                            <li><a href="#">Poetry</a></li>
-                                            <li><a href="#">Political thriller</a></li>
+                                            <li><a href="user_genre/FairyTail">Fairy Tail</a></li>
+                                            <li><a href="user_genre/Fantasy">Fantasy</a></li>
+                                            <li><a href="user_genre/Health/Fitness">Health/Fitness</a></li>
+                                            <li><a href="user_genre/History">History</a></li>
+                                            <li><a href="user_genre/HistoricalFiction">Historical Fiction</a></li>
+                                            <li><a href="user_genre/Humor">Humor</a></li>
+                                            <li><a href="user_genre/Horror">Horror</a></li>
+                                            <li><a href="user_genre/Mystery">Mystery</a></li>
+                                            <li><a href="user_genre/Paranormalromance">Paranormal romance</a></li>
+                                            <li><a href="user_genre/Philosophy">Philosophy</a></li>
+                                            <li><a href="user_genre/Poetry">Poetry</a></li>
+                                            <li><a href="user_genre/Politicalthriller">Political thriller</a></li>
 
 
                                         </ul>
@@ -62,32 +64,32 @@
                                     <li class="cus-col-33">
 
                                         <ul class="mega-single-block">
-                                            <li><a href="#">Religion/spirituality</a></li>
-                                            <li><a href="#">Romance</a></li>
-                                            <li><a href="#">Science fiction</a></li>
-                                            <li><a href="#">Suspense</a></li>
-                                            <li><a href="#">Self help</a></li>
-                                            <li><a href="#">Sports and leisure</a></li>
-                                            <li><a href="#">Thriller</a></li>
-                                            <li><a href="#">Travel</a></li>
-                                            <li><a href="#">True Crime</a></li>
-                                            <li><a href="#">Western</a></li>
-                                            <li><a href="#">Young Adult</a></li>
+                                            <li><a href="user_genre/Religion/spirituality">Religion/spirituality</a></li>
+                                            <li><a href="user_genre/Romance">Romance</a></li>
+                                            <li><a href="user_genre/Sciencefiction">Science fiction</a></li>
+                                            <li><a href="user_genre/Suspense">Suspense</a></li>
+                                            <li><a href="user_genre/Selfhelp">Self help</a></li>
+                                            <li><a href="user_genre/Sportsandleisure">Sports and leisure</a></li>
+                                            <li><a href="user_genre/Thriller">Thriller</a></li>
+                                            <li><a href="user_genre/Travel">Travel</a></li>
+                                            <li><a href="user_genre/TrueCrime">True Crime</a></li>
+                                            <li><a href="user_genre/Western">Western</a></li>
+                                            <li><a href="user_genre/YoungAdult">Young Adult</a></li>
                                         </ul>
                                     </li>
                                 </ul>
                             </li>
 
                             <li class="menu-item">
-                                <a href="index-3.html">PDF Books</a>
+                                <a href="{% url 'user-pdf-book' %}">PDF Books</a>
 
                             </li>
                             <li class="menu-item">
-                                <a href="index-3.html">Audiobooks</a>
+                                <a href="{% url 'user-audio-book' %}">Audiobooks</a>
 
                             </li>
                             <li class="menu-item">
-                                <a href="index-3.html">BestSeller </a>
+                                <a href="{% url 'user-best-book' %}">BestSeller </a>
                             </li>
 
                         </ul>
@@ -99,6 +101,7 @@
                             <a href="javascript:void(0)" class="category-trigger"><i
                                     class="fa fa-bars"></i></a>
                             <ul class="category-menu">
+                                {% if request.user.date_of_birth|calculate_years > 18 %}
                                 <li class="cat-item has-children">
                                     <a href="#">Mode</a>
                                     <ul class="sub-menu">
@@ -107,7 +110,7 @@
 
                                     </ul>
                                 </li>
-
+                                {% endif %}
                                 {% if request.user.is_author %}
                                 <li class="cat-item">
                                     <a href="{% url 'user_author_menu' %}">Author</a>
@@ -173,8 +176,8 @@
 
                 <div class="col-lg-4">
                     <div class="header-search-block">
-                        <input type="text" placeholder="Enter your keyword..">
-                        <button><i class="fas fa-search"></i></button>
+                        <input type="text" id="search_book_text" placeholder="Enter your keyword..">
+                        <button onclick="search_book()"><i class="fas fa-search"></i></button>
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -369,4 +372,10 @@
     </aside>
     <!--Off Canvas Navigation End-->
 </div>
-       
+
+<script>
+    function search_book(){
+        window.location = "/search_book/"+$('#search_book_text').val();
+    }
+
+</script>

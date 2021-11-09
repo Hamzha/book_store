@@ -49,7 +49,7 @@ urlpatterns = [
 
     path('delete_quiz/<int:quiz_id>', views.delete_quiz, name='admin_delete_quiz'),
 
-    path('check_mail',views.test_mail)
+    path('check_mail', views.send_mail)
     # path('delete_user_deal_voucher/<int:deal_voucher_user_id>', views.delete_user_deal_voucher,
     #      name='admin-delete-deal-voucher-user-id'),
     # path('admin_edit_user_deal_voucher/<int:deal_voucher_user_id>', views.admin_edit_user_deal_voucher,

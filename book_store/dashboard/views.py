@@ -1,7 +1,7 @@
 import json
 import random
 import string
-from datetime import datetime
+from datetime import datetime, timezone
 from itertools import chain
 import uuid;
 from django.contrib import messages
@@ -11,6 +11,8 @@ from django.contrib.auth import authenticate, login as login_user, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Q
 from django.http import JsonResponse, HttpResponse, FileResponse
 from django.shortcuts import render, redirect
 from django.core import serializers
@@ -20,6 +22,7 @@ from django.forms.models import model_to_dict
 from django.contrib.auth.hashers import make_password
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
+from mailjet_rest import Client
 
 from book_store.admin_dashboard.models import Book, BookMark, QuickNote, Wishlist, Cart, Review, Deal, VoucherUser, \
     Voucher, Quiz, BookAudio
@@ -88,10 +91,13 @@ def product_detail(request, product_id):
     except:
         rating = 0
     audio = BookAudio.objects.filter(book=book['book_id'])
+
+    recommandation = Book.objects.filter(genre=book['genre'])
+
     return render(request, 'user_dashboard/product_details_2.html',
                   {'book': book, 'book_id': book['book_id'], 'summary': summary, 'year': book['year_of_publish'].year,
                    'month': book['year_of_publish'].strftime("%b"), 'day': book['year_of_publish'].day,
-                   'reviews': reviews, 'ratings': rating, 'audios': audio})
+                   'reviews': reviews, 'ratings': rating, 'audios': audio, 'recommandation': recommandation})
 
 
 # def dashboard(request):
@@ -367,8 +373,12 @@ def cart(request):
             print(total)
         except Exception as ex:
             total = float(book.price) + total
-    print(total)
-    return render(request, 'user_dashboard/cart.html', {'books': books, 'total': total})
+    print(books)
+
+    recommandation = Book.objects.filter(genre=books[0].genre)
+
+    return render(request, 'user_dashboard/cart.html',
+                  {'books': books, 'total': total, 'recommandations': recommandation})
 
 
 @login_required(login_url='/')
@@ -513,8 +523,9 @@ def voucher_check(request):
 @login_required(login_url='/')
 def attempt_quiz(request, book_id):
     book = Book.objects.filter(book_id=book_id).first()
-    quiz = Quiz.objects.filter(quiz_book=book)
-    print(quiz)
+    quiz = Quiz.objects.filter(quiz_book=book).all()
+
+    print(Quiz.objects.all())
     return render(request, 'user_dashboard/attempt_quiz.html', {'book': book, 'quizs': quiz})
 
 
@@ -543,7 +554,7 @@ def check_answer(request):
                 ).first()
 
                 VoucherUser.objects.create(voucher=voucher, user=request.user).save()
-                score = score + 1
+                score = score + 2
 
     json_data = json.dumps({'result': score})
 
@@ -637,6 +648,7 @@ def user_author_add_book(request):
                 book_user=request.user
             )
             book.save()
+            send_mail(book)
             if book.free_book:
                 for user in User.objects.all():
                     cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
@@ -663,6 +675,8 @@ def user_author_add_book(request):
                 book_user=request.user
             )
             book.save()
+            send_mail(book)
+
             if book.free_book:
                 for user in User.objects.all():
                     cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
@@ -673,3 +687,209 @@ def user_author_add_book(request):
 def user_delete_book(request, book_id):
     Book.objects.filter(book_id=book_id).delete()
     return HttpResponse('Success')
+
+
+def user_get_genre_book(request, genre):
+    books = Book.objects.filter(genre=genre)
+    diff = 12
+
+    diff = datetime.now(timezone.utc) - request.user.date_of_birth
+    diff = diff.seconds / (365.25 * 24 * 60 * 60)
+    books_list = []
+    if diff < 18:
+        [books_list.append(to_dict(book)) for book in books if book.adult_mode == False]
+    else:
+        [books_list.append(to_dict(book)) for book in books]
+    for index, book in enumerate(books_list):
+        reviews = Review.objects.filter(review_book=book['book_id'])
+        rating = 0
+        for review in reviews:
+            rating = rating + review.review_rate
+        try:
+            rating = int(rating / len(reviews))
+        except:
+            rating = 0
+        books_list[index]['rating'] = rating
+    books_list_final = []
+    print(books_list)
+    # if diff < 18:
+    #     books_list_final = [book for book in books_list if book['adult_mode'] != True]
+
+    return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list, 'genre': genre})
+
+
+def user_get_best_book(request):
+    books = Book.objects.filter(best_seller=True)
+    diff = 12
+
+    diff = datetime.now(timezone.utc) - request.user.date_of_birth
+    diff = diff.seconds / (365.25 * 24 * 60 * 60)
+    books_list = []
+    if diff < 18:
+        [books_list.append(to_dict(book)) for book in books if book.adult_mode == False]
+    else:
+        [books_list.append(to_dict(book)) for book in books]
+    for index, book in enumerate(books_list):
+        reviews = Review.objects.filter(review_book=book['book_id'])
+        rating = 0
+        for review in reviews:
+            rating = rating + review.review_rate
+        try:
+            rating = int(rating / len(reviews))
+        except:
+            rating = 0
+        books_list[index]['rating'] = rating
+    books_list_final = []
+    print(books_list)
+    # if diff < 18:
+    #     books_list_final = [book for book in books_list if book['adult_mode'] != True]
+    return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list})
+
+
+def user_get_best_book(request):
+    books = Book.objects.filter(best_seller=True)
+    diff = 12
+
+    diff = datetime.now(timezone.utc) - request.user.date_of_birth
+    diff = diff.seconds / (365.25 * 24 * 60 * 60)
+
+    books_list = []
+
+    if diff < 18:
+        [books_list.append(to_dict(book)) for book in books if book.adult_mode == False]
+    else:
+        [books_list.append(to_dict(book)) for book in books]
+    for index, book in enumerate(books_list):
+        reviews = Review.objects.filter(review_book=book['book_id'])
+        rating = 0
+        for review in reviews:
+            rating = rating + review.review_rate
+        try:
+            rating = int(rating / len(reviews))
+        except:
+            rating = 0
+        books_list[index]['rating'] = rating
+    books_list_final = []
+    print(books_list)
+    # if diff < 18:
+    #     books_list_final = [book for book in books_list if book['adult_mode'] != True]
+    return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list, 'genre': 'Best Seller'})
+
+
+def user_get_audio_book(request):
+    books = Book.objects.filter(book_type="BOTH")
+    diff = 12
+
+    diff = datetime.now(timezone.utc) - request.user.date_of_birth
+    diff = diff.seconds / (365.25 * 24 * 60 * 60)
+
+    books_list = []
+
+    if diff < 18:
+        [books_list.append(to_dict(book)) for book in books if book.adult_mode == False]
+    else:
+        [books_list.append(to_dict(book)) for book in books]
+    for index, book in enumerate(books_list):
+        reviews = Review.objects.filter(review_book=book['book_id'])
+        rating = 0
+        for review in reviews:
+            rating = rating + review.review_rate
+        try:
+            rating = int(rating / len(reviews))
+        except:
+            rating = 0
+        books_list[index]['rating'] = rating
+    books_list_final = []
+    print(books_list)
+    # if diff < 18:
+    #     books_list_final = [book for book in books_list if book['adult_mode'] != True]
+    return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list, 'genre': 'Audio and PDF'})
+
+
+def user_get_pdf_book(request):
+    books = Book.objects.filter(book_type="PDF")
+    diff = 12
+
+    diff = datetime.now(timezone.utc) - request.user.date_of_birth
+    diff = diff.seconds / (365.25 * 24 * 60 * 60)
+
+    books_list = []
+
+    if diff < 18:
+        [books_list.append(to_dict(book)) for book in books if book.adult_mode == False]
+    else:
+        [books_list.append(to_dict(book)) for book in books]
+    for index, book in enumerate(books_list):
+        reviews = Review.objects.filter(review_book=book['book_id'])
+        rating = 0
+        for review in reviews:
+            rating = rating + review.review_rate
+        try:
+            rating = int(rating / len(reviews))
+        except:
+            rating = 0
+        books_list[index]['rating'] = rating
+    books_list_final = []
+    print(books_list)
+    # if diff < 18:
+    #     books_list_final = [book for book in books_list if book['adult_mode'] != True]
+    return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list, 'genre': 'PDF Books'})
+
+
+def user_search_book(request, search):
+    books = Book.objects.filter(
+        Q(title__icontains=search) | Q(genre__icontains=search) | Q(author__icontains=search) | Q(
+            summary__icontains=search))
+    diff = 12
+
+    diff = datetime.now(timezone.utc) - request.user.date_of_birth
+    diff = diff.seconds / (365.25 * 24 * 60 * 60)
+
+    books_list = []
+
+    if diff < 18:
+        [books_list.append(to_dict(book)) for book in books if book.adult_mode == False]
+    else:
+        [books_list.append(to_dict(book)) for book in books]
+    for index, book in enumerate(books_list):
+        reviews = Review.objects.filter(review_book=book['book_id'])
+        rating = 0
+        for review in reviews:
+            rating = rating + review.review_rate
+        try:
+            rating = int(rating / len(reviews))
+        except:
+            rating = 0
+        books_list[index]['rating'] = rating
+    return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list, 'genre': search})
+
+
+def send_mail(book):
+    api_key = '21b0378ce48d6aa976e690ccaef126cc'
+    api_secret = '6e3f27dce05716d6b7e45739dcdd93ac'
+    mailjet = Client(auth=(api_key, api_secret), version='v3.1')
+    data = {
+        'Messages': [
+            {
+                "From": {
+                    "Email": "ayesharaig786@gmail.com",
+                    "Name": "Ayesha"
+                },
+                "To": [
+                    {
+                        "Email": "ahmedhamza884@gmail.com",
+                        "Name": "Ayesha"
+                    }
+                ],
+                "Subject": "New Book Added",
+                "TextPart": "My first Mailjet email",
+                "HTMLPart": "Dear beloved customer! A new Book is added in the Book Store. <br /> Name: " + book.title +
+                            "<br />Author: " + book.author + "<br /> Feel Free to visit anytime.<br /> Regards Book Store Co.",
+
+            }
+        ]
+    }
+    result = mailjet.send.create(data=data)
+    print(result.status_code)
+    print(result.json())
+    return HttpResponse('test')

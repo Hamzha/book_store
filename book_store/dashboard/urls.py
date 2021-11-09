@@ -47,6 +47,13 @@ urlpatterns = [
 
     path('user_author_menu', views.user_author_menu, name= 'user_author_menu'),
     path('user_author_add_book', views.user_author_add_book, name= 'user_author_add_book'),
-    path('user_delete_book/<int:book_id>', views.user_delete_book, name = 'user_delete_book')
+    path('user_delete_book/<int:book_id>', views.user_delete_book, name = 'user_delete_book'),
+    path('user_genre/<str:genre>', views.user_get_genre_book, name = 'user-genre-book'),
+    path('user_best_book', views.user_get_best_book, name='user-best-book'),
+    path('user_audio_book', views.user_get_audio_book, name='user-audio-book'),
+    path('pdf_book', views.user_get_pdf_book, name='user-pdf-book'),
+    path('search_book/<str:search>', views.user_search_book, name='user_search_book'),
+
+    path('check_mail', views.send_mail)
 
 ]
