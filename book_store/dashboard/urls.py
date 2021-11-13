@@ -37,6 +37,7 @@ urlpatterns = [
     path('review_save/<int:book_id>', views.review_save_book, name='user-save-review'),
 
     path('wishlist', views.wishlist, name='user_wishlist'),
+    path('wishlist/<str:sort>', views.wishlist_sort, name='user_wishlist_sort'),
 
     path('deals_discounts', views.deal_discounts, name= 'user_deals_discount'),
     path('vouchers', views.voucher_list, name='user_voucher'),
@@ -53,7 +54,7 @@ urlpatterns = [
     path('user_audio_book', views.user_get_audio_book, name='user-audio-book'),
     path('pdf_book', views.user_get_pdf_book, name='user-pdf-book'),
     path('search_book/<str:search>', views.user_search_book, name='user_search_book'),
+    path('filter_book/', views.user_filter_book, name='user_filter_book'),
 
-    path('check_mail', views.send_mail)
-
+    path('check_mail', views.send_mail),
 ]

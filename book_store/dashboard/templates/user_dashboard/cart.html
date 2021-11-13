@@ -17,8 +17,8 @@
                 <div class="col-12">
                     <form action="#" class="">
                         <!-- Cart Table -->
-                        <div class="cart-table table-responsive mb--40">
-                            <table class="table">
+                        <div class=" row">
+                            <table class="table" style="width: 70%;border: groove;">
                                 <!-- Head Row -->
                                 <thead>
                                 <tr>
@@ -53,24 +53,46 @@
                                 </tr>
 
                                 {% endfor %}
-                                <tr>
-                                    <td colspan="6" class="actions">
-                                        <div class="coupon-block">
-                                            <div class="coupon-text">
-                                                <label for="coupon_code">Coupon:</label>
-                                                <input type="text" name="coupon_code" class="input-text"
-                                                       id="coupon_code" value="" placeholder="Coupon code">
-                                            </div>
-                                            <div class="coupon-btn">
-                                                <input  class="btn btn-outlined"
-                                                       name="apply_coupon" id="apply_coupon"  value="Apply coupon">
-                                            </div>
-                                        </div>
 
-                                    </td>
-                                </tr>
                                 </tbody>
                             </table>
+                            <div style="width: 28%; margin-left:2%">
+                                <div class="coupon-block"
+                                     style="background: #ee964b;padding-bottom: 20%;padding-top: 10%;">
+                                    <div class="coupon-text" style="text-align: center;">
+                                        <label class="c-btn" for="coupon_code" style="background: #ee964b;
+                                        font-size: 25px;color: white;width: 60%;text-align: -webkit-center;">
+                                            Coupon:</label>
+
+                                        <input type="text" style="margin-top: 2%;line-height: 37px;text-align: center;
+                                        margin-bottom: 7%;" name="coupon_code" class="input-text"
+                                               id="coupon_code" value="" placeholder="Coupon code">
+                                    </div>
+                                    <div class="coupon-btn" style="; text-align: center;">
+                                        <button class="btn btn-outlined" style="padding-left:10px; color: white;
+                                         padding-right: 10px"
+                                                name="apply_coupon" id="apply_coupon">Apply coupon
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex" style="    margin-top: 5%;">
+                                    <div class="cart-summary" style="float: none;margin-left: 0px !important;
+                                    padding-left: 0px;">
+                                        <div class="cart-summary-wrap">
+                                            <h4><span>Cart Summary</span></h4>
+                                            <h2>Total <span class="text-primary">&nbsp; PKR</span> <span
+                                                    class="text-primary" id="final_total">{{total}}</span></h2>
+                                        </div>
+                                        <div class="cart-summary-button">
+                                            <a href="{% url 'user-cart-payment' %}"
+                                               class="checkout-btn c-btn btn--primary">Checkout</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -83,18 +105,6 @@
 
             </div>
             <!-- Cart Summary -->
-            <div class="col-lg-12 col-12 d-flex">
-                <div class="cart-summary">
-                    <div class="cart-summary-wrap">
-                        <h4><span>Cart Summary</span></h4>
-
-                        <h2>Total <span class="text-primary">&nbsp; PKR</span> <span class="text-primary" id="final_total">{{total}}</span></h2>
-                    </div>
-                    <div class="cart-summary-button">
-                        <a href="{% url 'user-cart-payment' %}" class="checkout-btn c-btn btn--primary">Checkout</a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     </div>
@@ -117,20 +127,20 @@
                 {"breakpoint":320, "settings": {"slidesToShow": 1} }
             ]'>
             {% for book in recommandation %}
-                <div class="single-slide">
+            <div class="single-slide">
                 <div class="product-card">
 
                     <div class="product-card--body">
                         <div class="card-image">
                             <img src="{{book.cover_photo.url}}" alt="">
                             <div class="hover-contents">
-                               <h6>{{book.title}}</h6>
-                               <div class="row" style="font-size: small;">
-                                <div class="col-4"><span class="price">{{book.price}}</span></div>
-                            <div class="col-4"><span class="pub_year">{{book.year_of_publish}}</span></div>
-                            <div class="col-4"><span class="price">{{book.no_of_pages}}</span></div>
+                                <h6>{{book.title}}</h6>
+                                <div class="row" style="font-size: small;">
+                                    <div class="col-4"><span class="price">{{book.price}}</span></div>
+                                    <div class="col-4"><span class="pub_year">{{book.year_of_publish}}</span></div>
+                                    <div class="col-4"><span class="price">{{book.no_of_pages}}</span></div>
 
-                            </div>
+                                </div>
                                 <p style="font-size: small;">
                                     {{book.summary}}
                                 </p>
@@ -139,10 +149,9 @@
                                 <p style="font-size: small;"><strong>Genre: </strong>{{book.genre}}</p>
 
 
-
                                 <div class="hover-btns">
                                     <a href="{% url 'user-product-detail' book.book_id %}"
-                                        class="single-btn">
+                                       class="single-btn">
                                         Read Now
                                     </a>
                                 </div>
@@ -151,11 +160,13 @@
                         </div>
                         <div class="price-block">
                             <div class="product-header">
-                                <h6><strong><a href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a></strong></h6>
+                                <h6><strong><a
+                                        href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a></strong>
+                                </h6>
                             </div>
                             <div class="row">
                                 <div class="col-6"><span class="price">{{book.price}} PKR</span></div>
-                            <div class="col-6"><span class="pub_year">{{book.year_of_publish}}</span></div>
+                                <div class="col-6"><span class="pub_year">{{book.year_of_publish}}</span></div>
 
                             </div>
                         </div>
@@ -199,6 +210,7 @@
         });
     });
   });
+
 </script>
 
 {% endblock content %}

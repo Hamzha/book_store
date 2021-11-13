@@ -81,6 +81,7 @@ class Cart(models.Model):
     cart_user = models.ForeignKey(User, on_delete=models.CASCADE)
     cart_book = models.ManyToManyField(Book)
     payment_status = models.CharField(max_length=200, null=True, blank=True)
+    cart_date = models.DateField(default=datetime.date.today)
     cart_detail = models.CharField(max_length=200, null=True, blank=True)
 
 

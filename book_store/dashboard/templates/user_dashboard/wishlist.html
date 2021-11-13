@@ -9,6 +9,8 @@
 {% block content %}
 
 <div class="cart_area inner-page-sec-padding-bottom">
+
+
     <div class="container">
         <div id="mySidenav" class="sidenav">
             <div style="margin-left:5%">
@@ -24,34 +26,35 @@
 
                     </div>
                 </div>
+
                 <h6>By Price</h6>
                 <div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                        <input class="form-check-input" type="checkbox" value="0" id="by-price"/>
                         <label class="form-check-label" for="flexCheckDefault">
                             Free
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                        <input class="form-check-input" type="checkbox" value="1" id="by-price"/>
                         <label class="form-check-label" for="flexCheckDefault">
                             0 - 500
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                        <input class="form-check-input" type="checkbox" value="2" id="by-price"/>
                         <label class="form-check-label" for="flexCheckDefault">
                             501 - 1000
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                        <input class="form-check-input" type="checkbox" value="3" id="by-price"/>
                         <label class="form-check-label" for="flexCheckDefault">
                             1001 - 1500
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                        <input class="form-check-input" type="checkbox" value="4" id="by-price"/>
                         <label class="form-check-label" for="flexCheckDefault">
                             1501 & Above
                         </label>
@@ -63,124 +66,77 @@
 
 
                 <div style="height: 200px; overflow-y: scroll">
-
+                    {% for author in authors %}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            William Shakespeare
+                        <input class="form-check-input" type="checkbox" value="{{author.author}}" id="by_author"/>
+                        <label class="form-check-label" for="by_author">
+                            {{author.author}}
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Emily Dickinson
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            H. P. Lovecraft
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Arthur Conan Doyle
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Leo Tolstoy
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Edgar Allan Poe
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Robert Ervin Howard
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Rabindranath Tagore
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Rudyard Kipling
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Seneca
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
-                            John Donne
-                        </label>
-                    </div>
+                    {% endfor %}
                 </div>
                 <h6 style="margin-top:5%">By Rating</h6>
                 <div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="0" id="by_rating"/>
+                        <label class="form-check-label" for="by_rating">
                             4.5 - 5
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="1" id="by_rating"/>
+                        <label class="form-check-label" for="by_rating">
                             4 - 4.49
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="2" id="by_rating"/>
+                        <label class="form-check-label" for="by_rating">
                             3.5 - 3.99
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="3" id="by_rating"/>
+                        <label class="form-check-label" for="by_rating">
                             3 - 3.49
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="4" id="by_rating"/>
+                        <label class="form-check-label" for="by_rating">
                             2.5 - 2.99
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="5" id="by_rating"/>
+                        <label class="form-check-label" for="by_rating">
                             2.5 - 0
                         </label>
                     </div>
                 </div>
-                <button style="margin:5%" class="btn btn-secondary"> Search</button>
+                <button style="margin:5%" onclick="on_submit()" class="btn btn-secondary"> Search</button>
             </div>
         </div>
+
         <div class="row">
             <div class="col-9">
                 <br/>
                 <p style="cursor:pointer" onclick="openNav()">&#9776; Filters</p>
             </div>
-
+            <div class="col-3">
+                <p>
+                    <select class="form-control" id="order" name="order">
+                        <option value="1" selected>Best Selling</option>
+                        <option value="2">Alphabetically, A-Z</option>
+                        <option value="3">Alphabetically, Z-A</option>
+                        <option value="4">Price, low to high</option>
+                        <option value="5">Price, high to low</option>
+                        <option value="6">Date, old to new</option>
+                        <option value="7">Price, new to old</option>
+                    </select>
+                </p>
+            </div>
         </div>
-
 
     </div>
 </div>
@@ -256,6 +212,49 @@ function openNav() {
 	});
 });
 
+
+
+function on_submit(){
+    price = [];
+    rating = [];
+    author = [];
+    console.log('test');
+    $('input[id="by-price"]:checked').each(function() {
+       price.push(this.value)
+    });
+    $('input[id="by_author"]:checked').each(function() {
+       author.push(this.value)
+    });
+    $('input[id="by_rating"]:checked').each(function() {
+       rating.push(this.value);
+    });
+
+    console.log(price , rating, author)
+    var obj = new Object();
+    obj.price = price;
+    obj.author = author;
+    obj.rating = rating;
+
+    var jsonString= JSON.stringify(obj);
+    $.ajax({
+        url: "{% url 'user_filter_book' %}",
+        type: 'get', // This is the default though, you don't actually need to always mention it
+        data: {'data':jsonString},
+        success: function(data) {
+
+            window.location = '/wishlist'
+        },
+        failure: function(data){}
+    });
+
+
+}
+ $("#order").change(function () {
+        var end = this.value;
+        console.log(end);
+
+        window.location = '/wishlist/'+end
+    });
 
 </script>
 

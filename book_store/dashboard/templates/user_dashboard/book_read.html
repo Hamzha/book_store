@@ -83,28 +83,28 @@
             <button
                     class="btn btn-outline-secondary"
                     type="button"
-                    style="box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); padding-left: 20px;padding-right: 20px"
+                    style="box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); padding-left: 20px;padding-right: 20px;background: red;color: white;"
                     onclick="search_online()"
                     data-toggle="modal"
                     data-target="#myModal"
             >
-                Search
+                <i class="fas fa-search"></i>
             </button>
         </div>
     </div>
     <div style="width:22%; margin-left:2%">
-        <button class="bookmark-false" title="Add Bookamrk" style="height: 50px;">
+        <button class="bookmark-false" title="Add Bookamrk" style="height: 56px;width: 56px;border-radius: 30px;background: red;">
             <img
                     src="{% static 'user_dashboard/image/bookmark-false.png' %}"
-                    style="height: 50px"
+                    style="height: 35px"
                     onclick="save_bookmark({{book.book_id}})"
             />
         </button>
 
-        <button class="bookmark-true" title="Remove Bookmark" style="height: 50px;">
+        <button class="bookmark-true" title="Remove Bookmark" style="height: 56px;width: 56px;border-radius: 30px;background: red;">
             <img
                     src="{% static 'user_dashboard/image/bookmark-true.png' %}"
-                    style="height: 50px"
+                    style="height: 35px"
                     onclick="remove_bookmark({{book.book_id}})"
             />
         </button>
@@ -147,18 +147,28 @@
     </div>
 </div>
 
+<div class="row" style="margin-left:21%; margin-top:1%;margin-bottom: 2%">
+           <button class="btn" onclick="zoom_in()" style="padding-left:18px; padding-right: 18px; font-size: 20px">
+            <i class="fas fa-search-minus"></i>
+
+        </button>
+    <button class="btn" onclick="zoom_out()" style="margin-left:30%;padding-left:18px; padding-right: 18px; font-size: 20px">
+            <i class="fas fa-search-minus"></i>
+        </button>
+</div>
 
 <div class="row" style="margin-left: 21%; width: 79%; margin-bottom: 20px ">
 
     <div style="
-      margin-top: 50px;
       box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.8);
       width: 40%;
       height: 800px;
+      margin-top: 20px;
       overflow:scroll;
     ">
+        <canvas id="pdf-render" style="width: 100%">
 
-        <canvas id="pdf-render" style="width: 100%"></canvas>
+        </canvas>
     </div>
     <div style="width: 30%; margin-top: 50px;height: fit-content; margin-left: 5%">
         <!--        <button class="btn btn-primary" onclick="save_bookmark({{book.book_id}})">BookMark this page</button>-->
@@ -171,8 +181,7 @@
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
-                    style=" padding-left:20px; padding-right: 20px; font-size: 10px"
-            >
+                    style=" padding-left:20px; padding-right: 20px; font-size: 10px;background: red;color: white !important;border-color: white !important;">
                 BookMark
             </a>
 
@@ -189,29 +198,21 @@
 
 
         </div>
-        <h3 style="margin-top: 50px;"> Quick Notes</h3>
-        <textarea style="margin-top: 00px;width: 50%; height: 50%; padding: 10px" id="book_quick_notes"></textarea>
+        <h3 style="margin-top: 50px; font-size:30px"> NotePad</h3>
+        <textarea style="margin-top: 00px;width: 50%; height: 180px; padding: 10px; box-shadow: 0 0 10px black;" id="book_quick_notes"></textarea>
         <div>
-            <button class="btn" style="margin-top: 10px;background: grey;color: white;font-size:15px; width:50px"
+            <button class="btn" style="margin-top: 10px;background: red;color: white;font-size:15px; width:50px"
                     onclick="save_quick_notes({{book.book_id}})"> Save
             </button>
         </div>
         <div style="margin-top:15px" id="quiz-attempt">
             <button class="btn"
-                    style="margin-top: 10x;background: grey;color: white;font-size: 15px;width: 180px;padding-left: 5px;padding-right: 5px;"
+                    style="margin-top: 10x;background: red;color: white;font-size: 15px;width: 180px;padding-left: 5px;padding-right: 5px;"
             ><a href="{% url 'user_attempt_quiz' book.book_id %}">Attempt the quiz</a>
             </button>
         </div>
     </div>
 
-</div>
-<div class="row" style="margin-left:21%; margin-top:1%;margin-bottom: 2%">
-           <button class="btn" onclick="zoom_in()" style="padding-left:18px; padding-right: 18px; font-size: 10px">
-            Zoom In</i>
-        </button>
-    <button class="btn" onclick="zoom_out()" style="margin-left:2%;padding-left:18px; padding-right: 18px; font-size: 10px">
-            Zoom out</i>
-        </button>
 </div>
 <!-- Button trigger modal -->
 

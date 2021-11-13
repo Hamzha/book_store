@@ -90,6 +90,7 @@ def product_detail(request, product_id):
         rating = int(rating / len(reviews))
     except:
         rating = 0
+    print(rating)
     audio = BookAudio.objects.filter(book=book['book_id'])
 
     recommandation = Book.objects.filter(genre=book['genre'])
@@ -391,6 +392,17 @@ def cart_payment(request):
     for book in books:
         cart.cart_book.add(book)
     cart.save()
+
+    if len(books) >= 5:
+        code = uuid.uuid4().hex.upper()[0:6]
+        Voucher.objects.create(description='For Buying 5 books',
+                               credit=100, code=code).save()
+        voucher = Voucher.objects.filter(
+            voucher_id=Voucher.objects.filter(code=code).first().voucher_id
+        ).first()
+
+        VoucherUser.objects.create(voucher=voucher, user=request.user).save()
+
     return HttpResponse('Success')
 
 
@@ -399,6 +411,7 @@ def user_profile(request):
     wishlist = Wishlist.objects.filter(wishlist_user=request.user)
     carts = Cart.objects.filter(cart_user=request.user)
     user_Vouchers = VoucherUser.objects.filter(user=request.user)
+    print(carts)
     return render(request, 'user_dashboard/user_profile.html',
                   {'wishlists': wishlist, 'user': request.user, 'carts': carts, 'user_vouchers': user_Vouchers})
 
@@ -466,7 +479,18 @@ def review_book(request, book_id):
 @login_required(login_url='/')
 def wishlist(request):
     wishlist = Wishlist.objects.filter(wishlist_user=request.user)
-    return render(request, 'user_dashboard/wishlist.html', {'wishlists': wishlist})
+
+    author = Book.objects.values('author').distinct()
+    if "filter_book" in request.session.keys():
+        print('request.session["filter_book"]', request.session["filter_book"])
+
+        book_list = []
+        [book_list.append(book) for book in wishlist if book.wishlist_book.book_id in request.session['filter_book']]
+
+        del request.session["filter_book"]
+        return render(request, 'user_dashboard/wishlist.html', {'wishlists': book_list, 'authors': author})
+
+    return render(request, 'user_dashboard/wishlist.html', {'wishlists': wishlist, 'authors': author})
 
 
 @login_required(login_url='/')
@@ -893,3 +917,78 @@ def send_mail(book):
     print(result.status_code)
     print(result.json())
     return HttpResponse('test')
+
+
+def user_filter_book(request):
+    if request.method == 'GET':
+        data = json.loads(request.GET.dict()['data'])
+        print(data)
+
+        print(data['price'])
+        books = []
+        book_list = Book.objects.all()
+
+        for price in data['price']:
+            print(price)
+            if price == '0':
+                [books.appeand(book.book_id) for book in book_list if book.free_book == True]
+            if price == '1':
+                [books.append(book.book_id) for book in book_list if 0 <= book.price <= 500]
+            if price == '2':
+                [books.append(book.book_id) for book in book_list if 501 <= book.price <= 1000]
+            if price == '3':
+                [books.append(book.book_id) for book in book_list if 1001 <= book.price <= 1500]
+            if price == '4':
+                [books.append(book.book_id) for book in book_list if book.price >= 1501]
+        print('books', books)
+        for author in data['author']:
+            [books.append(book.book_id) for book in book_list if book.author == author]
+
+        for rating in data['rating']:
+            for book in book_list:
+                review = Review.objects.filter(review_book=book).all()
+                if review:
+                    if rating == '0':
+                        [books.append(book.review_book.book_id) for book in review if 4.5 <= book.review_rate <= 5]
+                    if rating == '1':
+                        [books.append(book.review_book.book_id) for book in review if 4.0 <= book.review_rate <= 4.5]
+
+                    if rating == '2':
+                        [books.append(book.review_book.book_id) for book in review if 3.5 <= book.review_rate <= 4.0]
+
+                    if rating == '3':
+                        [books.append(book.review_book.book_id) for book in review if 3.0 <= book.review_rate <= 3.5]
+
+                    if rating == '4':
+                        [books.append(book.review_book.book_id) for book in review if 2.5 <= book.review_rate <= 3]
+
+                    if rating == '5':
+                        [books.append(book.review_book.book_id) for book in review if 0 <= book.review_rate <= 2.5]
+
+    request.session['filter_book'] = books
+    print('book_id', books)
+    return HttpResponse('success')
+
+
+def wishlist_sort(request, sort):
+    wishlists = Wishlist.objects.filter(wishlist_user=request.user)
+    book_list = []
+    print(wishlists)
+    if sort == '1':
+        [book_list.append(wishlist) for wishlist in wishlists if wishlist.wishlist_book.best_seller == True]
+    if sort == '2':
+        book_list = Wishlist.objects.filter(wishlist_user=request.user).order_by("wishlist_book__title")
+    if sort == '3':
+        book_list = Wishlist.objects.filter(wishlist_user=request.user).order_by("wishlist_book__title").reverse()
+    if sort == '4':
+        book_list = Wishlist.objects.filter(wishlist_user=request.user).order_by("wishlist_book__price")
+    if sort == '5':
+        book_list = Wishlist.objects.filter(wishlist_user=request.user).order_by("wishlist_book__price").reverse()
+    if sort == '6':
+        book_list = Wishlist.objects.filter(wishlist_user=request.user).order_by("wishlist_book__year_of_publish")
+    if sort == '7':
+        book_list = Wishlist.objects.filter(wishlist_user=request.user).order_by("wishlist_book__year_of_publish").reverse()
+
+    author = Book.objects.values('author').distinct()
+
+    return render(request, 'user_dashboard/wishlist.html', {'wishlists': book_list, 'authors': author})
