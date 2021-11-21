@@ -57,4 +57,7 @@ urlpatterns = [
     path('filter_book/', views.user_filter_book, name='user_filter_book'),
 
     path('check_mail', views.send_mail),
+    path('cart_update', views.update_cart),
+    path('remove_cart/<int:book_id>', views.remove_cart, name='user-remove-cart'),
+
 ]

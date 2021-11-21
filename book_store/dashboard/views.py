@@ -13,7 +13,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse, FileResponse
+from django.http import JsonResponse, HttpResponse, FileResponse, HttpResponseNotAllowed
 from django.shortcuts import render, redirect
 from django.core import serializers
 from django.forms.models import model_to_dict
@@ -355,10 +355,13 @@ def set_cart(request):
 @login_required(login_url='/')
 def cart(request):
     book_list_ids = request.session.get('book_list', False)
+    print(book_list_ids)
+    if len(book_list_ids) == 2:
+        return redirect('user-dashboard')
     book_list_ids = list(book_list_ids.replace('[', '').replace(']', '').split(","))
     book_list_ids = [int(x) for x in book_list_ids]
     books = Book.objects.filter(pk__in=book_list_ids)
-
+    wishlist = []
     deals = Deal.objects.all()
     deals = [deal for deal in deals if deal.deal_valid_upto > datetime.now().date()]
 
@@ -369,6 +372,9 @@ def cart(request):
                     book.percentage = deal.deal_percentage
     total = 0
     for book in books:
+        wish = Wishlist.objects.filter(wishlist_user=request.user, wishlist_book = book).first()
+        if wish :
+            book.wishlist_book = True
         try:
             total = (float(book.price) - (float(book.price) * (book.percentage / 100))) + total
             print(total)
@@ -379,7 +385,7 @@ def cart(request):
     recommandation = Book.objects.filter(genre=books[0].genre)
 
     return render(request, 'user_dashboard/cart.html',
-                  {'books': books, 'total': total, 'recommandations': recommandation})
+                  {'books': books, 'total': total, 'recommandations': recommandation, 'wishlists': wishlist})
 
 
 @login_required(login_url='/')
@@ -992,3 +998,22 @@ def wishlist_sort(request, sort):
     author = Book.objects.values('author').distinct()
 
     return render(request, 'user_dashboard/wishlist.html', {'wishlists': book_list, 'authors': author})
+
+
+def update_cart(request):
+    if not request.is_ajax() or not request.method=='POST':
+        return HttpResponseNotAllowed(['POST'])
+    book_list = request.session['book_list']
+    print(book_list)
+    return HttpResponse('ok')
+
+
+def remove_cart(request,book_id):
+    book_list_ids = request.session.get('book_list', False)
+    book_list_ids = list(book_list_ids.replace('[', '').replace(']', '').split(","))
+    book_list_ids = [int(x) for x in book_list_ids]
+
+    book_list_ids.remove(book_id)
+    print(book_list_ids)
+    request.session['book_list'] = str(book_list_ids)
+    return HttpResponse("OK")

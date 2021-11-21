@@ -22,6 +22,7 @@ def times_reverse(number):
 
 @register.filter(name='calculate_price')
 def calculate_price(price, percentage):
+
     after_price = price - price * (percentage / 100)
     return after_price
 

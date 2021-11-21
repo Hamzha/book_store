@@ -7,7 +7,7 @@ from . import views
 
 urlpatterns = [
     path('hello', views.HelloView.as_view()),
-    path('token/', jwt_views.TokenObtainPairView.as_view(), name='api_token_auth'),  # <-- And here
-    path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('login/', jwt_views.TokenObtainPairView.as_view(), name='api_token_auth'),  # <-- And here
+    path('login/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
 ]

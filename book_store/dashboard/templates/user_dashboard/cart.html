@@ -11,102 +11,87 @@
     <div class="cart_area cart-area-padding  ">
         <div class="container">
             <div class="page-section-title">
-                <h1>Shopping Cart</h1>
+                <h4 class="login-title login-headings">YOUR BAG</h4>
+
             </div>
             <div class="row">
-                <div class="col-12">
-                    <form action="#" class="">
-                        <!-- Cart Table -->
-                        <div class=" row">
-                            <table class="table" style="width: 70%;border: groove;">
-                                <!-- Head Row -->
-                                <thead>
-                                <tr>
-                                    <!--                                    <th class="pro-remove"></th>-->
-                                    <th class="pro-thumbnail">Cover Photo</th>
-                                    <th class="pro-title"> Book Author</th>
-                                    <th class="pro-title">Book Title</th>
-                                    <th class="pro-price">Price</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <!-- Product Row -->
-                                {% for book in books %}
-                                <tr>
-                                    <!--                                    <td class="pro-remove"><a href="#"><i class="far fa-trash-alt"></i></a>-->
-                                    </td>
-                                    <td class="pro-thumbnail"><img
-                                            src="{{ book.cover_photo.url }}" style="height: 150px; width: 120px"
-                                            alt="Product"></td>
-                                    <td class="pro-title">{{book.author}}</td>
-
-                                    <td class="pro-title">{{book.title}}</td>
-                                    <td class="pro-price">
-                                        {% if book.percentage %}
-                                        <del class="price-old">Rs. {{book.price}}</del>
-                                        <span>Rs. {{ book.price|calculate_price:book.percentage}}</span>
-                                        {% else %}
-                                        <span>Rs. {{book.price}}</span>
-                                        {% endif %}
-                                    </td>
-
-                                </tr>
-
-                                {% endfor %}
-
-                                </tbody>
-                            </table>
-                            <div style="width: 28%; margin-left:2%">
-                                <div class="coupon-block"
-                                     style="background: #ee964b;padding-bottom: 20%;padding-top: 10%;">
-                                    <div class="coupon-text" style="text-align: center;">
-                                        <label class="c-btn" for="coupon_code" style="background: #ee964b;
-                                        font-size: 25px;color: white;width: 60%;text-align: -webkit-center;">
-                                            Coupon:</label>
-
-                                        <input type="text" style="margin-top: 2%;line-height: 37px;text-align: center;
-                                        margin-bottom: 7%;" name="coupon_code" class="input-text"
-                                               id="coupon_code" value="" placeholder="Coupon code">
+                <form action="#" style="width: 70%">
+                    <!-- Cart Table -->
+                    <div class="row">
+                        <div style=" padding-top: 10px; padding-bottom: 10px;padding-left: 10px;width:90%">
+                            {% for book in books %}
+                            <div class="row"
+                                 style="border-bottom: 0.5px solid black; padding-top: 10px; padding-bottom: 10px ;">
+                                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4">
+                                    <div class="pro-thumbnail" style="width: 90px;"><a href="#"><img
+                                            src="{{book.cover_photo.url}}"
+                                            alt="Product"></a>
                                     </div>
-                                    <div class="coupon-btn" style="; text-align: center;">
-                                        <button class="btn btn-outlined" style="padding-left:10px; color: white;
-                                         padding-right: 10px"
-                                                name="apply_coupon" id="apply_coupon">Apply coupon
-                                        </button>
+                                </div>
+                                <div class="col-lg-6 col-md-7 col-sm-8 col-xs-8">
+                                    <a href="#">{{book.title}}</a>
+                                    <p>{{book.author}}</p>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6"><a href="#" onclick="remove_cart({{book.book_id}})"><i class="far fa-trash-alt"></i>
+                                            Remove from cart</a></div>
+                                            {% if book.wishlist_book%}
+                                            <div class="col-lg-6 col-md-6"><a href="#" onclick="remove_to_wishlist({{book.book_id}}); return false;"><i class="fas fa-heart"
+                                                                                          style="color: red;"></i> Add to
+                                                wishlist</a></div>
+
+                                            {% else %}
+                                                <div class="col-lg-6 col-md-6"><a href="#" onclick="add_to_wishlist({{book.book_id}}); return false;"><i class="far fa-heart"
+                                                                                          style="color: red;"></i> Add to
+                                                wishlist</a></div>
+                                            {% endif %}
                                     </div>
                                 </div>
 
-                                <div class="d-flex" style="    margin-top: 5%;">
-                                    <div class="cart-summary" style="float: none;margin-left: 0px !important;
-                                    padding-left: 0px;">
-                                        <div class="cart-summary-wrap">
-                                            <h4><span>Cart Summary</span></h4>
-                                            <h2>Total <span class="text-primary">&nbsp; PKR</span> <span
-                                                    class="text-primary" id="final_total">{{total}}</span></h2>
-                                        </div>
-                                        <div class="cart-summary-button">
-                                            <a href="{% url 'user-cart-payment' %}"
-                                               class="checkout-btn c-btn btn--primary">Checkout</a>
-                                        </div>
-                                    </div>
+                                <div class="col-lg-2 col-md-2 col-sm-1 col-xs-12">
+                                    {% if book.percentage %}
+                                    <del class="price-old">Rs. {{book.price}}</del>
+                                    <span>Rs. {{ book.price|calculate_price:book.percentage}}</span>
+                                    {% else %}
+                                    <span>Rs. {{book.price}}</span>
+                                    {% endif %}
                                 </div>
-
 
                             </div>
+                            {% endfor %}
                         </div>
-                    </form>
+                    </div>
+                </form>
+                <div>
+                    <div class="row">
+                        <div>
+                            <div class="cart-summary">
+                                <div class="cart-summary-wrap">
+                                    <h4><span>Cart Summary</span></h4>
+                                    <p>Sub Total <span class="text-primary"><strong>Rs.</strong> {{total}}</span></p>
+                                    <p>Shipping Cost <span class="text-primary">$00.00</span></p>
+                                    <p>Enter Discount code here</p>
+
+
+                                    <p><input type="text" name="coupon" id="coupon_code"> <span
+                                            class="text-primary">
+                                            <input
+                                                    type="submit" value="Apply" id="apply_coupon"></span></p>
+
+                                    <h2>Grand Total <span class="text-primary"><strong>Rs.</strong> <span id="final_total">{{total}}</span></span></h2>
+                                </div>
+                                <div class="cart-summary-button">
+
+                                    <a href="{% url 'user-cart-payment' %}" class="checkout-btn c-btn btn--primary">Checkout</a>
+                                    <button class="update-btn c-btn btn-outlined" onClick="window.location.reload();">Update Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="cart-section-2">
-        <div class="container">
-            <div class="row">
 
-            </div>
-            <!-- Cart Summary -->
         </div>
-    </div>
+
     </div>
 </main>
 <section class="section-margin">
@@ -210,6 +195,47 @@
         });
     });
   });
+
+
+    function add_to_wishlist(book_id){
+        $.ajax({
+            url:"set_wishlist/"+parseInt(book_id),
+            type: 'get',
+            success: function(data){
+                alert('Added to Wishlist')
+            },
+            failure(data){
+
+            }
+        });
+    }
+
+    function remove_to_wishlist(book_id){
+        $.ajax({
+            url:"remove_wishlist/"+parseInt(book_id),
+            type: 'get',
+            success: function(data){
+                alert('Removed from Wishlist')
+
+            },
+            failure(data){
+
+            }
+        });
+    }
+
+
+function remove_cart(book_id){
+    $.ajax({
+        url:"remove_cart/"+parseInt(book_id),
+        type: 'get',
+        success: function(data){
+        },
+        failure(data){
+        }
+    });
+
+}
 
 </script>
 

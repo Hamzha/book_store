@@ -31,24 +31,24 @@
                     <div class="add-cart-btn row" >
                         {% if book.is_buy %}
                             {% if book.book_type == 'PDF' %}
-                                <a href="{% url 'user-read-book' book.book_id 1 %}" style="margin-right:0.5%" class="btn btn-outlined&#45;&#45;primary">Read
+                                <a href="{% url 'user-read-book' book.book_id 1 %}" style="margin-right:0.5%; width:50%" class="btn btn-outlined&#45;&#45;primary">Read
                                     Now</a>
-                                <a href="{% url 'user_review_book' book.book_id %}" style="margin-right:0.5%" class="btn btn-outlined&#45;&#45;primary">
+                                <a href="{% url 'user_review_book' book.book_id %}" style="margin-right:0.5%; " class="btn btn-outlined&#45;&#45;primary">
                                     Review </a>
                             {% else %}
-                                <a href="{% url 'user-read-book' book.book_id 1 %}" style="margin-right:0.5%" class="btn btn-outlined&#45;&#45;primary">Read
+                                <a href="{% url 'user-read-book' book.book_id 1 %}" style="margin-right:0.5%;" class="btn btn-outlined&#45;&#45;primary">Read
                                     Now</a>
-                                <div class="dropdown" style="margin-right:0.5%">
+                                <div class="dropdown" style="margin-right:0.5%; ">
                                     <button class="btn btn-secondary dropdown-toggle"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Listen
                                     </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="; margin-top:2%">
                                         {% for audio in audios %}
                                             <a class="dropdown-item" href="{% url 'user-listen_chapter-book' book.book_id audio.audio_id %}"> Chapter# {{forloop.counter}}</a>
                                         {% endfor %}
                                     </div>
                                 </div>
-                                <a href="{% url 'user_review_book' book.book_id %}" style="margin-right:0.5%" class="btn btn-outlined&#45;&#45;primary">
+                                <a href="{% url 'user_review_book' book.book_id %}" style="margin-right:0.5%; margin-top:2%;width: 70%;" class="btn btn-outlined&#45;&#45;primary">
                                     Review </a>
                             {% endif %}
 

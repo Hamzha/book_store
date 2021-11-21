@@ -1,0 +1,219 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+{% load filters_user %}
+{% block navbar_address %}
+<li class="breadcrumb-item active">Cart</li>
+
+
+{% endblock navbar_address %}
+{% block content %}
+<main class="cart-page-main-block inner-page-sec-padding-bottom">
+    <div class="cart_area cart-area-padding  ">
+        <div class="container">
+            <div class="page-section-title">
+                <h1>Shopping Cart</h1>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <form action="#" class="">
+                        <!-- Cart Table -->
+                        <div class=" row">
+                            <table class="table" style="width: 70%;border: groove;">
+                                <!-- Head Row -->
+                                <thead>
+                                <tr>
+                                    <!--                                    <th class="pro-remove"></th>-->
+                                    <th class="pro-thumbnail">Cover Photo</th>
+                                    <th class="pro-title"> Book Author</th>
+                                    <th class="pro-title">Book Title</th>
+                                    <th class="pro-price">Price</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Product Row -->
+                                {% for book in books %}
+                                <tr>
+                                    <!--                                    <td class="pro-remove"><a href="#"><i class="far fa-trash-alt"></i></a>-->
+                                    </td>
+                                    <td class="pro-thumbnail"><img
+                                            src="{{ book.cover_photo.url }}" style="height: 150px; width: 120px"
+                                            alt="Product"></td>
+                                    <td class="pro-title">{{book.author}}</td>
+
+                                    <td class="pro-title">{{book.title}}</td>
+                                    <td class="pro-price">
+                                        {% if book.percentage %}
+                                        <del class="price-old">Rs. {{book.price}}</del>
+                                        <span>Rs. {{ book.price|calculate_price:book.percentage}}</span>
+                                        {% else %}
+                                        <span>Rs. {{book.price}}</span>
+                                        {% endif %}
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                            <div style="width: 28%; margin-left:2%">
+                                <div class="coupon-block"
+                                     style="background: #ee964b;padding-bottom: 20%;padding-top: 10%;">
+                                    <div class="coupon-text" style="text-align: center;">
+                                        <label class="c-btn" for="coupon_code" style="background: #ee964b;
+                                        font-size: 25px;color: white;width: 60%;text-align: -webkit-center;">
+                                            Coupon:</label>
+
+                                        <input type="text" style="margin-top: 2%;line-height: 37px;text-align: center;
+                                        margin-bottom: 7%;" name="coupon_code" class="input-text"
+                                               id="coupon_code" value="" placeholder="Coupon code">
+                                    </div>
+                                    <div class="coupon-btn" style="; text-align: center;">
+                                        <button class="btn btn-outlined" style="padding-left:10px; color: white;
+                                         padding-right: 10px"
+                                                name="apply_coupon" id="apply_coupon">Apply coupon
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex" style="    margin-top: 5%;">
+                                    <div class="cart-summary" style="float: none;margin-left: 0px !important;
+                                    padding-left: 0px;">
+                                        <div class="cart-summary-wrap">
+                                            <h4><span>Cart Summary</span></h4>
+                                            <h2>Total <span class="text-primary">&nbsp; PKR</span> <span
+                                                    class="text-primary" id="final_total">{{total}}</span></h2>
+                                        </div>
+                                        <div class="cart-summary-button">
+                                            <a href="{% url 'user-cart-payment' %}"
+                                               class="checkout-btn c-btn btn--primary">Checkout</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cart-section-2">
+        <div class="container">
+            <div class="row">
+
+            </div>
+            <!-- Cart Summary -->
+        </div>
+    </div>
+    </div>
+</main>
+<section class="section-margin">
+    <div class="container">
+        <div class="section-title section-title--bordered">
+            <h2>RECOMMENDED FOR YOU</h2>
+        </div>
+        <div class="product-slider sb-slick-slider slider-border-single-row" data-slick-setting='{
+                "autoplay": true,
+                "autoplaySpeed": 8000,
+                "slidesToShow": 6,
+                "dots":true
+            }' data-slick-responsive='[
+                {"breakpoint":1200, "settings": {"slidesToShow": 5} },
+                {"breakpoint":992, "settings": {"slidesToShow": 4} },
+                {"breakpoint":768, "settings": {"slidesToShow": 3} },
+                {"breakpoint":480, "settings": {"slidesToShow": 2} },
+                {"breakpoint":320, "settings": {"slidesToShow": 1} }
+            ]'>
+            {% for book in recommandation %}
+            <div class="single-slide">
+                <div class="product-card">
+
+                    <div class="product-card--body">
+                        <div class="card-image">
+                            <img src="{{book.cover_photo.url}}" alt="">
+                            <div class="hover-contents">
+                                <h6>{{book.title}}</h6>
+                                <div class="row" style="font-size: small;">
+                                    <div class="col-4"><span class="price">{{book.price}}</span></div>
+                                    <div class="col-4"><span class="pub_year">{{book.year_of_publish}}</span></div>
+                                    <div class="col-4"><span class="price">{{book.no_of_pages}}</span></div>
+
+                                </div>
+                                <p style="font-size: small;">
+                                    {{book.summary}}
+                                </p>
+
+                                <p style="font-size: small;"><strong>Author: </strong>{{book.author}}</p>
+                                <p style="font-size: small;"><strong>Genre: </strong>{{book.genre}}</p>
+
+
+                                <div class="hover-btns">
+                                    <a href="{% url 'user-product-detail' book.book_id %}"
+                                       class="single-btn">
+                                        Read Now
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="price-block">
+                            <div class="product-header">
+                                <h6><strong><a
+                                        href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a></strong>
+                                </h6>
+                            </div>
+                            <div class="row">
+                                <div class="col-6"><span class="price">{{book.price}} PKR</span></div>
+                                <div class="col-6"><span class="pub_year">{{book.year_of_publish}}</span></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<script>
+
+
+
+  $(document).ready(function(){
+    var voucher = '';
+
+    $('#apply_coupon').click(function(){
+       console.log($('#coupon_code').val());
+        var obj = new Object();
+        obj.code = $('#coupon_code').val();
+        obj.csrfmiddlewaretoken = "{{csrf_token}}";
+        var jsonString= JSON.stringify(obj);
+        $.ajax({
+            url: "{% url 'user_check_voucher' %}",
+            type: 'get',
+            data: {'data' : jsonString},
+            success: function(data) {
+
+                if(data['voucher'] != 'None'){
+                    voucher = data
+                    console.log(voucher['voucher'])
+                    pre=parseFloat($('#final_total').text())
+                    console.log(voucher['voucher']['credit'])
+                    post = pre - voucher['voucher']['credit']
+                    console.log(post)
+                    $('#final_total').text(parseFloat(post))
+                }else{
+                    alert('Invalid Code')
+                }
+
+            },
+            failure: function(data) {}
+        });
+    });
+  });
+
+</script>
+
+{% endblock content %}

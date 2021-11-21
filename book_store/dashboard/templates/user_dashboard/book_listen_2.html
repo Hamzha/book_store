@@ -284,6 +284,9 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
 
 
 
+
+
+
 </style>
 
 <div style="min-height: 500px; width: 100%; padding-left: 5%; text-align: revert;">
@@ -314,34 +317,31 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
                 </div>
             </div>
         </div>
-    <div class="input-group" style="width: 30%; margin-left:5%; height: 50px">
-        <input
-                type="text"
-                class="form-control"
-                placeholder="Enter a word"
-                aria-label="Enter a word"
-                aria-describedby="basic-addon2"
-                id="search_word"
-                style="    height: auto;"
-        />
-        <div class="input-group-append">
-            <button
-                    class="btn btn-outline-secondary"
-                    type="button"
-                    style="box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); padding-left: 20px;padding-right: 20px"
-                    onclick="search_online()"
-                    data-toggle="modal"
-                    data-target="#myModal"
-            >
-                Search
-            </button>
+        <div class="input-group" style="width: 30%; margin-left:5%; height: 50px">
+            <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter a word"
+                    aria-label="Enter a word"
+                    aria-describedby="basic-addon2"
+                    id="search_word"
+                    style="    height: auto;"
+            />
+            <div class="input-group-append">
+                <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        style="box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); padding-left: 20px;padding-right: 20px"
+                        onclick="search_online()"
+                        data-toggle="modal"
+                        data-target="#myModal"
+                >
+                    Search
+                </button>
+            </div>
         </div>
     </div>
-    </div>
-     <div style="margin-left:17%">
-        <textarea id="notepad" style="height: 170px; padding: 5px">{{quickNote.0.QuickNote_text}}</textarea>
-        <button class="btn btn-secondary" style="padding-left:10px; padding-right:10px; margin-top:-40px" onclick="save_quick_note()">Save</button>
-     </div>
+
 
     <div class="container-audio">
         <audio controls loop autoplay id="audio_source">
@@ -422,44 +422,49 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
         </div>
     </div>
 
-        <div style="margin:20px auto; margin-left:17%">
-            <button class="btn btn-primary" onclick="bookmark({{book.book_id}})">Bookmark Here</button>
+    <div style="margin:20px auto; margin-left:17%" class="row">
+        <button class="btn btn-primary" style="height: fit-content; background: #ee964b;border-color: #ee964b;" onclick="bookmark({{book.book_id}})">Bookmark Here
+        </button>
+        <textarea id="notepad" style="height: 80px; padding: 5px; margin-left: 2%; width: 55%">{{quickNote.0.QuickNote_text}}</textarea>
+        <button class="btn btn-secondary" style="padding-left:15px; padding-right:15px; margin-left: 2%; height: fit-content;    background: #ee964b;    border-color: #ee964b;"
+                onclick="save_quick_note()">Save
+        </button>
 
-        </div>
+    </div>
 
 
-
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Word: </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <p style="font-size: 20px">Origin:</p>
-                    <p class="search-modal-origin"></p>
-
-                    <p style="font-size: 20px">Part of Speech:</p>
-                    <p class="search-modal-part-of-speech"></p>
-
-                    <p style="font-size: 20px">Definition:</p>
-                    <p class="search-modal-definition"></p>
-
-                    <p style="font-size: 20px">Example:</p>
-                    <p class="search-modal-example"></p>
-
-                    <p style="font-size: 20px">Synonyms:</p>
-                    <p class="search-modal-synonyms"></p>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Word: </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
+                <div class="modal-body">
+                    <div>
+                        <p style="font-size: 20px">Origin:</p>
+                        <p class="search-modal-origin"></p>
 
+                        <p style="font-size: 20px">Part of Speech:</p>
+                        <p class="search-modal-part-of-speech"></p>
+
+                        <p style="font-size: 20px">Definition:</p>
+                        <p class="search-modal-definition"></p>
+
+                        <p style="font-size: 20px">Example:</p>
+                        <p class="search-modal-example"></p>
+
+                        <p style="font-size: 20px">Synonyms:</p>
+                        <p class="search-modal-synonyms"></p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
 
 </div>
 <script>
@@ -549,6 +554,9 @@ function save_quick_note(){
         failure: function(data){}
     });
 }
+
+
+
 
 </script>
 
