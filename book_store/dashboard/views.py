@@ -25,7 +25,8 @@ from django.views.decorators.csrf import csrf_exempt
 from mailjet_rest import Client
 
 from book_store.admin_dashboard.models import Book, BookMark, QuickNote, Wishlist, Cart, Review, Deal, VoucherUser, \
-    Voucher, Quiz, BookAudio
+    Voucher, Quiz, BookAudio, QueryFeedback
+from book_store.dashboard.forms import queryFeedbackForm
 from book_store.user.forms import RegisterForm
 from book_store.user.models import User
 
@@ -90,15 +91,13 @@ def product_detail(request, product_id):
         rating = int(rating / len(reviews))
     except:
         rating = 0
-    print(rating)
     audio = BookAudio.objects.filter(book=book['book_id'])
-
     recommandation = Book.objects.filter(genre=book['genre'])
 
     return render(request, 'user_dashboard/product_details_2.html',
                   {'book': book, 'book_id': book['book_id'], 'summary': summary, 'year': book['year_of_publish'].year,
                    'month': book['year_of_publish'].strftime("%b"), 'day': book['year_of_publish'].day,
-                   'reviews': reviews, 'ratings': rating, 'audios': audio, 'recommandation': recommandation})
+                   'reviews': reviews, 'ratings': rating, 'audios': audio, 'recommandations': recommandation})
 
 
 # def dashboard(request):
@@ -251,6 +250,12 @@ def signup(request):
             ).first()
 
             VoucherUser.objects.create(voucher=voucher, user=user).save()
+            books = Book.objects.filter(free_book = True)
+            cart = Cart.objects.create(cart_user=request.user, payment_status='Paid', cart_detail='Paid')
+            for book in books:
+                cart.cart_book.add(book)
+            cart.save()
+
             return render(request, 'user_dashboard/login.html', {})
 
         else:
@@ -372,8 +377,8 @@ def cart(request):
                     book.percentage = deal.deal_percentage
     total = 0
     for book in books:
-        wish = Wishlist.objects.filter(wishlist_user=request.user, wishlist_book = book).first()
-        if wish :
+        wish = Wishlist.objects.filter(wishlist_user=request.user, wishlist_book=book).first()
+        if wish:
             book.wishlist_book = True
         try:
             total = (float(book.price) - (float(book.price) * (book.percentage / 100))) + total
@@ -383,7 +388,7 @@ def cart(request):
     print(books)
 
     recommandation = Book.objects.filter(genre=books[0].genre)
-
+    print(recommandation)
     return render(request, 'user_dashboard/cart.html',
                   {'books': books, 'total': total, 'recommandations': recommandation, 'wishlists': wishlist})
 
@@ -993,7 +998,8 @@ def wishlist_sort(request, sort):
     if sort == '6':
         book_list = Wishlist.objects.filter(wishlist_user=request.user).order_by("wishlist_book__year_of_publish")
     if sort == '7':
-        book_list = Wishlist.objects.filter(wishlist_user=request.user).order_by("wishlist_book__year_of_publish").reverse()
+        book_list = Wishlist.objects.filter(wishlist_user=request.user).order_by(
+            "wishlist_book__year_of_publish").reverse()
 
     author = Book.objects.values('author').distinct()
 
@@ -1001,14 +1007,14 @@ def wishlist_sort(request, sort):
 
 
 def update_cart(request):
-    if not request.is_ajax() or not request.method=='POST':
+    if not request.is_ajax() or not request.method == 'POST':
         return HttpResponseNotAllowed(['POST'])
     book_list = request.session['book_list']
     print(book_list)
     return HttpResponse('ok')
 
 
-def remove_cart(request,book_id):
+def remove_cart(request, book_id):
     book_list_ids = request.session.get('book_list', False)
     book_list_ids = list(book_list_ids.replace('[', '').replace(']', '').split(","))
     book_list_ids = [int(x) for x in book_list_ids]
@@ -1017,3 +1023,37 @@ def remove_cart(request,book_id):
     print(book_list_ids)
     request.session['book_list'] = str(book_list_ids)
     return HttpResponse("OK")
+
+
+def query_feedback(request):
+    form = queryFeedbackForm()
+    if request.method == 'POST':
+
+        form = queryFeedbackForm(request.POST)
+        if form.is_valid():
+            # query_feedback = form.save(commit=False)
+            subject = form.cleaned_data['query_feedback_subject']
+            text = form.cleaned_data['query_feedback_text']
+            QueryFeedback.objects.create(
+                query_feedback_user_id=request.user,
+                query_feedback_text=text,
+                query_feedback_subject=subject
+            ).save()
+            return redirect('user_query_feedback_list')
+        else:
+            print('form.errors', form.errors)
+            for field, items in form.errors.items():
+                for item in items:
+                    messages.error(request, '{}: {}'.format(field, item))
+
+            return render(request, 'user_dashboard/query_feedback.html', {'form': form})
+
+    return render(request, 'user_dashboard/query_feedback.html', {'form': form})
+
+
+def query_feedback_list(request):
+    queries = QueryFeedback.objects.filter(
+        query_feedback_user_id=request.user
+    ).all()
+
+    return render(request, 'user_dashboard/query_feedback_list.html', {'queries': queries})

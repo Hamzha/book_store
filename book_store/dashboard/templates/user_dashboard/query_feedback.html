@@ -1,0 +1,54 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+{% load filters_user %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% block navbar_address %}
+<li class="breadcrumb-item active">Query/Feedback</li>
+
+
+{% endblock navbar_address %}
+{% block content %}
+
+<main class="page-section inner-page-sec-padding-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-12 mb--30 mb-lg--0">
+                <!-- Login Form s-->
+                <form id="form" action="{% url 'user_query_feedback' %}" method="post">
+                    {% csrf_token %}
+                    <div class="login-form">
+                        <h4 class="login-title login-headings">Query/Feedback</h4>
+                        <h3 class="login-title" style="font-size:20px; margin-top:2%">Subject</h3>
+                        <div class="row">
+                            {% render_field form.query_feedback_subject|add_class:'mb-0 form-control' type="text" placeholder="Subject" %}
+                        </div>
+                        <h3 class="login-title" style="font-size:20px; margin-top:2%">Query.Feedback</h3>
+                        <div class="row">
+                            {% render_field form.query_feedback_text|add_class:'mb-0 form-control' type="text" placeholder="Query/Feedback" %}
+                        </div>
+                        {% if messages %}
+                        <div class="col-lg-12 mb--20 outlined" style="background: rgba(255, 0, 0, 0.4); ">
+                            <ul class="messages">
+                                {% for message in messages %}
+                                <li {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        {% endif %}
+                        <div class="col-md-12" style="margin-top:2%">
+                            <button id="submit" type="submit" class="btn btn-outlined"> Submit</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+
+</script>
+{% endblock content %}

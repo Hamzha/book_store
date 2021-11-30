@@ -48,6 +48,8 @@ urlpatterns = [
     path('delete_deal/<int:deal_id>', views.delete_deal, name='admin_delete_deal'),
 
     path('delete_quiz/<int:quiz_id>', views.delete_quiz, name='admin_delete_quiz'),
+    path('query_feedback_list', views.query_feedback_list, name='admin_query_feedback_list'),
+    path('query_feedback_reply/<int:query_id>', views.query_feedback_reply, name='admin_query_feedback_reply'),
 
     path('check_mail', views.send_mail)
     # path('delete_user_deal_voucher/<int:deal_voucher_user_id>', views.delete_user_deal_voucher,

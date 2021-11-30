@@ -1,0 +1,59 @@
+{% extends 'dashboard/base.html' %}
+{% load widget_tweaks %}
+
+{% block dashboard_title %}
+Adding Book
+{% endblock %}
+
+
+<!-- navbar address -->
+{% block navbar_address %}
+<li class="breadcrumb-item active">list Query/feedback</li>
+{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<!-- form start -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="card-body table-responsive p-0">
+            <table class="table table-head-fixed text-nowrap">
+                <thead>
+                <tr>
+                    <th style="text-align: center;">Username</th>
+                    <th style="text-align: center;">Subject</th>
+                    <th style="text-align: center;">Text</th>
+                    <th style="text-align: center;">Reponse</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for query in queries %}
+                <tr>
+                    <td style="text-align: center;">{{ query.query_feedback_user_id.username }}</td>
+                    <td style="text-align: center;">{{ query.query_feedback_subject }}</td>
+                    <td style="text-align: center;">{{ query.query_feedback_text }}</td>
+                    <td style="text-align: center;">
+                        <a href="{% url 'admin_query_feedback_reply' query.query_feedback_id %}">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+
+</script>
+
+{% endblock %}
+
+

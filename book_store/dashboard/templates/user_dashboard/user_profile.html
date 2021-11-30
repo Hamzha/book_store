@@ -69,6 +69,7 @@
                                             {% for order in carts %}
                                              <tr>
                                                  {% for book in order.cart_book.all %}
+                                                 {% if book.free_book == False %}
                                                      <td>{{order.cart_id}}</td>
                                                      <td class="image"><img class="account_image"
                                                                            src="{{book.cover_photo.url}}"/>
@@ -76,6 +77,7 @@
                                                     <td>{{book.title}}</td>
                                                     <td>{{order.cart_date}}</td>
                                                     <td>{{book.price}}</td>
+                                                 {% endif %}
                                                  {% endfor %}
 
                                              </tr>
@@ -243,13 +245,13 @@
             {% for book in cart.cart_book.all %}
             <div class="single-slide">
                 <div class="product-card card-style-list">
-                    <div class="card-image" style="height: 200px; width: 200px">
-                        <img src="{{ book.cover_photo.url }}" style="height: 200px; width: 200px">
+                    <div class="card-image" style="height: 150px; width: 130px">
+                        <img src="{{ book.cover_photo.url }}" style="height: 150px; width: 130px">
                     </div>
                     <div class="product-card--body">
                         <div class="product-header">
                             {{book.author}}
-                            <h3><a href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a></h3>
+                            <h3><a href="{% url 'user-product-detail' book.book_id %}" style="font-size:20px; font-weight:700">{{book.title}}</a></h3>
                         </div>
                         <div class="price-block">
                             <span class="price">{{book.price}} PKR</span>

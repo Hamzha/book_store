@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import widgets
 
-from .models import Book, Voucher, VoucherUser
+from .models import Book, Voucher, VoucherUser, QueryFeedback
 from ..user.models import User, Mode
 
 GENRE = [
@@ -58,16 +58,17 @@ class book_form(forms.ModelForm):
     book_type = forms.CharField(required=True, widget=forms.Select(choices=BOOK_TYPE))
     pdf = forms.FileField(required=False)
     audio = forms.FileField(required=False)
-    adult_mode = forms.BooleanField(required=False,widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    adult_mode = forms.BooleanField(required=False, widget=forms.ClearableFileInput(attrs={'multiple': True}))
     free_book = forms.BooleanField(required=False)
-    best_seller =forms.BooleanField(required=False)
+    best_seller = forms.BooleanField(required=False)
     summary = forms.Textarea()
 
     class Meta:
         model = Book
         fields = (
-        'title', 'year_of_publish', 'no_of_pages', 'genre', 'price', 'author', 'adult_mode', 'summary', 'cover_photo',
-        'book_type', 'audio', 'pdf', 'free_book', 'best_seller')
+            'title', 'year_of_publish', 'no_of_pages', 'genre', 'price', 'author', 'adult_mode', 'summary',
+            'cover_photo',
+            'book_type', 'audio', 'pdf', 'free_book', 'best_seller')
 
 
 class register_form(forms.ModelForm):
@@ -126,3 +127,13 @@ class user_deal_voucher_form(forms.ModelForm):
     class Meta:
         model = VoucherUser
         fields = ('deal_voucher', 'user', 'valid_up_to')
+
+
+class queryFeedbackForm(forms.ModelForm):
+    query_feedback_subject = forms.CharField(widget = forms.TextInput(attrs={'readonly':'readonly'}),max_length=100, required=True)
+    query_feedback_text = forms.CharField(widget = forms.TextInput(attrs={'readonly':'readonly'}), required=True)
+    query_feedback_reply = forms.CharField(widget=forms.Textarea, required=True)
+
+    class Meta:
+        model = QueryFeedback
+        fields = ('query_feedback_subject', 'query_feedback_text', 'query_feedback_reply')

@@ -23,8 +23,9 @@ class Book(models.Model):
     adult_mode = models.BooleanField(default=False)
     free_book = models.BooleanField(default=False)
     best_seller = models.BooleanField(default=False)
-    book_user = models.ForeignKey(User, null=True,on_delete=models.CASCADE)
+    book_user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     book_key = models.CharField(max_length=10, null=True, blank=True)
+    check_voucher = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -129,3 +130,11 @@ class Deal(models.Model):
     deal_valid_upto = models.DateField(default=datetime.datetime.now)
     deal_percentage = models.FloatField(default=00)
     deal_book = models.ManyToManyField(Book)
+
+
+class QueryFeedback(models.Model):
+    query_feedback_id = models.AutoField(primary_key=True)
+    query_feedback_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    query_feedback_text = models.TextField(max_length=1000)
+    query_feedback_subject = models.TextField(max_length=200)
+    query_feedback_reply = models.TextField(max_length=1000, blank=True, null=True)

@@ -15,8 +15,8 @@ from django.contrib.auth import logout
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
 from book_store.admin_dashboard.forms import book_form, register_form, user_mode_form, deal_voucher_form, \
-    user_deal_voucher_form
-from book_store.admin_dashboard.models import Book, Voucher, VoucherUser, Quiz, Deal, Cart, BookAudio
+    user_deal_voucher_form, queryFeedbackForm
+from book_store.admin_dashboard.models import Book, Voucher, VoucherUser, Quiz, Deal, Cart, BookAudio, QueryFeedback
 from book_store.user.models import User, Mode
 from mailjet_rest import Client
 
@@ -41,7 +41,7 @@ def add_book(request):
 
         year_of_publish = request.POST.get('year_of_publish')
         no_of_pages = request.POST.get('no_of_pages')
-        genre = request.POST.get('genre')
+        genre = ", ".join(str(x) for x in request.POST.getlist('genre'))
         price = request.POST.get('price')
         author = request.POST.get('author')
         adult_mode = request.POST.get('adult_mode')
@@ -522,3 +522,30 @@ def make_admin_user(request, user_id):
 
     user.save()
     return HttpResponse('Success')
+
+
+def query_feedback_list(request):
+    list = QueryFeedback.objects.all()
+    return render(request, 'dashboard/query_feedback_list.html', {'queries': list})
+
+
+def query_feedback_reply(request, query_id):
+    query = QueryFeedback.objects.filter(query_feedback_id=query_id).first()
+    form = queryFeedbackForm(instance=query)
+
+    if request.method == 'POST':
+
+        form = queryFeedbackForm(request.POST,instance=query)
+        if form.is_valid():
+            form.save()
+            print('test test')
+            return redirect('admin_query_feedback_list')
+        else:
+            print('form.errors', form.errors)
+            for field, items in form.errors.items():
+                for item in items:
+                    messages.error(request, '{}: {}'.format(field, item))
+
+            return render(request, 'dashboard/query_feedback_reply.html', {'form': form, 'query_id':query_id})
+
+    return render(request, 'dashboard/query_feedback_reply.html', {'form': form, 'query_id':query_id})

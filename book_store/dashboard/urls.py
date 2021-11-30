@@ -31,25 +31,25 @@ urlpatterns = [
     path('cart_payment', views.checkout, name='user-cart-payment'),
     path('payment_final', views.cart_payment, name='user-payment-final'),
     path('user_profile', views.user_profile, name='user-profile'),
-    path('update_Profile', views.user_profile_update, name = 'user_profile_update'),
+    path('update_Profile', views.user_profile_update, name='user_profile_update'),
 
-    path('review_product/<int:book_id>', views.review_book, name= 'user_review_book'),
+    path('review_product/<int:book_id>', views.review_book, name='user_review_book'),
     path('review_save/<int:book_id>', views.review_save_book, name='user-save-review'),
 
     path('wishlist', views.wishlist, name='user_wishlist'),
     path('wishlist/<str:sort>', views.wishlist_sort, name='user_wishlist_sort'),
 
-    path('deals_discounts', views.deal_discounts, name= 'user_deals_discount'),
+    path('deals_discounts', views.deal_discounts, name='user_deals_discount'),
     path('vouchers', views.voucher_list, name='user_voucher'),
 
     path('check_voucher', views.voucher_check, name='user_check_voucher'),
     path('attempt_quiz/<int:book_id>', views.attempt_quiz, name='user_attempt_quiz'),
     path('check_answer', views.check_answer, name='user_check_answer'),
 
-    path('user_author_menu', views.user_author_menu, name= 'user_author_menu'),
-    path('user_author_add_book', views.user_author_add_book, name= 'user_author_add_book'),
-    path('user_delete_book/<int:book_id>', views.user_delete_book, name = 'user_delete_book'),
-    path('user_genre/<str:genre>', views.user_get_genre_book, name = 'user-genre-book'),
+    path('user_author_menu', views.user_author_menu, name='user_author_menu'),
+    path('user_author_add_book', views.user_author_add_book, name='user_author_add_book'),
+    path('user_delete_book/<int:book_id>', views.user_delete_book, name='user_delete_book'),
+    path('user_genre/<str:genre>', views.user_get_genre_book, name='user-genre-book'),
     path('user_best_book', views.user_get_best_book, name='user-best-book'),
     path('user_audio_book', views.user_get_audio_book, name='user-audio-book'),
     path('pdf_book', views.user_get_pdf_book, name='user-pdf-book'),
@@ -59,5 +59,8 @@ urlpatterns = [
     path('check_mail', views.send_mail),
     path('cart_update', views.update_cart),
     path('remove_cart/<int:book_id>', views.remove_cart, name='user-remove-cart'),
+
+    path('query_feedback', views.query_feedback, name='user_query_feedback'),
+    path('query_feedback_list', views.query_feedback_list, name='user_query_feedback_list'),
 
 ]

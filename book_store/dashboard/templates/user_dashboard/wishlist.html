@@ -171,7 +171,18 @@
                             <p style="font-size: small;"><strong>Author: </strong>{{wishlist.wishlist_book.author}}</p>
                             <p style="font-size: small;"><strong>Genre: </strong>{{wishlist.wishlist_book.genre}}</p>
 
+                            <div class="hover-btns">
 
+                                <a onclick="remove_to_wishlist({{wishlist.wishlist_book.book_id}})" id="wishlist-{{wishlist.wishlist_book.book_id}}"
+                                   class="single-btn ">
+                                    <i class="fas fa-heart red-icon" title="Remove from Wishlist"></i>
+                                </a>
+                                <a href="{% url 'user-product-detail' wishlist.wishlist_book.book_id %}"
+                                   class="single-btn">
+                                    Read Now
+                                </a>
+
+                            </div>
                         </div>
 
                     </div>
@@ -192,6 +203,20 @@
 });
 
 
+    function remove_to_wishlist(book_id){
+        $.ajax({
+            url:"remove_wishlist/"+parseInt(book_id),
+            type: 'get',
+            success: function(data){
+                alert('Removed from Wishlist')
+                    $('#wishlist-'+book_id).removeClass('red-icon')
+
+            },
+            failure(data){
+
+            }
+        });
+    }
 
 function openNav() {
 		  document.getElementById("mySidenav").style.width = "250px";
@@ -255,6 +280,7 @@ function on_submit(){
 
         window.location = '/wishlist/'+end
     });
+
 
 </script>
 

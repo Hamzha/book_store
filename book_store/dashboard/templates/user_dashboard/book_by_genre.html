@@ -64,16 +64,16 @@
         <div class="shop-product-wrap grid with-pagination row space-db--30 shop-border">
 
             {% for book in books %}
-            <div class="col-lg-4 col-sm-6">
+            <div class="col-lg-4 col-sm-6" >
                 <div class="product-card">
                     <div class="product-grid-content">
                         <div class="product-header">
                                 {{book.author}}
-                            <h3><a href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a></h3>
+                            <h3><a href="{% url 'user-product-detail' book.book_id %}" style="font-size:20px;font-weight:700">{{book.title}}</a></h3>
                         </div>
                         <div class="product-card--body">
                             <div class="card-image" >
-                                <img style="height: 300px" src="{{book.cover_photo.url}}" alt="">
+                                <img style="height: 150px" src="{{book.cover_photo.url}}" alt="">
                             </div>
                             <div class="price-block">
                                 <span class="price">{{book.price}} PKR</span>
