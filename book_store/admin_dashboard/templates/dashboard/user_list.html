@@ -53,7 +53,7 @@ Users List
                         <td style="text-align: center;">{{ user.email }}</td>
                         <td style="text-align: center;">{{ user.first_name }}</td>
                         <td style="text-align: center;">{{ user.last_name }}</td>
-                        <td style="text-align: center;">{{ user.date_of_birth }}</td>
+                        <td style="text-align: center;">{{ user.date_of_birth|date:"M d, Y" }}</td>
                         <td style="text-align: center;">{{ user.is_admin }}</td>
                         <td style="text-align: center;">{{ user.is_author }}</td>
                         <td style="text-align: center;">

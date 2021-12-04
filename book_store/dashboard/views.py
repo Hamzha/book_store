@@ -143,6 +143,13 @@ def get_book(request, book_id, chapter_id):
 
 
 @login_required(login_url='/')
+def get_book_pdf(request, book_id, chapter_id):
+    print('asdfasdf')
+    book = Book.objects.filter(book_id=book_id).values().first()
+    return HttpResponse('/media/' + book['pdf'])
+
+
+@login_required(login_url='/')
 def save_bookmark(request, book_id, page_num):
     bookmark = BookMark.objects.create(
         bookmark_book=Book.objects.filter(book_id=book_id).first(),
@@ -240,7 +247,7 @@ def signup(request):
             user = form.save(commit=False)
             user.password = make_password(user.password)
             user.save()
-
+            user = User.objects.filter(id= user.id).first()
             code = uuid.uuid4().hex.upper()[0:6]
 
             Voucher.objects.create(description='Signup Voucher',
@@ -251,7 +258,7 @@ def signup(request):
 
             VoucherUser.objects.create(voucher=voucher, user=user).save()
             books = Book.objects.filter(free_book = True)
-            cart = Cart.objects.create(cart_user=request.user, payment_status='Paid', cart_detail='Paid')
+            cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
             for book in books:
                 cart.cart_book.add(book)
             cart.save()
@@ -558,9 +565,8 @@ def voucher_check(request):
 @login_required(login_url='/')
 def attempt_quiz(request, book_id):
     book = Book.objects.filter(book_id=book_id).first()
-    quiz = Quiz.objects.filter(quiz_book=book).all()
+    quiz = Quiz.objects.filter(quiz_book=book).all().order_by('?')[0:10]
 
-    print(Quiz.objects.all())
     return render(request, 'user_dashboard/attempt_quiz.html', {'book': book, 'quizs': quiz})
 
 
@@ -606,14 +612,10 @@ def booK_listen(request, book_id):
 
 @login_required(login_url='/')
 def booK_listen_chapter(request, book_id, chapter):
-    print(book_id, chapter)
     book = Book.objects.filter(book_id=book_id).first()
-    print(book)
     audio = BookAudio.objects.filter(book=book, audio_id=chapter).first()
-    print(audio)
     bookmark = BookMark.objects.filter(bookmark_book=book, bookmark_user=request.user, bookmark_audio=audio)
     quickNote = QuickNote.objects.filter(QuickNote_book=book, QuickNote_user=request.user, QuickNote_audio_book=audio)
-    print(quickNote)
     for index, mark in enumerate(bookmark):
         mark.time = strftime("%H:%M:%S", gmtime(mark.bookmark_page_number))
     return render(request, 'user_dashboard/book_listen_2.html',
@@ -1057,3 +1059,17 @@ def query_feedback_list(request):
     ).all()
 
     return render(request, 'user_dashboard/query_feedback_list.html', {'queries': queries})
+
+
+def forget_password(request):
+    return render(request, 'user_dashboard/forget_password.html',{})
+
+
+def retrieve_password(request, email):
+    user = User.objects.filter(email = email).first()
+    if user:
+        user.set_password('new_pass_123')
+        user.save()
+        return HttpResponse('Success')
+    else:
+        return HttpResponse('Email do not exists')

@@ -287,9 +287,10 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
 
 
 
+
 </style>
 
-<div style="min-height: 500px; width: 100%; padding-left: 5%; text-align: revert;">
+<div style="min-height: 500px; width: 100%; padding-left: 5%; text-align: revert;margin-bottom:2%">
     <div class="row" style="width: 66%;margin: 20px auto">
         <h2 style="float:left">
             {{book.title}}
@@ -423,10 +424,12 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
     </div>
 
     <div style="margin:20px auto; margin-left:17%" class="row">
-        <button class="btn btn-primary" style="height: fit-content; background: #ee964b;border-color: #ee964b;" onclick="bookmark({{book.book_id}})">Bookmark Here
+        <button class="btn btn-primary" style="height: fit-content; background: #ee964b;border-color: #ee964b;"
+                onclick="bookmark({{book.book_id}})">Bookmark Here
         </button>
         <textarea id="notepad" style="height: 80px; padding: 5px; margin-left: 2%; width: 55%">{{quickNote.0.QuickNote_text}}</textarea>
-        <button class="btn btn-secondary" style="padding-left:15px; padding-right:15px; margin-left: 2%; height: fit-content;    background: #ee964b;    border-color: #ee964b;"
+        <button class="btn btn-secondary"
+                style="padding-left:15px; padding-right:15px; margin-left: 2%; height: fit-content;    background: #ee964b;    border-color: #ee964b;"
                 onclick="save_quick_note()">Save
         </button>
 
@@ -466,7 +469,35 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
         </div>
     </div>
 
+    <div class="top-bar-book row" style="margin-left: 16%; width: 79%">
+        <div style="width: 30%; font-size: 10px">
+            <button class="btn" id="prev-page" style="padding-left:18px; padding-right: 18px; font-size: 10px">
+                <i class="fas fa-arrow-circle-left"></i>
+                &ensp; Prev Page
+            </button>
+            <span class="page-info" style="margin-left: 2%; margin-right: 2%">
+    Page <span id="page-num"></span> of <span id="page-count"></span>
+    </span>
+            <button class="btn" id="next-page" style="padding-left:18px; padding-right: 18px; font-size: 10px">
+                Next Page &ensp;<i class="fas fa-arrow-circle-right"></i>
+            </button>
+        </div>
+
+    </div>
+    <div style="
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.8);
+      width: 45%;
+      height: 800px;
+      margin-top: 20px;
+      overflow:scroll;
+      margin-left:17%
+    ">
+        <canvas id="pdf-render" style="width: 100%">
+
+        </canvas>
+    </div>
 </div>
+
 <script>
 var obj = new Object();
 obj.type = 'audio';
@@ -555,9 +586,167 @@ function save_quick_note(){
     });
 }
 
+var book_mark = '/get_bookmark/'+{{book.book_id}};
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    var bookmarks = [];
+    var quick_notes = [];
+            $('#quiz-attempt').hide();
+
+    var canvas = document.getElementById("pdf-render");
+    var context = canvas.getContext("2d");
+    var scale = 1.5;
+    var originx = 0;
+    var originy = 0;
+
+    canvas.onmousewheel = function (event){
+        var mousex = event.clientX - canvas.offsetLeft;
+        var mousey = event.clientY - canvas.offsetTop;
+        var wheel = event.wheelDelta/120;//n or -n
+
+
+        //according to Chris comment
+        var zoom = Math.pow(1 + Math.abs(wheel)/2 , wheel > 0 ? 1 : -1);
+
+        context.translate(
+            originx,
+            originy
+        );
+        context.scale(zoom,zoom);
+        context.translate(
+            -( mousex / scale + originx - mousex / ( scale * zoom ) ),
+            -( mousey / scale + originy - mousey / ( scale * zoom ) )
+        );
+
+        originx = ( mousex / scale + originx - mousex / ( scale * zoom ) );
+        originy = ( mousey / scale + originy - mousey / ( scale * zoom ) );
+        scale *= zoom;
+    }
 
 
 
+
+
+});
+
+
+var zoom_factor = 1;
+var page_number = 1;
+let url_pdf = null;
+
+$.ajax({
+    url: '{% url "user-get-book-pdf" book.book_id 1 %}',
+    type: 'get', // This is the default though, you don't actually need to always mention it
+    data: {'data':'pdf'},
+    success: function(data) {
+        url_pdf = data;
+        let pdfDoc = null,
+            pageNum = 1,
+            pageIsRendering = false,
+            pageNumIsPending = null;
+
+        const scale = 1.5,
+            canvas = document.querySelector('#pdf-render'),
+            ctx = canvas.getContext('2d');
+
+        // Render the page
+        const renderPage = num => {
+            pageIsRendering = true;
+            page_number = num;
+            // Get page
+            pdfDoc.getPage(num).then(page => {
+                // Set scale
+                const viewport = page.getViewport({
+                    scale
+                });
+                canvas.height = viewport.height * zoom_factor;
+                canvas.width = viewport.width * zoom_factor;
+
+                const renderCtx = {
+                    canvasContext: ctx,
+                    viewport
+                };
+
+                page.render(renderCtx).promise.then(() => {
+                    pageIsRendering = false;
+
+                    if (pageNumIsPending !== null) {
+                        renderPage(pageNumIsPending);
+                        pageNumIsPending = null;
+                    }
+                });
+
+                // Output current page
+                document.querySelector('#page-num').textContent = num;
+            });
+        };
+
+        // Check for pages rendering
+        const queueRenderPage = num => {
+            if (pageIsRendering) {
+                pageNumIsPending = num;
+            } else {
+                renderPage(num);
+            }
+        };
+
+        // Show Prev Page
+        const showPrevPage = () => {
+            if (pageNum <= 1) {
+                return;
+            }
+            pageNum--;
+            queueRenderPage(pageNum);
+        };
+
+        // Show Next Page
+        const showNextPage = () => {
+            if (pageNum >= pdfDoc.numPages) {
+                return;
+            }
+            pageNum++;
+            queueRenderPage(pageNum);
+        };
+
+        // Get Document
+        pdfjsLib
+            .getDocument(url_pdf)
+            .promise.then(pdfDoc_ => {
+                pdfDoc = pdfDoc_;
+
+                document.querySelector('#page-count').textContent = pdfDoc.numPages;
+
+                renderPage(pageNum);
+            })
+            .catch(err => {
+                // Display error
+                const div = document.createElement('div');
+                div.className = 'error';
+                div.appendChild(document.createTextNode(err.message));
+                document.querySelector('body').insertBefore(div, canvas);
+                // Remove top bar
+                document.querySelector('.top-bar').style.display = 'none';
+            });
+
+        // Button Events
+        document.querySelector('#prev-page').addEventListener('click', showPrevPage);
+        document.querySelector('#next-page').addEventListener('click', showNextPage);
+        $(document).on("click", "#zoom", function () {
+            //your code
+            zoom_factor = 0.5
+
+            renderPage(page_number)
+
+        });
+
+
+
+    },
+    failure: function(data) {
+        alert('Got an error dude');
+    }
+});
 </script>
 
 {% endblock %}

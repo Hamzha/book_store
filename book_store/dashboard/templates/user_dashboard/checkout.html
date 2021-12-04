@@ -114,7 +114,8 @@
                                     </div>
                                     <div class="col-md-6 col-12 mb--20">
                                         <label>Security Code*</label>
-                                        <input type="number" placeholder="Security Code" id="security_code">
+                                        <input type="number" maxlength="3" pattern = "^[0-9]{3}$"
+ placeholder="Security Code" id="security_code">
 
                                         <p style="color:grey; font-size: smaller;"><img
                                                 style="width: 40px; height: 20px;"
@@ -180,7 +181,7 @@
             alert('Please input Card Holder Number')
         }else if($('#card_holder_number').val().length == 0){
             alert('Please input Card Holder Number')
-        }else if($('#security_code').val().length == 0){
+        }else if($('#security_code').val().length != 3 ){
             alert('Please input Security Code')
         }else if($('#accept_terms2').is(":checked") == false){
             alert('Please Accept the Term and Condition')

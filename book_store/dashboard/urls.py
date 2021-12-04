@@ -14,6 +14,7 @@ urlpatterns = [
     path('book_listen_chapter/<int:book_id>/<int:chapter>', views.booK_listen_chapter, name='user-listen_chapter-book'),
 
     path('get_book/<int:book_id>/<int:chapter_id>', views.get_book, name='user-get-book'),
+    path('get_book_pdf/<int:book_id>/<int:chapter_id>', views.get_book_pdf, name='user-get-book-pdf'),
 
     path('save_bookmark/<int:book_id>/<int:page_num>', views.save_bookmark, name='user-bookmark-save'),
 
@@ -63,4 +64,7 @@ urlpatterns = [
     path('query_feedback', views.query_feedback, name='user_query_feedback'),
     path('query_feedback_list', views.query_feedback_list, name='user_query_feedback_list'),
 
+
+    path('forget_password', views.forget_password, name='user_forget_password'),
+    path('retrieve_password/<str:email>', views.retrieve_password, name='user-retrieve-password')
 ]

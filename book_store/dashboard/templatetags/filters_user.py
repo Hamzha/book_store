@@ -41,9 +41,9 @@ def time_format(time):
 def calculate_years(date_of_birth):
     print(type(date_of_birth))
     try:
-        diff =  datetime.datetime.now(timezone.utc) - date_of_birth.replace()
-        print()
-        return diff.seconds / (365)
+        diff = datetime.datetime.now(timezone.utc) - date_of_birth.replace()
+        print(diff.seconds / 3.154e+7)
+        return diff.seconds / 3.154e+7
     except Exception as e:
         print(e)
     return 12
