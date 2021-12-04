@@ -727,7 +727,7 @@ def user_delete_book(request, book_id):
 
 
 def user_get_genre_book(request, genre):
-    books = Book.objects.filter(genre=genre)
+    books = Book.objects.filter(genre__icontains=genre)
     diff = 12
 
     diff = datetime.now(timezone.utc) - request.user.date_of_birth
@@ -944,7 +944,7 @@ def user_filter_book(request):
         for price in data['price']:
             print(price)
             if price == '0':
-                [books.appeand(book.book_id) for book in book_list if book.free_book == True]
+                [books.append(book.book_id) for book in book_list if book.free_book == True]
             if price == '1':
                 [books.append(book.book_id) for book in book_list if 0 <= book.price <= 500]
             if price == '2':

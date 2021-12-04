@@ -481,31 +481,32 @@ def send_mail(book):
     api_key = '21b0378ce48d6aa976e690ccaef126cc'
     api_secret = '6e3f27dce05716d6b7e45739dcdd93ac'
     mailjet = Client(auth=(api_key, api_secret), version='v3.1')
-    data = {
-        'Messages': [
-            {
-                "From": {
-                    "Email": "ayesharaig786@gmail.com",
-                    "Name": "Ayesha"
-                },
-                "To": [
-                    {
-                        "Email": "ahmedhamza884@gmail.com",
-                        "Name": "Ayesha"
-                    }
-                ],
-                "Subject": "New Book Added",
-                "TextPart": "My first Mailjet email",
-                "HTMLPart": "Dear beloved customer! A new Book is added in the Book Store. <br /> Name: " + book.title +
-                            "<br />Author: " + book.author + "<br /> Feel Free to visit anytime.<br /> Regards Book Store Co.",
+    users = User.objects.all()
 
-            }
-        ]
-    }
-    result = mailjet.send.create(data=data)
-    print(result.status_code)
-    print(result.json())
-    return HttpResponse('test')
+    for user in users:
+        data = {
+            'Messages': [
+                {
+                    "From": {
+                        "Email": "ayesharaig786@gmail.com",
+                        "Name": "Ayesha"
+                    },
+                    "To": [
+                        {
+                            "Email": user.email,
+                            "Name": user.first_name + " "+ user.last_name
+                        }
+                    ],
+                    "Subject": "New Book Added",
+                    "TextPart": "My first Mailjet email",
+                    "HTMLPart": "Dear beloved customer! A new Book is added in the Book Store. <br /> Name: " + book.title +
+                                "<br />Author: " + book.author + "<br /> Feel Free to visit anytime.<br /> Regards Book Store Co.",
+
+                }
+            ]
+        }
+        mailjet.send.create(data=data)
+    return HttpResponse('Success')
 
 
 def make_author_user(request, user_id):

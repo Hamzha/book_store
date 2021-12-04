@@ -3,6 +3,8 @@ from time import strftime, gmtime
 
 from django import template
 from django.utils import timezone
+from datetime import date
+import time
 
 register = template.Library()
 
@@ -41,9 +43,8 @@ def time_format(time):
 def calculate_years(date_of_birth):
     print(type(date_of_birth))
     try:
-        diff = datetime.datetime.now(timezone.utc) - date_of_birth.replace()
-        print(diff.seconds / 3.154e+7)
-        return diff.seconds / 3.154e+7
+        diff = datetime.datetime.now() - date_of_birth.replace(tzinfo=None)
+        return diff.days / 365
     except Exception as e:
         print(e)
     return 12
