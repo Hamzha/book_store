@@ -332,12 +332,12 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
                 <button
                         class="btn btn-outline-secondary"
                         type="button"
-                        style="box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); padding-left: 20px;padding-right: 20px"
+                        style="box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); padding-left: 20px;padding-right: 20px;background:#ee964b; color:white"
                         onclick="search_online()"
                         data-toggle="modal"
                         data-target="#myModal"
                 >
-                    Search
+                    <i class="fas fa-search"></i>
                 </button>
             </div>
         </div>
@@ -427,9 +427,9 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
         <button class="btn btn-primary" style="height: fit-content; background: #ee964b;border-color: #ee964b;"
                 onclick="bookmark({{book.book_id}})">Bookmark Here
         </button>
-        <textarea id="notepad" style="height: 80px; padding: 5px; margin-left: 2%; width: 55%">{{quickNote.0.QuickNote_text}}</textarea>
+        <textarea id="notepad" style="height: 80px; padding: 5px; margin-left: 2%; width: 50%">{{quickNote.0.QuickNote_text}}</textarea>
         <button class="btn btn-secondary"
-                style="padding-left:15px; padding-right:15px; margin-left: 2%; height: fit-content;    background: #ee964b;    border-color: #ee964b;"
+                style="padding-left:15px; padding-right:15px; margin-left: 2%;width:11%; height: fit-content;    background: #ee964b;    border-color: #ee964b;"
                 onclick="save_quick_note()">Save
         </button>
 
@@ -471,14 +471,14 @@ audio:nth-child(2), audio:nth-child(4), audio:nth-child(6) {
 
     <div class="top-bar-book row" style="margin-left: 16%; width: 79%">
         <div style="width: 30%; font-size: 10px">
-            <button class="btn" id="prev-page" style="padding-left:18px; padding-right: 18px; font-size: 10px">
+            <button class="btn" id="prev-page" style="padding-left:18px;background:#ee964b; color:white; padding-right: 18px; font-size: 10px">
                 <i class="fas fa-arrow-circle-left"></i>
                 &ensp; Prev Page
             </button>
             <span class="page-info" style="margin-left: 2%; margin-right: 2%">
     Page <span id="page-num"></span> of <span id="page-count"></span>
     </span>
-            <button class="btn" id="next-page" style="padding-left:18px; padding-right: 18px; font-size: 10px">
+            <button class="btn" id="next-page" style="background:#ee964b; color:white;padding-left:18px; padding-right: 18px; font-size: 10px">
                 Next Page &ensp;<i class="fas fa-arrow-circle-right"></i>
             </button>
         </div>

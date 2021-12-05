@@ -70,7 +70,7 @@
                                              <tr>
                                                  {% for book in order.cart_book.all %}
                                                  {% if book.free_book == False %}
-                                                     <td>{{order.cart_id}}</td>
+                                                     <td>{{forloop.counter}}</td>
                                                      <td class="image"><img class="account_image"
                                                                            src="{{book.cover_photo.url}}"/>
                                                     </td>

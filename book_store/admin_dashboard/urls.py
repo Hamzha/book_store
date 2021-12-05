@@ -38,6 +38,7 @@ urlpatterns = [
 
     path('add_quiz', views.add_quiz, name='admin-add-quiz'),
     path('list_quiz', views.list_quiz, name='admin-list-quiz'),
+    path('list_quiz_book/<int:book_id>', views.list_quiz_book, name='admin-list-quiz-book'),
     path('save_game', views.save_game, name='admin-save-game'),
     path('save_mcqs', views.save_mcqs, name='admin-save-mcqs'),
     path('save_question', views.save_question, name='admin-save-question'),

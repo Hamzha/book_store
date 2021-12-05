@@ -51,22 +51,31 @@
 }
 
 
+
 </style>
 
 <div class="top-bar-book row" style="margin-left: 21%; width: 79%">
-    <div style="width: 30%; font-size: 10px">
-        <button class="btn" id="prev-page" style="padding-left:18px; padding-right: 18px; font-size: 10px">
+    <div style="width: 21%; font-size: 10px">
+        <button class="btn" id="prev-page" style="background:#ee964b; color: white;padding-left:18px; padding-right: 18px; font-size: 10px">
             <i class="fas fa-arrow-circle-left"></i>
             &ensp; Prev Page
         </button>
         <span class="page-info" style="margin-left: 2%; margin-right: 2%">
     Page <span id="page-num"></span> of <span id="page-count"></span>
     </span>
-        <button class="btn" id="next-page" style="padding-left:18px; padding-right: 18px; font-size: 10px">
+        <button class="btn" id="next-page" style="background: #ee964b;color: white;padding-left:18px; padding-right: 18px; font-size: 10px">
             Next Page &ensp;<i class="fas fa-arrow-circle-right"></i>
         </button>
     </div>
-    <div class="input-group" style="width: 30%; margin-left:5%">
+    <div style="width:20%; align-items: center;place-content: center;" class="row">
+
+        <h3>Go to Page#</h3>
+        <input class="form-control" style="height:auto ;margin-left:1%; width:24%; text-align: center;" type="number" min="1" id="goto_page"/>
+        <button class="btn" style="margin-left: 1%;background: silver; height:30px; width: 30px;padding-left: 30px;
+    padding-right: 30px;background: #ee964b;
+    color: white;" onclick="goto_page()"> Go</button>
+    </div>
+    <div class="input-group" style="width: 20%; margin-left: 2%;">
         <input
                 type="text"
                 class="form-control"
@@ -92,9 +101,7 @@
 
 </div>
 <div class="row" style="margin-left:21%; margin-top:1%; align-items: center;">
-    <h3>Go to Page#</h3>
-    <input style="margin-left:1%; width:5%; text-align: center;" type="number" min="1" id="goto_page"/>
-    <button style="margin-left: 1%;background: silver; height:30px; width: 50px" onclick="goto_page()"> Go</button>
+
 </div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -194,7 +201,8 @@
 
         </div>
         <h3 style="margin-top: 50px; font-size:30px"> NotePad</h3>
-        <textarea style="margin-top: 00px;width: 60%; height: 280px; padding: 10px; box-shadow: 0 0 10px black;" placeholder="Write a note"
+        <textarea style="margin-top: 00px;width: 60%; height: 280px; padding: 10px; box-shadow: 0 0 10px black;"
+                  placeholder="Write a note"
                   id="book_quick_notes"></textarea>
         <div>
             <button class="btn" style="margin-top: 10px;background: #ee964b;color: white;font-size:15px; width:50px"
@@ -685,6 +693,7 @@ jQuery(document).ready(function(){
       $('#status').html(e.pageX +', '+ e.pageY);
    });
 })
+
 
 
 

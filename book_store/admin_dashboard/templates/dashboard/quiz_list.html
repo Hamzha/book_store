@@ -22,6 +22,16 @@ Quiz List
             <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
                     <h3 class="card-title">All quiz List</h3>
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Question
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            {% for book in books %}
+                            <li><a class="dropdown-item" href="{% url 'admin-list-quiz-book' book.book_id %}">{{book.title}}</a></li>
+                            {% endfor %}
+                      </ul>
+                    </div>
                     <a href="{% url 'admin-add-quiz' %}">Add New Quiz</a>
                 </div>
             </div>
@@ -34,7 +44,7 @@ Quiz List
                     <tr>
                         <th style="text-align: center;">Quiz Type</th>
                         <th style="text-align: center;">Quiz Question Statement</th>
-                        <th style="text-align: center;">Question</th>
+                        <th style="text-align: center;">Book</th>
                         <th style="text-align: center;">Delete</th>
                     </tr>
                     </thead>

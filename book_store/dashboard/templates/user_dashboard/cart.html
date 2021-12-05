@@ -117,22 +117,16 @@
 
                     <div class="product-card--body">
                         <div class="card-image">
-                            <img src="{{book.cover_photo.url}}" alt="">
+                            <img style="height:200px" src="{{book.cover_photo.url}}" alt="">
                             <div class="hover-contents">
                                 <h6>{{book.title}}</h6>
                                 <div class="row" style="font-size: small;">
                                     <div class="col-4"><span class="price">{{book.price}}</span></div>
-                                    <div class="col-4"><span class="pub_year">{{book.year_of_publish}}</span></div>
-                                    <div class="col-4"><span class="price">{{book.no_of_pages}}</span></div>
 
                                 </div>
                                 <p style="font-size: small;">
                                     {{book.summary}}
                                 </p>
-
-                                <p style="font-size: small;"><strong>Author: </strong>{{book.author}}</p>
-                                <p style="font-size: small;"><strong>Genre: </strong>{{book.genre}}</p>
-
 
                                 <div class="hover-btns">
                                     <a href="{% url 'user-product-detail' book.book_id %}"

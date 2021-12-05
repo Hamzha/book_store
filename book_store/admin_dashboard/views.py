@@ -373,7 +373,17 @@ def add_quiz(request):
 
 @staff_member_required(login_url='/')
 def list_quiz(request):
-    return render(request, 'dashboard/quiz_list.html', {'quizs': Quiz.objects.all()})
+    return render(request, 'dashboard/quiz_list.html', {'quizs': Quiz.objects.all(), 'books': Book.objects.all()})
+
+
+@staff_member_required(login_url='/')
+def list_quiz_book(request, book_id):
+    print(book_id,
+          Quiz.objects.filter(quiz_book=Book.objects.filter(book_id=book_id).first()),
+          Book.objects.all())
+    return render(request, 'dashboard/quiz_list.html',
+                  {'quizs': Quiz.objects.filter(quiz_book=Book.objects.filter(book_id=book_id).first()),
+                   'books': Book.objects.all()})
 
 
 @staff_member_required(login_url='/')
@@ -401,12 +411,10 @@ def save_mcqs(request):
         option_3 = data['option_3']
         option_4 = data['option_4']
         mcq_answer = data['mcq_answer']
-        mcq_book = list(map(int, data['mcq_book']))
-
-        books = Book.objects.filter(book_id=mcq_book[0]).first()
+        books = Book.objects.filter(book_id=data['mcq_book']).first()
 
         quiz = Quiz.objects.create(
-            quiz_type='mcq',
+            quiz_type='MCQ',
             quiz_question_statement=question,
             quiz_option_1=option_1,
             quiz_option_2=option_2,
@@ -494,7 +502,7 @@ def send_mail(book):
                     "To": [
                         {
                             "Email": user.email,
-                            "Name": user.first_name + " "+ user.last_name
+                            "Name": user.first_name + " " + user.last_name
                         }
                     ],
                     "Subject": "New Book Added",
@@ -536,7 +544,7 @@ def query_feedback_reply(request, query_id):
 
     if request.method == 'POST':
 
-        form = queryFeedbackForm(request.POST,instance=query)
+        form = queryFeedbackForm(request.POST, instance=query)
         if form.is_valid():
             form.save()
             print('test test')
@@ -547,6 +555,6 @@ def query_feedback_reply(request, query_id):
                 for item in items:
                     messages.error(request, '{}: {}'.format(field, item))
 
-            return render(request, 'dashboard/query_feedback_reply.html', {'form': form, 'query_id':query_id})
+            return render(request, 'dashboard/query_feedback_reply.html', {'form': form, 'query_id': query_id})
 
-    return render(request, 'dashboard/query_feedback_reply.html', {'form': form, 'query_id':query_id})
+    return render(request, 'dashboard/query_feedback_reply.html', {'form': form, 'query_id': query_id})

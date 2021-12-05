@@ -147,8 +147,7 @@ $(document).ready(function(){
         obj.mcq_book = $('#mcq_book').val();
         obj.csrfmiddlewaretoken = "{{csrf_token}}";
         var jsonString= JSON.stringify(obj);
-        console.log(jsonString)
-        
+
         $.ajax({
             url: "{% url 'admin-save-mcqs' %}",
             type: 'get',

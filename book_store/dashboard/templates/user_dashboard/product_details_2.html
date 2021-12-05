@@ -86,10 +86,7 @@
 
                 </div>
 
-                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6" style="border-left: 1px solid black;">
-                    <strong>Adult Mode</strong>
-                    <p style="font-size: small;"><strong style="font-size: large;">{{book.adult_mode}}</strong></p>
-                </div>
+
 
                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6" style="border-left: 1px solid black;">
                     <strong>LENGTH</strong>
@@ -172,13 +169,11 @@
 
                     <div class="product-card--body">
                         <div class="card-image">
-                            <img src="{{book.cover_photo.url}}" alt="">
+                            <img style="height:250px" src="{{book.cover_photo.url}}" alt="">
                             <div class="hover-contents">
                                <h6>{{book.title}}</h6>
                                <div class="row" style="font-size: small;">
-                                <div class="col-4"><span class="price">{{book.price}}</span></div>
-                            <div class="col-4"><span class="pub_year">{{book.year_of_publish}}</span></div>
-                            <div class="col-4"><span class="price">{{book.no_of_pages}}</span></div>
+                                <div class="col-4"><span class="price">{{book.price}} PKR</span></div>
 
                             </div>
                                 <p style="font-size: small;">
@@ -205,7 +200,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-6"><span class="price">{{book.price}} PKR</span></div>
-                            <div class="col-6"><span class="pub_year">{{book.year_of_publish}}</span></div>
 
                             </div>
 
