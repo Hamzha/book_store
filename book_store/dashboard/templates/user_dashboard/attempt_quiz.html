@@ -75,9 +75,11 @@ function submit(book_id, quiz_id){
             var jsonString= JSON.stringify(tmp);
             obj.push(tmp)
             count = count +1
+            console.log('check');
 
         }
     });
+    count = count -1;
     final_obj = new Object();
     final_obj.obj = obj
     var jsonString= JSON.stringify(final_obj);
@@ -90,7 +92,7 @@ function submit(book_id, quiz_id){
             console.log(data)
             $('#display_voucher').show()
             $('#display_submit').hide()
-            alert('Your total score is ' + data['result']+' out of '+ count
+            alert('Your total score is ' + data['result']+' out of '+ count*2
             +'\n' +"Congratulations you got voucher for "+ parseInt(data['result']) * 10 + "PKR. \nYou can avail this voucher on your next purchase.");
         },
         failure: function(data) {}
