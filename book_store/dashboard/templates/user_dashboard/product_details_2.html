@@ -31,15 +31,15 @@
                     <div class="add-cart-btn row" >
                         {% if book.is_buy %}
                             {% if book.book_type == 'PDF' %}
-                                <a href="{% url 'user-read-book' book.book_id 1 %}" style="margin-right:0.5%; width:50%" class="btn btn-outlined&#45;&#45;primary">Read
+                                <a href="{% url 'user-read-book' book.book_id 1 %}" style="margin-right:0.5%; width:50%;background:#ee964b;color:white;font-weight:bold" class="btn btn-outlined&#45;&#45;primary">Read
                                     Now</a>
-                                <a href="{% url 'user_review_book' book.book_id %}" style="margin-right:0.5%; " class="btn btn-outlined&#45;&#45;primary">
+                                <a href="{% url 'user_review_book' book.book_id %}" style="margin-right:0.5%;background:#ee964b;color:white;font-weight:bold " class="btn btn-outlined&#45;&#45;primary">
                                     Review </a>
                             {% else %}
-                                <a href="{% url 'user-read-book' book.book_id 1 %}" style="margin-right:0.5%;" class="btn btn-outlined&#45;&#45;primary">Read
+                                <a href="{% url 'user-read-book' book.book_id 1 %}" style="margin-right:0.5%;background:#ee964b;color:white;font-weight:bold" class="btn btn-outlined&#45;&#45;primary">Read
                                     Now</a>
                                 <div class="dropdown" style="margin-right:0.5%; ">
-                                    <button class="btn btn-secondary dropdown-toggle"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn btn-secondary dropdown-toggle" style="background:#ee964b;color:white;font-weight:bold"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Listen
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="; margin-top:2%">
@@ -48,13 +48,13 @@
                                         {% endfor %}
                                     </div>
                                 </div>
-                                <a href="{% url 'user_review_book' book.book_id %}" style="margin-right:0.5%; margin-top:2%;width: 70%;" class="btn btn-outlined&#45;&#45;primary">
+                                <a href="{% url 'user_review_book' book.book_id %}" style="margin-right:0.5%; margin-top:2%;width: 70%;background:#ee964b;color:white;font-weight:bold" class="btn btn-outlined&#45;&#45;primary">
                                     Review </a>
                             {% endif %}
 
 
                         {% else %}
-                        <a onclick="add_to_cart({{book.book_id}})" class="btn btn-outlined&#45;&#45;primary">
+                        <a onclick="add_to_cart({{book.book_id}})" style="background:#ee964b; border-color:#ee964b; color:white" class="btn btn-outlined&#45;&#45;primary">
                             Add To Cart</a>
 
                         {% endif %}
@@ -81,15 +81,15 @@
 
                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6" style="border-left: 1px solid black;">
                     <strong>RELEASED</strong>
-                    <p style="font-size: small;"><strong style="font-size: large;">{{year}}</strong><br/>{{month}}
-                        {{day}}</p>
+                    <p style="font-size: small;"><strong style="font-size: large;">{{year}}</strong><br/>
+                       </p>
 
                 </div>
 
 
 
                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6" style="border-left: 1px solid black;">
-                    <strong>LENGTH</strong>
+                    <strong>PAGES</strong>
                     <p style="font-size: small;"><strong style="font-size: large;">{{book.no_of_pages}}</strong><br/>pages
                     </p>
                 </div>
@@ -185,7 +185,7 @@
 
 
 
-                                <div class="hover-btns">
+                                <div class="hover-btns" >
                                     <a href="{% url 'user-product-detail' book.book_id %}"
                                         class="single-btn">
                                         Read Now

@@ -524,10 +524,26 @@ def make_author_user(request, user_id):
     return HttpResponse('Success')
 
 
+def make_non_author_user(request, user_id):
+    user = User.objects.filter(id=user_id).first()
+    user.is_author = False
+    user.save()
+    return HttpResponse('Success')
+
+
 def make_admin_user(request, user_id):
     user = User.objects.filter(id=user_id).first()
     user.is_admin = True
     user.is_staff = True
+
+    user.save()
+    return HttpResponse('Success')
+
+
+def make_non_admin_user(request, user_id):
+    user = User.objects.filter(id=user_id).first()
+    user.is_admin = False
+    user.is_staff = False
 
     user.save()
     return HttpResponse('Success')

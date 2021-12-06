@@ -18,42 +18,46 @@ Adding User
     <div class="container-fluid">
         <form id="form" action="{% url 'admin-add-user' %}" method="post">
             {% csrf_token %}
+            <div class="row">
+                <div class="form-group" style="width:50%">
+                    <label>Email</label>
+                    {% render_field form.email|add_class:'input input__email' type="email" placeholder="Email" class+="form-control" %}
+                </div>
+                <div class="form-group" style="width:50%">
+                    <label>UserName</label>
+                    {% render_field form.username|add_class:'input' type="text" placeholder="Username" class+="form-control" %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group" style="width: 50%">
+                    <label>First Name</label>
+                    {% render_field form.first_name|add_class:'input' type="text" placeholder="first_name" class+="form-control" %}
+                </div>
+                <div class="form-group" style="width: 50%">
+                    <label>Last Name</label>
+                    {% render_field form.last_name|add_class:'input' type="text" placeholder="last_name" class+="form-control" %}
+                </div>
 
-            <div class="form-group">
-                <label>Email</label>
-                {% render_field form.email|add_class:'input input__email' type="email" placeholder="Email" class+="form-control" %}
-            </div>
-            <div class="form-group">
-                <label>UserName</label>
-                {% render_field form.username|add_class:'input' type="text" placeholder="Username" class+="form-control" %}
             </div>
 
-            <div class="form-group">
-                <label>First Name</label>
-                {% render_field form.first_name|add_class:'input' type="text" placeholder="first_name" class+="form-control" %}
-            </div>
-            <div class="form-group">
-                <label>Last Name</label>
-                {% render_field form.last_name|add_class:'input' type="text" placeholder="last_name" class+="form-control" %}
-            </div>
-
-            <div class="form-group">
+            <div class="form-group" style="width: 50%">
                 <label>Date of Birth</label>
                 {% render_field form.date_of_birth|add_class:'input' type='date' placeholder="Date of Birth" class+="form-control" %}
             </div>
+            <div class="row">
 
-            <div class="form-group">
-                <label>Password</label>
-                {% render_field form.password|add_class:'input' type="password" placeholder="password" class+="form-control" %}
+                <div class="form-group" style="width: 50%">
+                    <label>Password</label>
+                    {% render_field form.password|add_class:'input' type="password" placeholder="password" class+="form-control" %}
+                </div>
+                <div class="form-group" style="width: 50%">
+                    <label>Password Again</label>
+                    {% render_field form.password2|add_class:'input' type="password" placeholder="password" class+="form-control" %}
+                </div>
             </div>
-            <div class="form-group">
-                <label>Password Again</label>
-                {% render_field form.password2|add_class:'input' type="password" placeholder="password" class+="form-control" %}
-            </div>
-
 
             <div class="actions-buttons">
-                <button id="submit" type="submit" class="btn btn-primary">
+                <button style="background:#ee964b; border-color:#ee964b; color:white"  id="submit" type="submit" class="btn btn-primary">
                     <span class="">Submit</span>
 
                 </button>

@@ -70,7 +70,7 @@
                                              <tr>
                                                  {% for book in order.cart_book.all %}
                                                  {% if book.free_book == False %}
-                                                     <td>{{forloop.counter}}</td>
+                                                     <td>{{ forloop.parentloop.counter0 }}</td>
                                                      <td class="image"><img class="account_image"
                                                                            src="{{book.cover_photo.url}}"/>
                                                     </td>
@@ -135,7 +135,7 @@
 
                                         </div>
                                         <div class="coupon-container">
-                                            <p style="margin-left:1.7%">Use Promo Code: <span class="promo">{{user_voucher.voucher.code}}</span>
+                                            <p style="margin-left:1.7%">Use Promo Code: <span class="promo" style="background:#ee964b; border-color:#ee964b; color:white">{{user_voucher.voucher.code}}</span>
                                             </p>
 
                                         </div>

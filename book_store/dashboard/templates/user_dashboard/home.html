@@ -28,6 +28,7 @@
     min-height: 300px;
   }
 }
+
 .card.card-has-bg {
   transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
   background-size: 120%;
@@ -89,7 +90,6 @@
 .red-icon{
     color: red;
 }
-
 
 
 
@@ -209,12 +209,10 @@
                 <div class="product-card--body">
                     <div class="card-image">
                         <img src="{{ book.cover_photo.url }}"
-                            style="height:250px; width: -webkit-fill-available;" alt="NOt Available">
+                             style="height:250px; width: -webkit-fill-available;" alt="NOt Available">
                         <div class="hover-contents">
                             <p>{{ book.title }}</p>
-                            <div class="row" style="font-size: small;">
-                                <div class="col-4"><span class="price">{{book.price}} PKR</span></div>
-                            </div>
+
                             <p style="font-size: small;">
                                 {{book.summary}}
                             </p>
@@ -225,7 +223,8 @@
 
                             <div class="hover-btns">
                                 {% if not book.is_buy %}
-                                <a onclick="add_to_cart({{book.book_id}})" class="single-btn" id="cart-{{book.book_id}}">
+                                <a onclick="add_to_cart({{book.book_id}})" class="single-btn"
+                                   id="cart-{{book.book_id}}">
                                     <i class="fas fa-shopping-basket"></i>
                                 </a>
                                 {% endif %}
@@ -257,6 +256,8 @@
                                     <a href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a>
                                 </strong>
                             </p>
+                            <div style="margin-top:-12px; font-size:14px">{{book.price}} PKR</div>
+
                         </div>
 
 
@@ -283,7 +284,7 @@
                 {"breakpoint":480, "settings": {"slidesToShow": 2} },
                 {"breakpoint":320, "settings": {"slidesToShow": 1} }
             ]'>
-          {% for book in best_seller %}
+        {% for book in best_seller %}
         <div class="single-slide">
             <div class="product-card">
 
@@ -293,12 +294,7 @@
                              style="height:250px; width: -webkit-fill-available;" alt="NOt Available">
                         <div class="hover-contents">
                             <p>{{ book.title }}</p>
-                            <div class="row" style="font-size: small;">
-                                <div class="col-4"><span class="price">{{book.price}}</span></div>
-                                <div class="col-4"><span class="pub_year">{{book.year_of_publish}}</span></div>
-                                <div class="col-4"><span class="price">{{book.no_of_pages}}</span></div>
 
-                            </div>
                             <p style="font-size: small;">
                                 {{book.summary}}
                             </p>
@@ -338,6 +334,7 @@
                         <div class="product-header">
                             <p><strong><a
                                     href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a></strong></p>
+                            <div style="margin-top:-12px; font-size:14px">{{book.price}} PKR</div>
                         </div>
 
 
@@ -348,7 +345,6 @@
         {% endfor %}
     </div>
 </section>
-
 
 
 <section class="section-margin" id="adult-section">
@@ -367,7 +363,7 @@
                 {"breakpoint":480, "settings": {"slidesToShow": 2} },
                 {"breakpoint":320, "settings": {"slidesToShow": 1} }
             ]'>
-          {% for book in adults %}
+        {% for book in adults %}
         <div class="single-slide">
             <div class="product-card">
 
@@ -520,6 +516,7 @@ function click_adult(){
     }
 
 }
+
 
 
 </script>

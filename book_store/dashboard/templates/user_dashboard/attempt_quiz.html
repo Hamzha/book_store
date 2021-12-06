@@ -51,8 +51,8 @@
 
 
     {% endfor %}
-    <button style="margin-left:21%; margin-bottom:30px" onclick="submit({{book.id}})" id="display_submit" class="btn btn-primary"> Submit </button>
-    <button style="margin-left:21%; margin-bottom:30px" id="display_voucher" class="btn btn-primary"><a href="{% url 'user-profile' %}" > Vouchers</a>  </button>
+    <button style="margin-left:21%; margin-bottom:30px; background:#ee964b; border-color:#ee964b; color:white" onclick="submit({{book.id}})" id="display_submit" class="btn btn-primary"> Submit </button>
+    <button style="margin-left:21%; margin-bottom:30px; background:#ee964b; border-color:#ee964b; color:white" id="display_voucher" class="btn btn-primary"><a href="{% url 'user-profile' %}" > Vouchers</a>  </button>
 {% else %}
     <h2 style="text-align: center;margin-top:5%; margin-bottom:5%">No Quiz for this Book Yet!</h2>
 {% endif %}

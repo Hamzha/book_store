@@ -504,6 +504,7 @@ $.ajax({
             })
             .catch(err => {
                 // Display error
+                console.log(err);
                 const div = document.createElement('div');
                 div.className = 'error';
                 div.appendChild(document.createTextNode(err.message));

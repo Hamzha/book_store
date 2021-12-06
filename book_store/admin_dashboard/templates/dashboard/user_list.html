@@ -63,6 +63,7 @@ Users List
                                 </i>
                             </a>
                         </td>
+
                         <td style="text-align: center;">
                             <a data-toggle="modal" href="#admin-modal-delete-user-{{user.id}}">
                                 <i
@@ -103,8 +104,49 @@ Users List
 
                         </td>
 
+                        {% if user.is_author %}
                         <td style="text-align: center;">
-                            <a data-toggle="modal" href="#admin-modal-author-user-{{user.id}}">
+                            <a data-toggle="modal" href="#admin-modal-non-author-user-{{user.id}}" title="Make this user non-author">
+                                <i
+                                        class="fas fa-users-cog"
+                                        style="color:green">
+                                </i>
+                                <div class="modal fade" id="admin-modal-non-author-user-{{user.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content bg-danger">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Make Non Author this User</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are yuo sure you want to Make Non-Author this user?</p>
+                                                <p>Username: {{user.username}}</p>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-outline-light"
+                                                        data-dismiss="modal">
+                                                    Close
+                                                </button>
+
+                                                <button onclick="make_author_non_user({{user.id}})" type="button"
+                                                        class="btn btn-outline-light">Make Non Author
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                            </a>
+
+                        </td>
+
+                        {% else %}
+                        <td style="text-align: center;">
+                            <a data-toggle="modal" href="#admin-modal-author-user-{{user.id}}" title="Make this user Author">
                                 <i
                                         class="fas fa-users-cog"
                                         style="color:gray">
@@ -142,11 +184,52 @@ Users List
 
                         </td>
 
+                        {% endif %}
+                        {% if user.is_admin %}
+                            <td style="text-align: center;">
+                            <a data-toggle="modal" href="#admin-modal-make-non-admin-user-{{user.id}}">
+                                <i
+                                        class="fas fa-user-lock"
+                                        style="color:green">
+                                </i>
+                                <div class="modal fade" id="admin-modal-make-non-admin-user-{{user.id}}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content bg-danger">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Make Non Admin the User</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are yuo sure you want to make non Admin this user?</p>
+                                                <p>Username: {{user.username}}</p>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-outline-light"
+                                                        data-dismiss="modal">
+                                                    Close
+                                                </button>
+
+                                                <button onclick="make_non_admin_user({{user.id}})" type="button"
+                                                        class="btn btn-outline-light">Make Non Admin
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                            </a>
+
+                        </td>
+                        {% else %}
                         <td style="text-align: center;">
                             <a data-toggle="modal" href="#admin-modal-make-admin-user-{{user.id}}">
                                 <i
                                         class="fas fa-user-lock"
-                                        style="color:green">
+                                        style="color:gray">
                                 </i>
                                 <div class="modal fade" id="admin-modal-make-admin-user-{{user.id}}">
                                     <div class="modal-dialog">
@@ -180,6 +263,8 @@ Users List
                             </a>
 
                         </td>
+
+                        {% endif %}
 
                     </tr>
                     {% endfor %}
@@ -215,9 +300,31 @@ Users List
             }
         });
     }
+    function make_author_non_user(user_id){
+        $.ajax({
+            url: 'make_non_author_user/'+parseInt(user_id),
+            type: 'get', // This is the default though, you don't actually need to always mention it
+            success: function(data) {
+                    window.location.href = '';
+            },
+            failure: function(data) {
+            }
+        });
+    }
     function make_admin_user(user_id){
         $.ajax({
             url: 'make_admin_user/'+parseInt(user_id),
+            type: 'get', // This is the default though, you don't actually need to always mention it
+            success: function(data) {
+                    window.location.href = '';
+            },
+            failure: function(data) {
+            }
+        });
+    }
+    function make_non_admin_user(user_id){
+        $.ajax({
+            url: 'make_non_admin_user/'+parseInt(user_id),
             type: 'get', // This is the default though, you don't actually need to always mention it
             success: function(data) {
                     window.location.href = '';

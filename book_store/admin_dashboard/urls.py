@@ -17,6 +17,9 @@ urlpatterns = [
     path('edit_user/<int:user_id>', views.edit_user, name='admin-edit-user'),
     path('delete_user/<int:user_id>', views.delete_user, name='admin-delete-user'),
     path('make_author_user/<int:user_id>', views.make_author_user, name='admin-make-author-user'),
+    path('make_non_author_user/<int:user_id>', views.make_non_author_user, name='admin-make-non-author-user'),
+
+    path('make_non_admin_user/<int:user_id>', views.make_non_admin_user, name='admin-make-non-admin-user'),
     path('make_admin_user/<int:user_id>', views.make_admin_user, name='admin-make_admin_user'),
 
     path('add_user_mode', views.add_mode, name='admin-add-user-mode'),
