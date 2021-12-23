@@ -507,14 +507,17 @@ function click_child(){
     $('#adult-section').css("visibility","hidden");
 }
 
-function click_adult(){
+function click_adult(email){
     if({{age}} > 18){
-       $('#adult-section').css("visibility","visible");
+        var emailTmp = window.prompt("Enter your email address!", "");
+        if(email == emailTmp){
+            $('#adult-section').css("visibility","visible");
+
+        }
     }else{
         alert('You are not old enough!')
         $('#adult-section').css("visibility","hidden");
     }
-
 }
 
 

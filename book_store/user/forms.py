@@ -5,7 +5,7 @@ from . import models
 
 
 class RegisterForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput, min_length=8)
     password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
 
     email = forms.EmailField(label="E-Mail Address", widget=forms.EmailInput, required=True)

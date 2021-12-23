@@ -319,12 +319,13 @@ def dashboard(request):
     books = [book for book in child if book['best_seller'] == False]
 
     data = datetime.now().replace(tzinfo=None) - request.user.date_of_birth.replace(tzinfo=None)
-
+    print(request.user.email)
     return render(request, 'user_dashboard/home.html', {'books': books,
                                                         'best_seller': best_seller,
                                                         'adults': adult,
                                                         'age': data.days / 360,
-                                                        'wishlists': wishlists})
+                                                        'wishlists': wishlists,
+                                                        'email':request.user.email})
 
 
 @login_required(login_url='/')
@@ -587,15 +588,21 @@ def check_answer(request):
             print('quiz_id', quiz_id)
             quiz = Quiz.objects.filter(quiz_id=quiz_id).first()
             if quiz.quiz_answer == answer:
-                code = uuid.uuid4().hex.upper()[0:6]
-                Voucher.objects.create(description='For pass the Question',
-                                       credit=20, code=code).save()
-                voucher = Voucher.objects.filter(
-                    voucher_id=Voucher.objects.filter(code=code).first().voucher_id
-                ).first()
-
-                VoucherUser.objects.create(voucher=voucher, user=request.user).save()
                 score = score + 2
+
+        # q1 - 2 * 2.5 = 5
+        # q2 - 2 * 2.5 = 5
+        # 4 * 2.5 = 10
+        if score != 0:
+            credit = score * 2.5
+            code = uuid.uuid4().hex.upper()[0:6]
+            Voucher.objects.create(description='For pass the Question',
+                                   credit=credit, code=code).save()
+            voucher = Voucher.objects.filter(
+                voucher_id=Voucher.objects.filter(code=code).first().voucher_id
+            ).first()
+
+            VoucherUser.objects.create(voucher=voucher, user=request.user).save()
 
     json_data = json.dumps({'result': score})
 

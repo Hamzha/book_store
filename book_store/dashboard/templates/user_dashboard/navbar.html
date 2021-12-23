@@ -105,7 +105,7 @@
                                 <li class="cat-item has-children">
                                     <a href="#">Mode</a>
                                     <ul class="sub-menu">
-                                        <li><a onclick="click_adult()">Adult</a></li>
+                                        <li><a onclick="click_adult('{{ request.user.email }}')">Adult</a></li>
                                         <li><a onclick="click_child()">Child</a></li>
 
                                     </ul>

@@ -41,17 +41,17 @@
                                 <div class="row">
                                     <div class="col-md-6 col-12 mb--20">
                                         <label>First Name*</label>
-                                        <input type="text" id="first_name" placeholder="First Name">
+                                        <input type="text" id="first_name" pattern=".{3,}" placeholder="First Name">
                                     </div>
                                     <div class="col-md-6 col-12 mb--20">
                                         <label>Last Name*</label>
-                                        <input type="text" placeholder="Last Name" id="last_name">
+                                        <input type="text" placeholder="Last Name" pattern=".{3,}" id="last_name">
                                     </div>
 
                                     <div class="col-12 col-12 mb--20">
                                         <label>Card Holder Name</label>
 
-                                        <input type="Card Holder Name" placeholder="Card Holder Name" id="card_holder_name">
+                                        <input type="Card Holder Name" placeholder="Card Holder Name" pattern=".{8,}" id="card_holder_name">
                                     </div>
                                     <div class="col-md-6 col-12 mb--20">
                                         <label>Email Address*</label>
@@ -59,11 +59,11 @@
                                     </div>
                                     <div class="col-md-6 col-12 mb--20">
                                         <label>Phone no*</label>
-                                        <input type="number" placeholder="Phone number" id="phone_number">
+                                        <input type="number" placeholder="Phone number" pattern=".{6,}" id="phone_number">
                                     </div>
                                     <div class="col-lg-6 col-12 mb--20">
                                         <label>Card Number*</label>
-                                        <input type="number" placeholder="Credit Card Number" id="card_holder_number">
+                                        <input type="number" placeholder="Credit Card Number" pattern=".{16,}" id="card_holder_number">
 
 
                                         <p><img style="width: 40px; height: 20px;"
@@ -114,7 +114,7 @@
                                     </div>
                                     <div class="col-md-6 col-12 mb--20">
                                         <label>Security Code*</label>
-                                        <input type="number" maxlength="3" pattern = "^[0-9]{3}$"
+                                        <input type="number" pattern=".{3,}"
  placeholder="Security Code" id="security_code">
 
                                         <p style="color:grey; font-size: smaller;"><img
