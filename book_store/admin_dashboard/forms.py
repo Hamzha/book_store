@@ -137,3 +137,4 @@ class queryFeedbackForm(forms.ModelForm):
     class Meta:
         model = QueryFeedback
         fields = ('query_feedback_subject', 'query_feedback_text', 'query_feedback_reply')
+

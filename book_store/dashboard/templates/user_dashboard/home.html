@@ -509,14 +509,28 @@ function click_child(){
 
 function click_adult(email){
     if({{age}} > 18){
-        var emailTmp = window.prompt("Enter your email address!", "");
-        if(email == emailTmp){
-            $('#adult-section').css("visibility","visible");
+    var emailTmp = window.prompt("Enter your Password!", "");
 
-        }
-    }else{
-        alert('You are not old enough!')
-        $('#adult-section').css("visibility","hidden");
+         $.ajax({
+            url:"adult_password_check",
+            type: 'GET',
+            data: {
+                "password": emailTmp
+                },
+            success: function(data){
+                if(data=='pass'){
+                    $('#adult-section').css("visibility","visible");
+                }
+                else{
+                    window.alert('Wrong password!!');
+
+                $('#adult-section').css("visibility","hidden");
+                }
+            },
+            failure(data){
+
+            }
+        });
     }
 }
 

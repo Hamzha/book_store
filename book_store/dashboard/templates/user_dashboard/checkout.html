@@ -59,11 +59,11 @@
                                     </div>
                                     <div class="col-md-6 col-12 mb--20">
                                         <label>Phone no*</label>
-                                        <input type="number" placeholder="Phone number" pattern=".{6,}" id="phone_number">
+                                        <input type="number" placeholder="Phone number" pattern=".{11,11}" id="phone_number">
                                     </div>
                                     <div class="col-lg-6 col-12 mb--20">
                                         <label>Card Number*</label>
-                                        <input type="number" placeholder="Credit Card Number" pattern=".{16,}" id="card_holder_number">
+                                        <input type="number" placeholder="Credit Card Number" pattern=".{16,}" id="card_holder_number"  onkeypress="limitKeypress(event,this.value,10)">
 
 
                                         <p><img style="width: 40px; height: 20px;"
@@ -177,10 +177,14 @@
             alert('Please input Email Address')
         }else if($('#phone_number').val().length == 0){
             alert('Please input Phone Number')
+        }else if($('#phone_number').val().length != 11){
+            alert('Please input Valid Phone Number')
         }else if($('#card_holder_number').val().length == 0){
             alert('Please input Card Holder Number')
         }else if($('#card_holder_number').val().length == 0){
             alert('Please input Card Holder Number')
+        }else if($('#card_holder_number').val().length != 16){
+            alert('Please input Valid Card Holder Number')
         }else if($('#security_code').val().length != 3 ){
             alert('Please input Security Code')
         }else if($('#accept_terms2').is(":checked") == false){
@@ -193,9 +197,14 @@
                     window.location = "{% url 'user-dashboard' %}"
                 },
                 failure(data){}
-            });
+            };
         }
 
+    }
+    function limitKeypress(event, value, maxLength) {
+        if (value != undefined && value.toString().length >= maxLength) {
+            event.preventDefault();
+        }
     }
 </script>
 

@@ -93,7 +93,7 @@ function submit(book_id){
             $('#display_voucher').show()
             $('#display_submit').hide()
             alert('Your total score is ' + data['result']+' out of '+ count*2
-            +'\n' +"Congratulations you got voucher for "+ parseInt(data['result']) * 10 + "PKR. \nYou can avail this voucher on your next purchase.");
+            +'\n' +"Congratulations you got voucher for "+ parseInt(data['result']) * 2.5 + "PKR. \nYou can avail this voucher on your next purchase.");
         },
         failure: function(data) {}
     });

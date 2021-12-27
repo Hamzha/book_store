@@ -584,8 +584,6 @@ def check_answer(request):
         for elmt in data['obj']:
             quiz_id = elmt['quiz_id']
             answer = elmt['answer']
-            print(elmt)
-            print('quiz_id', quiz_id)
             quiz = Quiz.objects.filter(quiz_id=quiz_id).first()
             if quiz.quiz_answer == answer:
                 score = score + 2
@@ -1080,3 +1078,38 @@ def retrieve_password(request, email):
         return HttpResponse('Success')
     else:
         return HttpResponse('Email do not exists')
+
+
+def adult_password_check(request):
+    print(request.GET['password'])
+    # password = request.POST['password']
+    print(request.user.email)
+    user = authenticate(request, email=request.user.email, password=request.GET['password'])
+    if(user):
+        return HttpResponse("pass")
+    else:
+        return HttpResponse('fail')
+
+
+def help_center(request):
+    return render(request,'user_dashboard/help_center.html')
+
+
+def contact_us(request):
+    return render(request,'user_dashboard/contact_us.html')
+
+
+def term_of_use(request):
+    return render(request,'user_dashboard/term_of_use.html')
+
+
+def privacy_policy(request):
+    return render(request,'user_dashboard/privacy_policy.html')
+
+
+def customer_service(request):
+    return render(request,'user_dashboard/customer_service.html')
+
+
+def feedback(request):
+    return render(request,'user_dashboard/feedback.html')

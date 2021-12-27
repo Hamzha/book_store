@@ -66,5 +66,15 @@ urlpatterns = [
 
 
     path('forget_password', views.forget_password, name='user_forget_password'),
-    path('retrieve_password/<str:email>', views.retrieve_password, name='user-retrieve-password')
+    path('retrieve_password/<str:email>', views.retrieve_password, name='user-retrieve-password'),
+
+    path('adult_password_check', views.adult_password_check, name= 'adult_password_check'),
+
+    path('help_center', views.help_center, name='help-center'),
+    path('contact_us', views.contact_us, name='contact-us'),
+    path('term_of_use', views.term_of_use, name='term-of-use'),
+    path('privacy_policy', views.privacy_policy, name='privacy-policy'),
+    path('customer_service', views.customer_service, name='customer-service'),
+    path('feedback', views.feedback, name='feedback'),
+
 ]
