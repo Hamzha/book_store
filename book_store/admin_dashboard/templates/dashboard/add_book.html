@@ -16,11 +16,12 @@ Adding Book
 <!-- form start -->
 <div class="content">
     <div class="container-fluid">
+
         <form enctype="multipart/form-data" method="post" action="/admin_dashboard/add_book">
             {% csrf_token %}
             <input type="hidden" name="csrfmiddlewaretoken"
                    value="xsswrQ4bTS2QMNjFGNkvhQTST63Ikd1WqxOLKmniaC8ZKMKmrBfoLHR2h4AbhDZ8">
-            <div class="card-body">
+            <div>
                 <div class="row">
                     <div class="form-group" style="width:50%">
                         <label>Book Title</label>

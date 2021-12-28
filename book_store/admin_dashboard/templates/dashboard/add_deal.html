@@ -20,6 +20,9 @@ Add Deal
         background: white;
     }
 </style>
+<div class="content">
+    <div class="container-fluid">
+            <div class="container-fluid">
 
 <form method="post" id="deal_form">
     {% csrf_token %}
@@ -52,7 +55,9 @@ Add Deal
     </div>
 </form>
 
-
+    </div>
+    </div>
+</div>
 <script>
 $(document).ready(function(){
     $("#deal_form").on('submit', function (e) {

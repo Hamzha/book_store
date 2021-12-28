@@ -171,7 +171,8 @@ def add_user(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.password = make_password(user.password)
-
+            user.save()
+            user = User.objects.filter(id=user.id).first()
             code = uuid.uuid4().hex.upper()[0:6]
 
             Voucher.objects.create(description='Signup Voucher',
@@ -181,6 +182,11 @@ def add_user(request):
             ).first()
 
             VoucherUser.objects.create(voucher=voucher, user=user).save()
+            books = Book.objects.filter(free_book=True)
+            cart = Cart.objects.create(cart_user=user, payment_status='Paid', cart_detail='Paid')
+            for book in books:
+                cart.cart_book.add(book)
+            cart.save()
             return redirect('admin-home')
         else:
             for field, items in form.errors.items():

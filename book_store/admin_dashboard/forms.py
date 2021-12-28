@@ -72,7 +72,7 @@ class book_form(forms.ModelForm):
 
 
 class register_form(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput, required=True)
+    password = forms.CharField(widget=forms.PasswordInput,min_length=8, required=True)
     password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput, required=True)
 
     email = forms.EmailField(label="E-Mail Address", widget=forms.EmailInput, required=True)
