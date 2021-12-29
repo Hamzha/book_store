@@ -310,7 +310,7 @@ def dashboard(request):
             for book in cart.cart_book.all():
                 if book_item['book_id'] == book.book_id:
                     book_list[book_index]['is_buy'] = True
-        book_list[book_index]['summary'] = book_list[book_index]['summary'][:126] + '...'
+        book_list[book_index]['summary'] = book_list[book_index]['summary'][:100] + '...'
 
     child = [book for book in book_list if book['adult_mode'] == False]
     adult = [book for book in book_list if book['adult_mode'] == True]

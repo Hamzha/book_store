@@ -154,37 +154,6 @@
                              style="height:250px; width: -webkit-fill-available;" alt="NOt Available">
                         <a href="{% url 'user-product-detail' wishlist.wishlist_book.book_id %}"><h5>
                             {{wishlist.wishlist_book}}</h5></a>
-                        <div class="hover-contents">
-                            <p>{{ wishlist.wishlist_book.title }}</p>
-                            <div class="row" style="font-size: small;">
-                                <div class="col-4"><span class="price">{{wishlist.wishlist_book.price}}</span></div>
-                                <div class="col-4"><span class="pub_year">{{wishlist.wishlist_book.year_of_publish.year}}</span>
-                                </div>
-                                <div class="col-4"><span class="price">{{wishlist.wishlist_book.no_of_pages}}</span>
-                                </div>
-
-                            </div>
-                            <p style="font-size: small;">
-                                {{wishlist.wishlist_book.summary}}
-                            </p>
-
-                            <p style="font-size: small;"><strong>Author: </strong>{{wishlist.wishlist_book.author}}</p>
-                            <p style="font-size: small;"><strong>Genre: </strong>{{wishlist.wishlist_book.genre}}</p>
-
-                            <div class="hover-btns">
-
-                                <a onclick="remove_to_wishlist({{wishlist.wishlist_book.book_id}})" id="wishlist-{{wishlist.wishlist_book.book_id}}"
-                                   class="single-btn ">
-                                    <i class="fas fa-heart red-icon" title="Remove from Wishlist"></i>
-                                </a>
-                                <a href="{% url 'user-product-detail' wishlist.wishlist_book.book_id %}"
-                                   class="single-btn">
-                                    Read Now
-                                </a>
-
-                            </div>
-                        </div>
-
                     </div>
 
                 </div>
