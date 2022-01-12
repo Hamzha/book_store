@@ -2,11 +2,12 @@ from django import forms
 from django.forms import DateField
 
 from . import models
-
+from django.core.validators import RegexValidator
+my_validator = RegexValidator(r"^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]{8,})$", "Minimum eight characters and one number.")
 
 class RegisterForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput, min_length=8)
-    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput, min_length=8, validators=[my_validator])
+    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput, validators=[my_validator])
 
     email = forms.EmailField(label="E-Mail Address", widget=forms.EmailInput, required=True)
     username = forms.CharField(label="Username", widget=forms.TextInput, required=True)

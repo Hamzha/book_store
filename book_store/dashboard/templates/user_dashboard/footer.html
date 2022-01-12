@@ -1,10 +1,10 @@
 {% load static %}
 
-<footer class="footer-bottom">
-    <div class="container">
-        <div class="row justify-content-between  section-padding">
+<footer class="footer-bottom" style="padding:30px">
+    <div style="margin-left:100px; margin-right:100px">
+        <div class="row justify-content-between  section-padding" style="padding-bottom:0px">
 
-            <div class=" col-xl-5 col-lg-5 col-sm-12">
+            <div class=" col-xl-5 col-lg-3 col-sm-12">
                 <div class="footer-title">
                     <h3 class="copyright-heading">Who are we?</h3>
 
@@ -12,14 +12,22 @@
                         delivered directly to your inbox. lasdjflaskdfjalkfjlsjfdlasjdflsajfdlkasjdflasjdflklaj
                         lasjfdlakjsfl slfdjlasjf las</p>
 
+                    <div class="copyright-text" style=" place-content: center;">
+                        <i class="fa fa-phone" style="color:white;font-size:20px"></i>
+                        <p style="color:white;font-size:15px">+1.555.555.5555</p>
+                    </div>
+
+                    <div class="copyright-text" style="    place-content: center;">
+                        <i class="fa fa-envelope" style="color:white;font-size:20px"></i>
+                        <p style="color:white;font-size:15px"><a
+                                href="mailto:support@company.com">support@company.com</a></p>
+                    </div>
+
                 </div>
-
-            </div>
-            <div class=" col-xl-1 col-lg-1 col-sm-12">
             </div>
 
 
-            <div class=" col-xl-2 col-lg-2 col-sm-4">
+            <div class=" col-xl-3 col-lg-3 col-sm-4">
                 <div class="single-footer pb--40">
                     <div class="footer-title">
                         <h3 class="copyright-heading">Quick Links</h3>
@@ -27,33 +35,53 @@
                     <ul class="footer-list normal-list copyright-text">
                         <li><a style="text-decoration:none !important;" href="{% url 'user-dashboard' %}">Home</a></li>
                         <li><a style="text-decoration:none !important;" href="{% url 'user-pdf-book' %}">PDF</a></li>
-                        <li><a href="{% url 'user-audio-book' %}" style="text-decoration:none !important;">AUDIOBOOKS</a></li>
-                        <li><a href="{% url 'user_deals_discount' %}" style="text-decoration:none !important;">Deals & promotions</a></li>
+                        <li><a href="{% url 'user-audio-book' %}"
+                               style="text-decoration:none !important;">AUDIOBOOKS</a></li>
+                        <li><a href="{% url 'user_deals_discount' %}" style="text-decoration:none !important;">Deals &
+                            promotions</a></li>
 
                     </ul>
                 </div>
             </div>
+            <div class=" col-xl-2 col-lg-2 col-sm-4">
+                <div class="single-footer ">
+                    <div class="footer-title">
+                        <h3 class="copyright-heading">Category</h3>
+                    </div>
+                    <ul class="footer-list normal-list copyright-text">
+                        <li><a href="{% url 'user-genre-book' 'Fairy_Tail' %}">Fairy Tail</a></li>
+                        <li><a href="{% url 'user-genre-book' 'Fantasy' %}">Fantasy</a></li>
+                        <li><a href="{% url 'user-genre-book' 'Health_Fitness' %}">Health/Fitness</a></li>
+                        <li><a href="{% url 'user-genre-book' 'History' %}">History</a></li>
+                        <li><a href="{% url 'user-genre-book' 'Historical_Fiction' %}">Historical Fiction</a></li>
+                        <li><a href="{% url 'user-genre-book' 'Humor' %}">Humor</a></li>
 
+                    </ul>
+                </div>
+            </div>
             <div class=" col-xl-2 col-lg-2 col-sm-4">
                 <div class="single-footer ">
                     <div class="footer-title">
                         <h3 class="copyright-heading">Get Help?</h3>
                     </div>
                     <ul class="footer-list normal-list copyright-text">
-                        <li><a href="{% url 'help-center' %}" style="text-decoration:none !important;">Help center</a></li>
-                        <li><a href="{% url 'contact-us' %}" style="text-decoration:none !important;">Contact us</a></li>
-                        <li><a href="{% url 'term-of-use' %}" style="text-decoration:none !important;">Terms of use</a></li>
-                        <li><a href="{% url 'privacy-policy' %}" style="text-decoration:none !important;">Privacy policy</a></li>
-                        <li><a href="{% url 'customer-service' %}" style="text-decoration:none !important;">Customer service</a></li>
+                        <li><a href="{% url 'help-center' %}" style="text-decoration:none !important;">Help center</a>
+                        </li>
+                        <li><a href="{% url 'contact-us' %}" style="text-decoration:none !important;">Contact us</a>
+                        </li>
+                        <li><a href="{% url 'term-of-use' %}" style="text-decoration:none !important;">Terms of use</a>
+                        </li>
+                        <li><a href="{% url 'privacy-policy' %}" style="text-decoration:none !important;">Privacy
+                            policy</a></li>
+                        <li><a href="{% url 'customer-service' %}" style="text-decoration:none !important;">Customer
+                            service</a></li>
                         <li><a href="{% url 'feedback' %}" style="text-decoration:none !important;">Feedback</a></li>
                     </ul>
                 </div>
             </div>
         </div>
-        <a href="#" class="payment-block">
-            <img src="{% static  'user_dashboard/image/icon/payment.png' %}" alt="">
-        </a>
-        <p class="copyright-text">Copyright © 2021 <a href="#" class="author">The Book Co.</a>. All Right Reserved.
+
+        <p class="copyright-text">Copyright © 2021 <a href="#" class="author">The Book Co.</a> All Right Reserved.
             <br>
             Design By The Book Co.</p>
     </div>

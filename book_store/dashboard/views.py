@@ -319,7 +319,7 @@ def dashboard(request):
     books = [book for book in child if book['best_seller'] == False]
 
     data = datetime.now().replace(tzinfo=None) - request.user.date_of_birth.replace(tzinfo=None)
-    print(request.user.email)
+    print(wishlists)
     return render(request, 'user_dashboard/home.html', {'books': books,
                                                         'best_seller': best_seller,
                                                         'adults': adult,
@@ -471,7 +471,7 @@ def checkout(request):
 def user_profile_update(request):
     if request.method == 'GET':
         data = json.loads(request.GET.dict()['data'])
-        print(data)
+        print('-----------',data)
         if not request.user.check_password(data['current_password']):
 
             return HttpResponse(JsonResponse({"error": "Current password is not correct"}))
@@ -626,7 +626,7 @@ def booK_listen_chapter(request, book_id, chapter):
     return render(request, 'user_dashboard/book_listen_2.html',
                   {'book': book, 'audio': audio, 'bookmarks': bookmark, 'quickNote': quickNote})
 
-
+@login_required(login_url='/')
 def user_author_menu(request):
     books = Book.objects.filter(book_user=request.user)
     print(books)
@@ -690,6 +690,7 @@ def user_author_add_book(request):
                 book_user=request.user
             )
             book.save()
+
             send_mail(book)
             if book.free_book:
                 for user in User.objects.all():
@@ -725,12 +726,12 @@ def user_author_add_book(request):
                     cart.cart_book.add(Book.objects.filter(book_id=book.book_id).first())
     return render(request, 'user_dashboard/add_book.html', {})
 
-
+@login_required(login_url='/')
 def user_delete_book(request, book_id):
     Book.objects.filter(book_id=book_id).delete()
     return HttpResponse('Success')
 
-
+@login_required(login_url='/')
 def user_get_genre_book(request, genre):
     books = Book.objects.filter(genre__icontains=genre)
     diff = 12
@@ -760,6 +761,7 @@ def user_get_genre_book(request, genre):
     return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list, 'genre': genre})
 
 
+@login_required(login_url='/')
 def user_get_best_book(request):
     books = Book.objects.filter(best_seller=True)
     diff = 12
@@ -788,6 +790,7 @@ def user_get_best_book(request):
     return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list})
 
 
+@login_required(login_url='/')
 def user_get_best_book(request):
     books = Book.objects.filter(best_seller=True)
     diff = 12
@@ -818,6 +821,7 @@ def user_get_best_book(request):
     return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list, 'genre': 'Best Seller'})
 
 
+@login_required(login_url='/')
 def user_get_audio_book(request):
     books = Book.objects.filter(book_type="BOTH")
     diff = 12
@@ -848,6 +852,7 @@ def user_get_audio_book(request):
     return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list, 'genre': 'Audio and PDF'})
 
 
+@login_required(login_url='/')
 def user_get_pdf_book(request):
     books = Book.objects.filter(book_type="PDF")
     diff = 12
@@ -878,6 +883,7 @@ def user_get_pdf_book(request):
     return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list, 'genre': 'PDF Books'})
 
 
+@login_required(login_url='/')
 def user_search_book(request, search):
     books = Book.objects.filter(
         Q(title__icontains=search) | Q(genre__icontains=search) | Q(author__icontains=search) | Q(
@@ -906,6 +912,7 @@ def user_search_book(request, search):
     return render(request, 'user_dashboard/book_by_genre.html', {'books': books_list, 'genre': search})
 
 
+@login_required(login_url='/')
 def send_mail(book):
     api_key = '21b0378ce48d6aa976e690ccaef126cc'
     api_secret = '6e3f27dce05716d6b7e45739dcdd93ac'
@@ -932,11 +939,10 @@ def send_mail(book):
         ]
     }
     result = mailjet.send.create(data=data)
-    print(result.status_code)
-    print(result.json())
     return HttpResponse('test')
 
 
+@login_required(login_url='/')
 def user_filter_book(request):
     if request.method == 'GET':
         data = json.loads(request.GET.dict()['data'])
@@ -988,6 +994,7 @@ def user_filter_book(request):
     return HttpResponse('success')
 
 
+@login_required(login_url='/')
 def wishlist_sort(request, sort):
     wishlists = Wishlist.objects.filter(wishlist_user=request.user)
     book_list = []
@@ -1013,6 +1020,7 @@ def wishlist_sort(request, sort):
     return render(request, 'user_dashboard/wishlist.html', {'wishlists': book_list, 'authors': author})
 
 
+@login_required(login_url='/')
 def update_cart(request):
     if not request.is_ajax() or not request.method == 'POST':
         return HttpResponseNotAllowed(['POST'])
@@ -1021,6 +1029,7 @@ def update_cart(request):
     return HttpResponse('ok')
 
 
+@login_required(login_url='/')
 def remove_cart(request, book_id):
     book_list_ids = request.session.get('book_list', False)
     book_list_ids = list(book_list_ids.replace('[', '').replace(']', '').split(","))
@@ -1032,6 +1041,7 @@ def remove_cart(request, book_id):
     return HttpResponse("OK")
 
 
+@login_required(login_url='/')
 def query_feedback(request):
     form = queryFeedbackForm()
     if request.method == 'POST':
@@ -1058,6 +1068,7 @@ def query_feedback(request):
     return render(request, 'user_dashboard/query_feedback.html', {'form': form})
 
 
+@login_required(login_url='/')
 def query_feedback_list(request):
     queries = QueryFeedback.objects.filter(
         query_feedback_user_id=request.user
@@ -1073,8 +1084,34 @@ def forget_password(request):
 def retrieve_password(request, email):
     user = User.objects.filter(email = email).first()
     if user:
-        user.set_password('new_pass_123')
+        password = uuid.uuid4().hex.upper()[0:10]
+
+        user.set_password(password)
         user.save()
+        api_key = '21b0378ce48d6aa976e690ccaef126cc'
+        api_secret = '6e3f27dce05716d6b7e45739dcdd93ac'
+        mailjet = Client(auth=(api_key, api_secret), version='v3.1')
+        data = {
+            'Messages': [
+                {
+                    "From": {
+                        "Email": "ayesharaig786@gmail.com",
+                        "Name": "Ayesha"
+                    },
+                    "To": [
+                        {
+                            "Email": user.email,
+                            "Name": user.username
+                        }
+                    ],
+                    "Subject": "New Password",
+                    "TextPart": "Your new password",
+                    "HTMLPart": "Dear beloved customer! your password is reset. and the new password is " + password + ".<br /> Regards Book Store Co.",
+
+                }
+            ]
+        }
+        result = mailjet.send.create(data=data)
         return HttpResponse('Success')
     else:
         return HttpResponse('Email do not exists')
@@ -1111,5 +1148,6 @@ def customer_service(request):
     return render(request,'user_dashboard/customer_service.html')
 
 
+@login_required(login_url='/')
 def feedback(request):
     return render(request,'user_dashboard/feedback.html')

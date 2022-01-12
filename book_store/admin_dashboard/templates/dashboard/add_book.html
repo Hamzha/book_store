@@ -233,6 +233,21 @@ $(document).ready(function(){
         image.appendChild(br1);
 
     }
+
+    checkbox = document.getElementById('id_free_book');
+    checkbox.addEventListener('change', e => {
+
+    if(e.target.checked){
+        $('#id_price').prop("readonly", true);
+        $('#id_price').val(00);
+    }else{
+        $('#id_price').prop("readonly", false);
+
+    }
+
+});
+
+
 });
 
 

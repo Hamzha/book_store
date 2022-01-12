@@ -104,10 +104,10 @@
                                                         }'>
         <div class="single-slide bg-image  bg-overlay--dark"
              data-bg="{% static 'user_dashboard/image/bg-images/Slider1.jpg' %} ">
-            <div class="container">
+            <div class="container" style="margin-left: 30px;">
                 <div class="home-content pl-3-0">
-                    <div class="row ">
-                        <div class="col-lg-6">
+                    <div class="row" style="margin-top: auto;margin-bottom: 50px;">
+                        <div class="col-lg-6" style="background: rgba(169,169,169,0.7);padding: 33px;">
                             <h1 class="slider_caption">Falling</h1>
                             <h2>Cover up front of book and
                                 <br>leave summary</h2>
@@ -120,10 +120,10 @@
         </div>
         <div class="single-slide bg-image  bg-overlay--dark"
              data-bg="{% static 'user_dashboard/image/bg-images/Slider2.jpg' %}">
-            <div class="container">
+            <div class="container" style="margin-left: 30px;">
                 <div class="home-content pl--30">
-                    <div class="row">
-                        <div class="col-lg-6">
+                    <div class="row" style="margin-top: auto;margin-bottom: 50px;">
+                        <div class="col-lg-6" style="background: rgba(128,128,128,0.7);padding: 33px;">
                             <h1>I Love This Idea!</h1>
                             <h2>Cover up front of book and
                                 <br>leave summary</h2>
@@ -135,10 +135,10 @@
         </div>
         <div class="single-slide bg-image  bg-overlay--dark"
              data-bg="{% static 'user_dashboard/image/bg-images/Slider3.jpg' %}">
-            <div class="container">
+            <div class="container" style="margin-left: 30px;">
                 <div class="home-content pl--30">
-                    <div class="row">
-                        <div class="col-lg-6">
+                    <div class="row" style="margin-top: auto;margin-bottom: 50px;">
+                        <div class="col-lg-6" style="background: rgba(	13, 152, 186,0.7);padding: 33px;">
                             <h1>I Love This Idea!</h1>
                             <h2>Cover up front of book and
                                 <br>leave summary</h2>
@@ -148,12 +148,13 @@
                 </div>
             </div>
         </div>
+
         <div class="single-slide bg-image  bg-overlay--dark"
              data-bg="{% static 'user_dashboard/image/bg-images/Slider4.jpg' %}">
-            <div class="container">
+            <div class="container" style="margin-left: 30px;">
                 <div class="home-content pl--30">
-                    <div class="row">
-                        <div class="col-lg-6">
+                    <div class="row" style="margin-top: auto;margin-bottom: 50px;">
+                        <div class="col-lg-6" style="background: rgba(196, 211, 223,0.7);padding: 33px;">
                             <h1>I Love This Idea!</h1>
                             <h2>Cover up front of book and
                                 <br>leave summary</h2>
@@ -165,16 +166,14 @@
         </div>
         <div class="single-slide bg-image  bg-overlay--dark"
              data-bg="{% static 'user_dashboard/image/bg-images/Slider5.jpg' %}">
-            <div class="container">
+            <div class="container" style="margin-left: 30px;">
                 <div class="home-content pl--30">
-                    <div class="row">
-                        <div class="col-lg-6">
+                    <div class="row" style="margin-top: auto;margin-bottom: 50px;">
+                        <div class="col-lg-6" style="background: rgba(255,99,71,0.7);padding: 33px;">
                             <h1>I Love This Idea!</h1>
                             <h2>Cover up front of book and
                                 <br>leave summary</h2>
-                            <a href="user_genre/FairyTail" class="btn btn--yellow">
-                                Shop Now
-                            </a>
+
                         </div>
                     </div>
                 </div>
@@ -346,7 +345,156 @@
     </div>
 </section>
 
+<section class="section-margin">
+    <div class="section-title section-title--bordered">
+        <h2>Wishlist</h2>
+    </div>
+    <div class="product-slider sb-slick-slider slider-border-single-row" data-slick-setting='{
+                        "autoplay": true,
+                        "autoplaySpeed": 8000,
+                        "slidesToShow": 8,
+                        "dots":true
+                    }' data-slick-responsive='[
+                        {"breakpoint":1200, "settings": {"slidesToShow": 6} },
+                        {"breakpoint":992, "settings": {"slidesToShow": 5} },
+                        {"breakpoint":768, "settings": {"slidesToShow": 4} },
+                        {"breakpoint":480, "settings": {"slidesToShow": 2} },
+                        {"breakpoint":320, "settings": {"slidesToShow": 1} }
+                    ]'>
 
+        {% for book in books %}
+        {% if book.book_wishlist %}
+        <div class="single-slide">
+            <div class="product-card">
+
+                <div class="product-card--body">
+                    <div class="card-image">
+                        <img src="{{ book.cover_photo.url }}"
+                             style="height:250px; width: -webkit-fill-available;" alt="NOt Available">
+                        <div class="hover-contents">
+                            <p>{{ book.title }}</p>
+
+                            <p style="font-size: small;">
+                                {{book.summary}}
+                            </p>
+
+                            <p style="font-size: small;"><strong>Author: </strong>{{book.author}}</p>
+                            <p style="font-size: small;"><strong>Genre: </strong>{{book.genre}}</p>
+
+
+                            <div class="hover-btns">
+                                {% if not book.is_buy %}
+                                <a onclick="add_to_cart({{book.book_id}})" class="single-btn"
+                                   id="cart-{{book.book_id}}">
+                                    <i class="fas fa-shopping-basket"></i>
+                                </a>
+                                {% endif %}
+
+                                {% if book.book_wishlist %}
+                                <a onclick="remove_to_wishlist({{book.book_id}})" id="wishlist-{{book.book_id}}"
+                                   class="single-btn ">
+                                    <i class="fas fa-heart red-icon" title="Remove from Wishlist"></i>
+                                </a>
+                                {% else %}
+                                <a onclick="add_to_wishlist({{book.book_id}})" id="wishlist-{{book.book_id}}"
+                                   class="single-btn ">
+                                    <i class="fas fa-heart" title="Add to Wishlist"></i>
+                                </a>
+                                {% endif %}
+
+                                <a href="{% url 'user-product-detail' book.book_id %}"
+                                   class="single-btn">
+                                    Read Now
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="price-block">
+                        <div class="product-header">
+                            <p>
+                                <strong>
+                                    <a href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a>
+                                </strong>
+                            </p>
+                            <div style="margin-top:-12px; font-size:14px">{{book.price}} PKR</div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% for book in best_seller %}
+                <div class="single-slide">
+            <div class="product-card">
+
+                <div class="product-card--body">
+                    <div class="card-image">
+                        <img src="{{ book.cover_photo.url }}"
+                             style="height:250px; width: -webkit-fill-available;" alt="NOt Available">
+                        <div class="hover-contents">
+                            <p>{{ book.title }}</p>
+
+                            <p style="font-size: small;">
+                                {{book.summary}}
+                            </p>
+
+                            <p style="font-size: small;"><strong>Author: </strong>{{book.author}}</p>
+                            <p style="font-size: small;"><strong>Genre: </strong>{{book.genre}}</p>
+
+
+                            <div class="hover-btns">
+                                {% if not book.is_buy %}
+                                <a onclick="add_to_cart({{book.book_id}})" class="single-btn"
+                                   id="cart-{{book.book_id}}">
+                                    <i class="fas fa-shopping-basket"></i>
+                                </a>
+                                {% endif %}
+
+                                {% if book.book_wishlist %}
+                                <a onclick="remove_to_wishlist({{book.book_id}})" id="wishlist-{{book.book_id}}"
+                                   class="single-btn ">
+                                    <i class="fas fa-heart red-icon" title="Remove from Wishlist"></i>
+                                </a>
+                                {% else %}
+                                <a onclick="add_to_wishlist({{book.book_id}})" id="wishlist-{{book.book_id}}"
+                                   class="single-btn ">
+                                    <i class="fas fa-heart" title="Add to Wishlist"></i>
+                                </a>
+                                {% endif %}
+
+                                <a href="{% url 'user-product-detail' book.book_id %}"
+                                   class="single-btn">
+                                    Read Now
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="price-block">
+                        <div class="product-header">
+                            <p>
+                                <strong>
+                                    <a href="{% url 'user-product-detail' book.book_id %}">{{book.title}}</a>
+                                </strong>
+                            </p>
+                            <div style="margin-top:-12px; font-size:14px">{{book.price}} PKR</div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</section>
 <section class="section-margin" id="adult-section">
     <div class="section-title section-title--bordered">
         <h2>Adult</h2>
@@ -502,9 +650,9 @@ function cart_click(){
     }
 
 }
-setTimeout(function(){ $('#adult-section').css("visibility","hidden"); }, 1000);
+setTimeout(function(){ $('#adult-section').css("content-visibility","hidden"); }, 1000);
 function click_child(){
-    $('#adult-section').css("visibility","hidden");
+    $('#adult-section').css("content-visibility","hidden");
 }
 
 function click_adult(email){
@@ -519,12 +667,12 @@ function click_adult(email){
                 },
             success: function(data){
                 if(data=='pass'){
-                    $('#adult-section').css("visibility","visible");
+                    $('#adult-section').css("content-visibility","visible");
                 }
                 else{
                     window.alert('Wrong password!!');
 
-                $('#adult-section').css("visibility","hidden");
+                $('#adult-section').css("content-visibility","hidden");
                 }
             },
             failure(data){

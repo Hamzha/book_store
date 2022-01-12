@@ -21,31 +21,33 @@
                             <div class="col-md-12 col-12 mb--15">
                                 <label for="email">Email address</label>
                                 <input class="mb-0 form-control" type="email" id="email" name="email"
-                                       placeholder="Enter you email address here.">
+                                       placeholder="Enter you email address here." required >
                                 <p>We'll never share yor email with anyone else.</p>
                             </div>
 
                             <div class="col-12 mb--20">
                                 <label for="password">Password</label>
-                                <input class="mb-0 form-control" type="password" id="password" name="password" pattern=".{6,}"
-                                       placeholder="Enter your password">
+                                <input class="mb-0 form-control" type="password" id="password" name="password" pattern="^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]{8,})$"
+                                       placeholder="Enter your password" required>
+                                 <div><a href="{% url 'user_forget_password' %}">forget Password?</a></div>
                             </div>
                             {% if error %}
                                  <div class="col-12 mb--20" style="background: rgba(255, 0, 0, 0.4); padding: 2%; max-width: 90%; margin-left: 3%;">
                                     {{ error }}
                                  </div>
                             {% endif %}
-                            <div class="row col-md-12">
-                                <div class="col-md-4">
-                                    <button type="submit" style="background:#ee964b; border-color:#ee964b; color:white" class="btn btn-outlined">Login</button>
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <button type="submit" style="background:#ee964b; border-color:#ee964b; color:white" class="btn btn-outlined col-md-12">Login</button>
                                 </div>
-                                <div class="col-md-4">
-                                    <a class="btn btn-outlined" style="background:#ee964b; border-color:#ee964b; color:white" href="{% url 'user-signup' %}">Signup</a>
+                                <div class="col-md-12" style="text-align-last: center;">
+                                    <p style=" margin-top: 10px;margin-bottom:0px">Or Sign-Up using</p>
+                                    <a style="font-weight: bold;" href="{% url 'user-signup' %}">SIGN UP</a>
                                 </div>
                             </div>
 
                         </div>
-                        <div><a href="{% url 'user_forget_password' %}">forger Password?</a></div>
+
 
                     </div>
 

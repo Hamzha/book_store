@@ -8,7 +8,7 @@
 
 {% block content %}
 
-<div class="cart_area inner-page-sec-padding-bottom">
+<div class="cart_area inner-page-sec-padding-bottom" style="padding-bottom:20px">
 
 
     <div class="container">
@@ -143,17 +143,21 @@
 
 
 <div class="container" style="margin-bottom: 100px">
-    <div class="row">
+    <div class="row" style="column-gap: 100px;">
         {% for wishlist in wishlists %}
         <div class="col-2">
             <div class="product-card">
 
                 <div class="product-card--body">
+                       {{wishlist.wishlist_book.author}}
+
                     <div class="card-image">
+
+                        <a href="{% url 'user-product-detail' wishlist.wishlist_book.book_id %}"><h5 style="    font-weight: bold;">
+                            {{wishlist.wishlist_book}}</h5></a>
                         <img src="{{ wishlist.wishlist_book.cover_photo.url }}"
                              style="height:250px; width: -webkit-fill-available;" alt="NOt Available">
-                        <a href="{% url 'user-product-detail' wishlist.wishlist_book.book_id %}"><h5>
-                            {{wishlist.wishlist_book}}</h5></a>
+
                     </div>
 
                 </div>
